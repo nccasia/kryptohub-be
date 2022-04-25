@@ -1,0 +1,56 @@
+version: '3.7'
+
+volumes:
+  ipfs-data:
+  app-data:
+
+networks:
+  front:
+  back:
+
+services:
+  proxy:
+    build:
+      context: ./docker/
+      dockerfile: nginx.Dockerfile
+    ports:
+      - '80:80'
+    depends_on:
+      - ipfs
+      - app
+    networks:
+      - back
+      - front
+
+  app:
+    build:
+      context: .
+      target: production
+# uncomment next lines for debugging the app
+#      target: development
+#    command: npm run start:debug
+    volumes:
+#      - .:/usr/src/app
+      - /usr/src/app/node_modules
+      - app-data:/usr/src/app
+    ports:
+      - '3000:3000'
+    networks:
+      - back
+    environment:
+      - IPFS_URL=http://ipfs:5001/api/v0
+      - PORT=3000
+    depends_on:
+      - ipfs
+
+  ipfs:
+    image: ipfs/go-ipfs:v0.7.0
+    command: [ "daemon", "--migrate=true", "--enable-pubsub-experiment" ]
+    ports:
+      - 5001:5001
+      - 4001:4001
+    volumes:
+      - ipfs-data:/data/ipfs
+    restart: unless-stopped
+    networks:
+      - back

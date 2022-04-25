@@ -1,0 +1,24 @@
+{
+  "compilerOptions": {
+    "skipLibCheck": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": true,
+    "strict": true,
+    "target": "es2017",
+    "module": "commonjs",
+    "outDir": "./dist",
+    "incremental": true,
+    "moduleResolution": "node",
+    "lib": [
+      "es2017",
+      "es2018.asynciterable",
+      "dom"
+    ]
+  }
+}
