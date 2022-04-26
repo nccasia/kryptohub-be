@@ -1,12 +1,10 @@
-import { EthereumAddress } from "../../utils/EthereumAddress";
-import { IsEthereumAddress, IsString } from "class-validator";
+import {EthereumAddress} from '../../utils/EthereumAddress';
+import {IsEthereumAddress, IsString} from 'class-validator';
 
 export class LoginRequest {
+    @IsEthereumAddress()
+    address: EthereumAddress;
 
-  @IsEthereumAddress()
-  address: EthereumAddress
-
-  @IsString()
-  password: string
-
+    @IsString()
+    password: string;
 }

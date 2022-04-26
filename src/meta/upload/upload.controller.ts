@@ -6,7 +6,7 @@ import {
     Body,
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
-import {Metadata} from '../../model';
+import {Metadata} from '../../database';
 import {IpfsUploader} from '../../ipfs/ipfs-uploader';
 
 @Controller('upload')
