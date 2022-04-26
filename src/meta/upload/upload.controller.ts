@@ -9,7 +9,7 @@ import {FileInterceptor} from '@nestjs/platform-express';
 import {Metadata} from '../../database';
 import {IpfsUploader} from '../../ipfs/ipfs-uploader';
 
-@Controller('upload')
+@Controller('meta/upload')
 export class UploadController {
     constructor(private readonly uploader: IpfsUploader) {}
 
