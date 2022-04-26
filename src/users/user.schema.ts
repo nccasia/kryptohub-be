@@ -5,7 +5,7 @@ import {Exclude} from 'class-transformer';
 import {EthereumAddress} from '../utils/EthereumAddress';
 import {Document} from 'mongoose';
 
-export type CatDocument = User & Document;
+export type UserDocument = User & Document;
 
 @Schema()
 export class User {
@@ -75,4 +75,4 @@ export class User {
     }
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat);
+export const UserSchema = SchemaFactory.createForClass(User);
