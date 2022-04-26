@@ -1,8 +1,8 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {ReadController} from './read.controller';
-import {IpfsClient} from '../ipfs/ipfs-client';
-import {IpfsModule} from '../ipfs/ipfs.module';
-import {IpfsDownloader} from './ipfs-downloader';
+import {IpfsClient} from '../../ipfs/ipfs-client';
+import {IpfsModule} from '../../ipfs/ipfs.module';
+import {IpfsDownloader} from '../../ipfs/ipfs-downloader';
 
 describe('ReadController', () => {
     let controller: ReadController;

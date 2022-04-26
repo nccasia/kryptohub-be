@@ -1,19 +1,37 @@
 import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
-import {AppService} from './app.service';
 import {IpfsModule} from './ipfs/ipfs.module';
-import {ReadModule} from './read/read.module';
-import {ReadController} from './read/read.controller';
-import {IpfsClient} from './ipfs/ipfs-client';
-import {UploadModule} from './upload/upload.module';
-import {MulterModule} from '@nestjs/platform-express';
-import {UploadController} from './upload/upload.controller';
-import {IpfsDownloader} from './read/ipfs-downloader';
-import {IpfsUploader} from './upload/ipfs-uploader';
+import {ReadModule} from './meta/read/read.module';
+import {ReadController} from './meta/read/read.controller';
+import {UploadModule} from './meta/upload/upload.module';
+import {UploadController} from './meta/upload/upload.controller';
+import {MetaModule} from './meta/meta.module';
+import {TokenModule} from './token/token.module';
+import {AlbumModule} from './album/album.module';
+import {SubsgraphModule} from './subsgraph/subsgraph.module';
+import {S3fsModule} from './s3fs/s3fs.module';
+import {ConfigModule} from '@nestjs/config';
+import {APP_PIPE} from '@nestjs/core';
+import {ValidationPipe} from '@hovoh/nestjs-api-lib';
 
 @Module({
-    imports: [MulterModule.register(), IpfsModule, ReadModule, UploadModule],
+    imports: [
+        IpfsModule,
+        ReadModule,
+        UploadModule,
+        MetaModule,
+        TokenModule,
+        AlbumModule,
+        SubsgraphModule,
+        S3fsModule,
+        ConfigModule.forRoot(),
+    ],
     controllers: [AppController, ReadController, UploadController],
-    providers: [AppService, IpfsClient, IpfsDownloader, IpfsUploader],
+    providers: [
+        {
+            provide: APP_PIPE,
+            useClass: ValidationPipe,
+        },
+    ],
 })
 export class AppModule {}

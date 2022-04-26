@@ -1,7 +1,7 @@
-import {IpfsClient} from '../ipfs/ipfs-client';
+import {IpfsClient} from './ipfs-client';
 import {Injectable} from '@nestjs/common';
-import {Metadata, MetadataFilter, metadataPath} from '../model/metadata';
-import {FileContent} from '../model/file';
+import {Metadata, MetadataFilter, metadataPath} from '../database/metadata';
+import {FileContent} from '../database/file';
 
 export interface IUploader {
     upload(

@@ -3,7 +3,7 @@ import ipfsClient from 'ipfs-http-client';
 import {BufferList} from 'bl';
 import {once} from 'events';
 import {Writable} from 'stream';
-import {FileContent, FileHeaders, ID} from '../model';
+import {FileContent, FileHeaders, ID} from '../database';
 import * as http from 'http';
 
 const opts = createIpfsConn();

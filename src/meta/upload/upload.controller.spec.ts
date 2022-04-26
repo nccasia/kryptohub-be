@@ -1,8 +1,8 @@
 import {Test, TestingModule} from '@nestjs/testing';
 import {UploadController} from './upload.controller';
-import {IpfsClient} from '../ipfs/ipfs-client';
-import {IpfsUploader} from './ipfs-uploader';
-import {IpfsModule} from '../ipfs/ipfs.module';
+import {IpfsClient} from '../../ipfs/ipfs-client';
+import {IpfsUploader} from '../../ipfs/ipfs-uploader';
+import {IpfsModule} from '../../ipfs/ipfs.module';
 
 describe('UploadController', () => {
     let controller: UploadController;

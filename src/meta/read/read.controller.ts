@@ -1,7 +1,7 @@
 import {Controller, Get, Logger, Param, Res} from '@nestjs/common';
 import {Response} from 'express';
-import {Metadata, MetadataFilter} from '../model';
-import {IpfsDownloader} from './ipfs-downloader';
+import {Metadata, MetadataFilter} from '../../database';
+import {IpfsDownloader} from '../../ipfs/ipfs-downloader';
 
 @Controller('read')
 export class ReadController {
