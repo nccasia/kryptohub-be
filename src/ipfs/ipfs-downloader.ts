@@ -1,7 +1,7 @@
-import {IpfsClient} from '../ipfs/ipfs-client';
+import {IpfsClient} from './ipfs-client';
 import {Injectable} from '@nestjs/common';
 import {Writable} from 'stream';
-import {Metadata, MetadataFilter} from '../model/metadata';
+import {Metadata, MetadataFilter} from '../database/metadata';
 
 export interface IDownloader {
     download(path: string, writer: Writable): Promise<Metadata | null>;
