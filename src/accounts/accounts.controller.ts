@@ -25,8 +25,10 @@ export class AccountsController {
         const {password, ...rest} = body;
         if (password) {
             const user = await this.usersService.findByUuid(session.userUuid);
-            user.password = password;
-            await this.usersService.update(user, rest);
+            if (user) {
+                user.password = password;
+                await this.usersService.update(user, rest);
+            }
         } else {
             await this.usersService.updateFromUuid(session.userUuid, rest);
         }

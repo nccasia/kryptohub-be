@@ -2,8 +2,8 @@ import {IsEthereumAddress, IsString} from 'class-validator';
 
 export class Web3LoginRequest {
     @IsEthereumAddress()
-    ethereumAddress: string;
+    ethereumAddress!: string;
 
     @IsString()
-    signature: string;
+    signature!: string;
 }

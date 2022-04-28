@@ -10,26 +10,26 @@ import {Exclude} from 'class-transformer';
 export class VerificationCode {
     @PrimaryGeneratedColumn()
     @Exclude()
-    id: number;
+    id!: number;
 
     @Column({
         name: 'code',
         length: 64,
     })
-    code: string;
+    code!: string;
 
     @Column()
     @Exclude()
-    identifierType: 'ethereumAddress' | 'username';
+    identifierType!: 'ethereumAddress' | 'username';
 
     @Column()
     @Exclude()
-    identifier: string;
+    identifier!: string;
 
     @Column({default: false})
     @Exclude()
-    used: boolean;
+    used!: boolean;
 
     @CreateDateColumn()
-    createdAt: Date;
+    createdAt!: Date;
 }

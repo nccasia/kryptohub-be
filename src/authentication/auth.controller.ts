@@ -25,8 +25,8 @@ import {
 } from '@hovoh/nestjs-application-error';
 import {LoginRequest} from './requests/login.request';
 import {RegisterRequest} from './requests/register.request';
-import {EnvironmentService} from '@hovoh/nestjs-environment-module';
-import {IEnv} from '../app.module';
+// import {EnvironmentService} from '@hovoh/nestjs-environment-module';
+// import {IEnv} from '../app.module';
 import {
     ETHEREUM_ADDRESS_ALREADY_IN_USE,
     REGISTRATIONS_CLOSE,
@@ -54,7 +54,7 @@ const SIGNATURE_DOES_NOT_MATCH = 'signature_does_not_match_address';
 export class AuthController {
     constructor(
         private authService: AuthService,
-        private envService: EnvironmentService<IEnv>,
+        // private envService: EnvironmentService<IEnv>,
         private verificationService: VerificationService,
     ) {}
 
@@ -96,7 +96,7 @@ export class AuthController {
     @Get('web3-login-code')
     async getWeb3LoginCode(@Query() req: Web3LoginCodeRequest) {
         if (
-            !this.envService.env.REGISTRATIONS_OPEN &&
+            !process.env.REGISTRATIONS_OPEN &&
             !(await this.authService.isRegistered(req.ethereumAddress))
         ) {
             throw new ApplicationError(REGISTRATIONS_CLOSE);
@@ -132,7 +132,7 @@ export class AuthController {
 
     @Post('register')
     async register(@Body() args: RegisterRequest) {
-        if (this.envService.env.REGISTRATIONS_OPEN) {
+        if (process.env.REGISTRATIONS_OPEN) {
             const user = await this.authService.register(
                 args.address,
                 args.username,
