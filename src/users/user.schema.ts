@@ -59,7 +59,7 @@ export class User {
         if (password) {
             this._password = bcrypt.hashSync(password, 2);
         } else {
-            this._password = null;
+            this._password = undefined;
         }
     }
 
@@ -75,4 +75,4 @@ export class User {
     }
 }
 
-export const CatSchema = SchemaFactory.createForClass(Cat);
+export const CatSchema = SchemaFactory.createForClass(User);

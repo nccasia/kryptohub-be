@@ -13,6 +13,7 @@ import {S3fsModule} from './s3fs/s3fs.module';
 import {ConfigModule} from '@nestjs/config';
 import {APP_PIPE} from '@nestjs/core';
 import {ValidationPipe} from '@hovoh/nestjs-api-lib';
+import {AppService} from './app.service';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import {ValidationPipe} from '@hovoh/nestjs-api-lib';
             provide: APP_PIPE,
             useClass: ValidationPipe,
         },
+        AppService,
     ],
 })
 export class AppModule {}

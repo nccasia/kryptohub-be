@@ -42,15 +42,29 @@ export class UsersService {
     }
 
     async findByUsername(username: string): Promise<User | null> {
-        return this.usersRepository.findOne({username});
+        const user = await this.usersRepository.findOne({username});
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findByEthAddress(address: string): Promise<User | null> {
-        return this.usersRepository.findOne({ethereumAddress: address});
+        const user = await this.usersRepository.findOne({
+            ethereumAddress: address,
+        });
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findByUuid(uuid: string): Promise<User | null> {
-        return this.usersRepository.findOne({uuid});
+        const user = await this.usersRepository.findOne({uuid});
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findOne(user: Partial<User>) {

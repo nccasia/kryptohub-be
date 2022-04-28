@@ -11,10 +11,10 @@ export class User {
         length: '42',
         unique: true,
     })
-    ethereumAddress: EthereumAddress;
+    ethereumAddress!: EthereumAddress;
 
     @PrimaryGeneratedColumn('uuid')
-    readonly uuid: string;
+    readonly uuid!: string;
 
     @Column({
         type: 'varchar',
@@ -59,7 +59,7 @@ export class User {
         if (password) {
             this._password = bcrypt.hashSync(password, 2);
         } else {
-            this._password = null;
+            this._password = undefined;
         }
     }
 

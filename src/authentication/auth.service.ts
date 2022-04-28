@@ -90,7 +90,13 @@ export class AuthService {
     }
 
     async getSessionFromUuid(sessionUuid: string): Promise<Session | null> {
-        return this.sessionsRepository.findOne({uuid: sessionUuid});
+        const session = await this.sessionsRepository.findOne({
+            uuid: sessionUuid,
+        });
+        if (session) {
+            return session;
+        }
+        return null;
     }
 
     async refreshSession(
