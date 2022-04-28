@@ -9,7 +9,7 @@ export class ReadController {
 
     constructor(private readonly downloader: IpfsDownloader) {}
 
-    @Get(':cid')
+    @Get('meta/ipfs/:cid')
     async getData(
         @Res() res: Response,
         @Param('cid') cid: string,
@@ -22,7 +22,7 @@ export class ReadController {
                 this.headersMetaFilter(res),
             );
         } catch (e) {
-            this.logger.error(`could not read ${cid}: `, e);
+            this.logger.error(`could not read ${cid}: `, e as any);
             throw e;
         }
     }
