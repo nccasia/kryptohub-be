@@ -1,15 +1,18 @@
 import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {DeepPartial, Repository} from 'typeorm';
+import {User} from './user.entity';
 import {USERNAME_TAKEN} from './error.codes';
-import {Model} from 'mongoose';
 import {ApplicationError} from '@hovoh/nestjs-application-error';
 import {EthereumAddress} from '../utils/EthereumAddress';
 import {ETHEREUM_ADDRESS_ALREADY_IN_USE} from '../authentication/error.codes';
-import {InjectModel} from '@nestjs/mongoose';
-import {User, UserDocument} from './user.schema';
 
 @Injectable()
 export class UsersService {
-    constructor(private usersRepository: Model<UserDocument>) {}
+    constructor(
+        @InjectRepository(User)
+        private usersRepository: Repository<User>,
+    ) {}
 
     async registerUser(
         address: EthereumAddress,
@@ -21,8 +24,12 @@ export class UsersService {
         user.password = password;
         user.ethereumAddress = address;
         try {
-            const insertResult = await this.usersRepository.create(user);
-            user = Object.assign(user, insertResult.toJSON());
+            const insertResult = await this.usersRepository
+                .createQueryBuilder()
+                .insert()
+                .values(user)
+                .execute();
+            user = Object.assign(user, insertResult.raw[0]);
         } catch (sqlError) {
             const userAccount = await this.findByEthAddress(address);
             if (userAccount) {
@@ -35,15 +42,29 @@ export class UsersService {
     }
 
     async findByUsername(username: string): Promise<User | null> {
-        return this.usersRepository.findOne({username});
+        const user = await this.usersRepository.findOne({username});
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findByEthAddress(address: string): Promise<User | null> {
-        return this.usersRepository.findOne({ethereumAddress: address});
+        const user = await this.usersRepository.findOne({
+            ethereumAddress: address,
+        });
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findByUuid(uuid: string): Promise<User | null> {
-        return this.usersRepository.findOne({uuid});
+        const user = await this.usersRepository.findOne({uuid});
+        if (user) {
+            return user;
+        }
+        return null;
     }
 
     async findOne(user: Partial<User>) {
@@ -55,7 +76,8 @@ export class UsersService {
     }
 
     async update(user: User, update: Partial<User>) {
-        await this.usersRepository.updateOne(user, update).exec();
+        this.usersRepository.merge(user, update);
+        await this.usersRepository.save(user);
         return user;
     }
 
@@ -63,11 +85,15 @@ export class UsersService {
         return await this.usersRepository.update({uuid}, update);
     }
 
+    async save(user: User) {
+        return this.usersRepository.save(user);
+    }
+
     async walletIsRegistered(address: EthereumAddress) {
         return !!(await this.findByEthAddress(address));
     }
 
-    merge(user0: User, user1: Partial<User>) {
-        return this.usersRepository.update(user0, user1);
+    merge(user0: User, user1: DeepPartial<User>) {
+        return this.usersRepository.merge(user0, user1);
     }
 }

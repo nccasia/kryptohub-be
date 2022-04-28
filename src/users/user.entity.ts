@@ -1,22 +1,22 @@
-import {Prop, Schema, SchemaFactory} from '@nestjs/mongoose';
+import {Entity, PrimaryGeneratedColumn, Column} from 'typeorm';
 import {IsDate, IsEmail, Length} from 'class-validator';
 import * as bcrypt from 'bcrypt';
 import {Exclude} from 'class-transformer';
 import {EthereumAddress} from '../utils/EthereumAddress';
-import {Document} from 'mongoose';
 
-export type CatDocument = User & Document;
-
-@Schema()
+@Entity()
 export class User {
-    @Prop({
+    @Column({
         type: 'varchar',
         length: '42',
         unique: true,
     })
     ethereumAddress!: EthereumAddress;
 
-    @Prop({
+    @PrimaryGeneratedColumn('uuid')
+    readonly uuid!: string;
+
+    @Column({
         type: 'varchar',
         length: 20,
         unique: true,
@@ -25,7 +25,7 @@ export class User {
     @Length(3, 20)
     username?: string;
 
-    @Prop({
+    @Column({
         name: 'password',
         type: 'varchar',
         length: '60',
@@ -34,25 +34,25 @@ export class User {
     @Exclude()
     private _password?: string;
 
-    @Prop({nullable: true})
+    @Column({nullable: true})
     @IsEmail()
     @Length(5, 255)
     email?: string;
 
-    @Prop({default: false})
+    @Column({default: false})
     verified?: boolean;
 
-    @Prop({nullable: true})
+    @Column({nullable: true})
     firstName?: string;
 
-    @Prop({nullable: true})
+    @Column({nullable: true})
     lastName?: string;
 
-    @Prop({nullable: true})
+    @Column({nullable: true})
     @IsDate()
     dateOfBirth?: Date;
 
-    @Prop({nullable: true})
+    @Column({nullable: true})
     phone?: string;
 
     set password(password) {
@@ -74,5 +74,3 @@ export class User {
         return false;
     }
 }
-
-export const CatSchema = SchemaFactory.createForClass(User);

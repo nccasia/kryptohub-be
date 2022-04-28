@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import ipfsClient from 'ipfs-http-client';
+import {create} from 'ipfs-http-client';
 import {BufferList} from 'bl';
 import {once} from 'events';
 import {Writable} from 'stream';
@@ -7,7 +7,7 @@ import {FileContent, FileHeaders, ID} from '../database';
 import * as http from 'http';
 
 const opts = createIpfsConn();
-const ipfs = ipfsClient(opts as any);
+const ipfs = create(opts as any);
 
 @Injectable()
 export class IpfsClient {

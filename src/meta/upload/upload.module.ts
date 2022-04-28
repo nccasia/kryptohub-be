@@ -5,8 +5,8 @@ import {IpfsClient} from '../../ipfs/ipfs-client';
 import {IpfsUploader} from '../../ipfs/ipfs-uploader';
 
 @Module({
+    imports: [IpfsModule],
     controllers: [UploadController],
     providers: [IpfsClient, IpfsUploader],
-    imports: [IpfsModule],
 })
 export class UploadModule {}

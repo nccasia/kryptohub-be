@@ -1,6 +1,6 @@
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {User} from '../users/user.entity';
-import * as moment from 'moment';
+import moment from 'moment';
 import {Exclude, Expose} from 'class-transformer';
 import {serialize} from '@hovoh/nestjs-api-lib';
 import {ApplicationError} from '@hovoh/nestjs-application-error';
@@ -22,37 +22,37 @@ export const REFRESH_LENGTH = 1440;
 export class Session implements IAccessToken, IRefreshToken {
     @Expose({groups: [EXPOSE_ACCESS_GROUP]})
     @PrimaryGeneratedColumn('uuid')
-    readonly uuid: string;
+    readonly uuid!: string;
 
     @ManyToOne(() => User)
-    user: User;
+    user!: User;
 
     @Expose({groups: [EXPOSE_ACCESS_GROUP]})
     @Column()
-    userUuid: string;
+    userUuid!: string;
 
     @Expose({groups: [EXPOSE_ACCESS_GROUP]})
     @Column({
         name: 'startedAt',
         type: 'timestamp with time zone',
     })
-    startedAt: Date;
+    startedAt!: Date;
 
     @Expose({groups: [EXPOSE_ACCESS_GROUP]})
     @Column({
         type: 'timestamp with time zone',
     })
-    validUntil: Date;
+    validUntil!: Date;
 
     @Expose({groups: [EXPOSE_REFRESH_GROUP]})
     @Column()
-    refreshSecret: number;
+    refreshSecret!: number;
 
     @Expose({groups: [EXPOSE_REFRESH_GROUP]})
     @Column({
         type: 'timestamp with time zone',
     })
-    refreshableUntil: Date;
+    refreshableUntil!: Date;
 
     anon = false;
 

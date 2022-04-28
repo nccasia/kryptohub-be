@@ -6,7 +6,7 @@ import {IpfsDownloader} from '../../ipfs/ipfs-downloader';
 
 @Module({
     imports: [IpfsModule],
-    providers: [IpfsClient, IpfsDownloader],
     controllers: [ReadController],
+    providers: [IpfsClient, IpfsDownloader],
 })
 export class ReadModule {}

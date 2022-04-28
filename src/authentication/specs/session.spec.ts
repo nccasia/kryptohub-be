@@ -1,6 +1,6 @@
 import {REFRESH_LENGTH, Session, SESSION_LENGTH} from '../session.entity';
 import MockDate from 'mockdate';
-import * as moment from 'moment';
+import moment from 'moment';
 import {userFactory} from '../../users/specs/user.factory';
 import {User} from '../../users/user.entity';
 describe('Session', () => {

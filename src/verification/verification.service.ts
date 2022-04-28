@@ -32,7 +32,9 @@ export class VerificationService {
         return crypto.randomBytes(size).toString('base64').slice(0, size);
     }
 
-    findEthCode(address: EthereumAddress): Promise<VerificationCode> {
+    findEthCode(
+        address: EthereumAddress,
+    ): Promise<VerificationCode | undefined> {
         return this.codesRepository.findOne({
             where: {
                 identifierType: 'ethereumAddress',

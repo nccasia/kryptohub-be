@@ -1,6 +1,6 @@
 import {NestFactory} from '@nestjs/core';
 import compression from 'compression';
-import * as cookieParser from 'cookie-parser';
+import cookieParser from 'cookie-parser';
 import {SerializeInterceptor, ValidationPipe} from '@hovoh/nestjs-api-lib';
 import {ApplicationErrorsFilter} from '@hovoh/nestjs-application-error';
 import {errors} from '@hovoh/nestjs-authentication-lib';
