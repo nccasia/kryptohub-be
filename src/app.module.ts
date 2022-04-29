@@ -1,3 +1,4 @@
+import { DatabaseModule } from './database/database.module';
 import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {IpfsModule} from './ipfs/ipfs.module';
@@ -17,6 +18,10 @@ import {AppService} from './app.service';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        DatabaseModule,
         IpfsModule,
         ReadModule,
         UploadModule,
@@ -25,7 +30,6 @@ import {AppService} from './app.service';
         AlbumModule,
         SubsgraphModule,
         S3fsModule,
-        ConfigModule.forRoot(),
     ],
     controllers: [AppController, ReadController, UploadController],
     providers: [

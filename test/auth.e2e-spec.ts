@@ -7,7 +7,7 @@ import {Session} from '../src/authentication/session.entity';
 import {UsersService} from '../src/users/users.service';
 import {INestApplication} from '@nestjs/common';
 import * as faker from 'faker';
-import {userFactory} from '../src/users/specs/user.factory';
+import {userFactory} from './user.factory';
 
 describe('Auth package', () => {
     let app: INestApplication;
