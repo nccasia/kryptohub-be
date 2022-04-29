@@ -1,26 +1,39 @@
-import { Injectable } from '@nestjs/common';
-import { CreateMetadiscDto } from './dto/create-metadisc.dto';
-import { UpdateMetadiscDto } from './dto/update-metadisc.dto';
+import {Injectable} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateMetadiscDto} from './dto/create-metadisc.dto';
+import {UpdateMetadiscDto} from './dto/update-metadisc.dto';
+import {Metadisc} from './entities/metadisc.entity';
+import {MetadiscsRepository} from './metadiscs.repository';
 
 @Injectable()
 export class MetadiscsService {
-  create(createMetadiscDto: CreateMetadiscDto) {
-    return 'This action adds a new metadisc';
-  }
+    constructor(
+        @InjectRepository(MetadiscsRepository)
+        private metadiscsRepository: MetadiscsRepository,
+    ) {}
 
-  findAll() {
-    return `This action returns all metadiscs`;
-  }
+    async create(createMetadiscDto: CreateMetadiscDto) {
+        return await this.metadiscsRepository.createMetadisc(createMetadiscDto);
+    }
 
-  findOne(id: number) {
-    return `This action returns a #${id} metadisc`;
-  }
+    async findAll() {
+        return await this.metadiscsRepository.findAll();
+    }
 
-  update(id: number, updateMetadiscDto: UpdateMetadiscDto) {
-    return `This action updates a #${id} metadisc`;
-  }
+    async findOne(id: number) {
+        return await this.metadiscsRepository.findById(id);
+    }
 
-  remove(id: number) {
-    return `This action removes a #${id} metadisc`;
-  }
+    async update(id: number, updateMetadiscDto: UpdateMetadiscDto) {
+        return await this.metadiscsRepository.editMetadisc(
+            id,
+            updateMetadiscDto,
+        );
+    }
+
+    async remove(id: number) {
+        return await this.metadiscsRepository.destroy(id);
+    }
 }
+

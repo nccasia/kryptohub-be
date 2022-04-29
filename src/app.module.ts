@@ -13,7 +13,7 @@ import {ConfigModule} from '@nestjs/config';
 import {APP_PIPE} from '@nestjs/core';
 import {ValidationPipe} from '@hovoh/nestjs-api-lib';
 import {AppService} from './app.service';
-import { MetadiscsModule } from './metadiscs/metadiscs.module';
+import {MetadiscsModule} from './metadiscs/metadiscs.module';
 
 @Module({
     imports: [
