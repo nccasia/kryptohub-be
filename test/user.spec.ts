@@ -1,4 +1,4 @@
-import {User} from '../user.entity';
+import {User} from '../../src/users/user.entity';
 
 describe('User entity', () => {
     it('should encrypt password', () => {

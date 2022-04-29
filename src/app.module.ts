@@ -1,3 +1,4 @@
+import {DatabaseModule} from './database/database.module';
 import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {IpfsModule} from './ipfs/ipfs.module';
@@ -17,6 +18,10 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
 
 @Module({
     imports: [
+        ConfigModule.forRoot({
+            isGlobal: true,
+        }),
+        DatabaseModule,
         IpfsModule,
         ReadModule,
         UploadModule,
@@ -24,7 +29,6 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
         TokenModule,
         SubsgraphModule,
         S3fsModule,
-        ConfigModule.forRoot(),
         MetadiscsModule,
     ],
     controllers: [AppController, ReadController, UploadController],

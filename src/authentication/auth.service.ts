@@ -29,7 +29,7 @@ export class AuthService {
         address: EthereumAddress,
         username: string,
         password: string,
-    ): Promise<User> {
+    ): Promise<User | null> {
         return await this.usersService.registerUser(
             address,
             username,
@@ -91,7 +91,9 @@ export class AuthService {
 
     async getSessionFromUuid(sessionUuid: string): Promise<Session | null> {
         const session = await this.sessionsRepository.findOne({
-            uuid: sessionUuid,
+            where: {
+                uuid: sessionUuid,
+            }
         });
         if (session) {
             return session;
