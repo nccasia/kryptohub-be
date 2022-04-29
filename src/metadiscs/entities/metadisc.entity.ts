@@ -41,7 +41,7 @@ export class Metadisc {
     @Column()
     description!: string;
 
-    @Column()
+    @Column({type: 'json'})
     location!: JSON;
 }
 

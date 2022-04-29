@@ -1,9 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
 import {CreateMetadiscDto} from './dto/create-metadisc.dto';
 import {UpdateMetadiscDto} from './dto/update-metadisc.dto';
-import {Metadisc} from './entities/metadisc.entity';
 import {MetadiscsRepository} from './metadiscs.repository';
 
 @Injectable()
@@ -26,7 +24,7 @@ export class MetadiscsService {
     }
 
     async update(id: number, updateMetadiscDto: UpdateMetadiscDto) {
-        return await this.metadiscsRepository.editMetadisc(
+        return await this.metadiscsRepository.updateMetadisc(
             id,
             updateMetadiscDto,
         );

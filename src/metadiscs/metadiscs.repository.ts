@@ -16,16 +16,21 @@ export class MetadiscsRepository extends Repository<Metadisc> {
     public async createMetadisc(
         createMetadiscDto: CreateMetadiscDto,
     ): Promise<Metadisc> {
-        return await this.save(createMetadiscDto);
+        const date = new Date().toISOString();
+        return await this.save({
+            ...createMetadiscDto,
+            release_date: date,
+            release_date_precision: date.toString(),
+        });
     }
 
-    public async editMetadisc(
+    public async updateMetadisc(
         id: number,
         updateMetadiscDto: UpdateMetadiscDto,
-    ): Promise<Metadisc | undefined> {
+    ) {
         const metadisc = await this.findOne(id);
         if (metadisc) {
-            return await this.save({metadisc, ...updateMetadiscDto});
+            return await this.update({id}, updateMetadiscDto);
         }
     }
 
