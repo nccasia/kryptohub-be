@@ -1,5 +1,5 @@
 import * as Factory from 'factory.ts';
-import {User} from '../user.entity';
+import {User} from '../src/users/user.entity';
 import * as faker from 'faker';
 
 type functionObj<T> = {
