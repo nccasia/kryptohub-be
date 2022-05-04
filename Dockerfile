@@ -37,8 +37,6 @@ ENV PORT 3000
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
+COPY --from=builder /usr/src/app/ormconfig.js ./ormconfig.js
 
-ADD ./start.sh /usr/local/bin/
-RUN chmod +x /usr/local/bin/start.sh
-
-CMD ["/start.sh"]
+CMD [ "yarn","start:prod" ]

@@ -25,6 +25,9 @@ export class User {
     @Exclude()
     password?: string;
 
+    @Column()
+    walletAddress?: string;
+
     @CreateDateColumn()
     createdAt?: Date;
 
