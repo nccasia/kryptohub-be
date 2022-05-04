@@ -9,6 +9,8 @@ WORKDIR /usr/src/app
 COPY package*.json ./
 COPY . .
 
+RUN apk add --no-cache git openssh
+
 RUN yarn
 
 # Rebuild the source code only when needed
@@ -28,8 +30,15 @@ FROM node:16.15.0-alpine3.14 AS runner
 
 WORKDIR /usr/src/app
 
+EXPOSE 3000
+
+ENV PORT 3000
+
 COPY --from=builder /usr/src/app/package.json ./package.json
 COPY --from=builder /usr/src/app/dist ./dist
 COPY --from=builder /usr/src/app/node_modules ./node_modules
 
-CMD ["yarn", "start:prod"]
+ADD ./start.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/start.sh
+
+CMD ["/start.sh"]

@@ -1,3 +1,5 @@
+import {TerminusModule} from '@nestjs/terminus';
+import {AuthModule} from './auth/auth.module';
 import {DatabaseModule} from './database/database.module';
 import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
@@ -21,6 +23,7 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
         ConfigModule.forRoot({
             isGlobal: true,
         }),
+        TerminusModule,
         DatabaseModule,
         IpfsModule,
         ReadModule,
@@ -30,6 +33,7 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
         SubsgraphModule,
         S3fsModule,
         MetadiscsModule,
+        AuthModule,
     ],
     controllers: [AppController, ReadController, UploadController],
     providers: [

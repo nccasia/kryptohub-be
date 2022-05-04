@@ -60,4 +60,3 @@ export class UpdateMetadiscDto {
     @IsOptional()
     location!: JSON;
 }
-

@@ -11,4 +11,3 @@ import {MetadiscsRepository} from './metadiscs.repository';
     providers: [MetadiscsService],
 })
 export class MetadiscsModule {}
-

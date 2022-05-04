@@ -19,9 +19,8 @@ describe('Verification module', () => {
         const module = await Test.createTestingModule({
             imports: [EnvironmentModule, DatabaseModule, VerificationModule],
         }).compile();
-        verificationService = module.get<VerificationService>(
-            VerificationService,
-        );
+        verificationService =
+            module.get<VerificationService>(VerificationService);
         verificationRepo = module.get<Repository<VerificationCode>>(
             getRepositoryToken(VerificationCode),
         );

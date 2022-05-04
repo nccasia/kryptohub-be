@@ -34,4 +34,3 @@ export class MetadiscsService {
         return await this.metadiscsRepository.destroy(id);
     }
 }
-

@@ -60,4 +60,3 @@ export class CreateMetadiscDto {
     @IsNotEmpty()
     location!: JSON;
 }
-
