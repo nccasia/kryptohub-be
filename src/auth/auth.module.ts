@@ -18,7 +18,7 @@ import { Web3Strategy } from './strategies/web3.strategy';
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (env: ConfigService): Promise<JwtModuleOptions> => ({
-                secret: env.get('JWT_SECRET') || 'nsandnaskjdnajksndk',
+                secret: env.get('JWT_SECRET'),
                 signOptions: {
                     expiresIn: '1d',
                     algorithm: 'HS384',
@@ -29,7 +29,7 @@ import { Web3Strategy } from './strategies/web3.strategy';
             }),
             inject: [ConfigService]
         }),
-        PassportModule.register({defaultStrategy: 'jwt'}),
+        PassportModule.register({defaultStrategy: 'web3'}),
     ],
     controllers: [AuthController],
     providers: [AuthService, LocalStrategy, JwtStrategy, Web3Strategy, SessionSerializer],

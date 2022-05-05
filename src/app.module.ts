@@ -13,8 +13,6 @@ import {TokenModule} from './token/token.module';
 import {SubsgraphModule} from './subsgraph/subsgraph.module';
 import {S3fsModule} from './s3fs/s3fs.module';
 import {ConfigModule} from '@nestjs/config';
-import {APP_PIPE} from '@nestjs/core';
-import {ValidationPipe} from '@hovoh/nestjs-api-lib';
 import {AppService} from './app.service';
 import {MetadiscsModule} from './metadiscs/metadiscs.module';
 
@@ -37,10 +35,6 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
     ],
     controllers: [AppController, ReadController, UploadController],
     providers: [
-        {
-            provide: APP_PIPE,
-            useClass: ValidationPipe,
-        },
         AppService,
     ],
 })

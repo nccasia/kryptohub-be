@@ -1,10 +1,14 @@
+import { GetAuthDataQueryDTO } from './dto/get-auth-data-query.dto';
+import { Web3AuthGuard } from './guards/web3-auth.guard';
 import {
     Body,
     Controller,
     Get,
     HttpCode,
     HttpStatus,
+    Param,
     Post,
+    Query,
     UseGuards,
     UseInterceptors,
 } from '@nestjs/common';
@@ -17,7 +21,9 @@ import {JWTAuthGuard} from './guards/jwt-auth.guard';
 import {LocalAuthGuard} from './guards/local-auth.guard';
 import {SessionAuthGuard} from './guards/session-auth.guard';
 import {TokenInterceptor} from './interceptors/token.interceptor';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
@@ -35,6 +41,21 @@ export class AuthController {
     @UseInterceptors(TokenInterceptor)
     async login(@AuthUser() user: User): Promise<User> {
         return user;
+    }
+
+    @Post('web3')
+    @UseGuards(Web3AuthGuard)
+    @HttpCode(HttpStatus.OK)
+    async loginWeb3(@AuthUser() user: User): Promise<User> {
+        return user;
+    }
+
+    @Get('data')
+    @HttpCode(HttpStatus.OK)
+    async getData(
+        @Query() query: GetAuthDataQueryDTO,
+    ): Promise<User> {
+        return this.authService.getAuthData({ walletAddress: query.address });
     }
 
     @Get('/me')

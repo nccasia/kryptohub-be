@@ -10,7 +10,9 @@ import {
 import {MetadiscsService} from './metadiscs.service';
 import {UpdateMetadiscDto} from './dto/update-metadisc.dto';
 import {CreateMetadiscDto} from './dto/create-metadisc.dto';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('MetaDiscs')
 @Controller('metadiscs')
 export class MetadiscsController {
     constructor(private readonly metadiscsService: MetadiscsService) {}

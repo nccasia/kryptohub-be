@@ -18,7 +18,7 @@ export class User {
     @Column()
     name?: string;
 
-    @Column({unique: true})
+    @Column()
     email?: string;
 
     @Column()
@@ -26,6 +26,9 @@ export class User {
     password?: string;
 
     @Column()
+    nonce?: string;
+
+    @Column({ unique: true })
     walletAddress?: string;
 
     @CreateDateColumn()
@@ -45,6 +48,12 @@ export class User {
         if (this.password && !/^\$2a\$\d+\$/.test(this.password)) {
             this.password = await bcrypt.hash(this.password, salt);
         }
+    }
+
+    @BeforeInsert()
+    async genNonce() {
+        const salt = await bcrypt.genSalt();
+        this.nonce = salt;
     }
 
     async checkPassword(plainPassword: string): Promise<boolean> {

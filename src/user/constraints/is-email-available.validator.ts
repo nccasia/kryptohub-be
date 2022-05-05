@@ -7,11 +7,11 @@ import {
 import {Repository} from 'typeorm';
 import {isNullOrUndefined} from 'util';
 
-import {User} from './user.entity';
+import {User} from '../user.entity';
 
-@ValidatorConstraint({name: 'isUserAlreadyExist', async: true})
+@ValidatorConstraint({name: 'IsEmailAvailable', async: true})
 @Injectable()
-export class IsUserAlreadyExist implements ValidatorConstraintInterface {
+export class IsEmailAvailable implements ValidatorConstraintInterface {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,

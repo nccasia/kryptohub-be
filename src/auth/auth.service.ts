@@ -1,4 +1,4 @@
-import {Injectable, UnauthorizedException} from '@nestjs/common';
+import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 
 import {User} from '../user/user.entity';
@@ -36,6 +36,38 @@ export class AuthService {
                 `Wrong password for user with email: ${email}`,
             );
         }
+        delete user.password;
+
+        return user;
+    }
+
+    async loginWeb3(walletAddress: string): Promise<User> {
+        let user: User;
+
+        try {
+            user = await this.userService.findOne({where: {walletAddress}});
+        } catch (err) {
+            throw new UnauthorizedException(
+                `There isn't any user with wallet: ${walletAddress}`,
+            );
+        }
+        
+        delete user.password;
+
+        return user;
+    }
+
+    async getAuthData({ walletAddress }) {
+        let user: User;
+
+        try {
+            user = await this.userService.findOne({ where: {walletAddress}});
+        } catch (err) {
+            throw new NotFoundException(
+                `There isn't any user with wallet: ${walletAddress}`,
+            );
+        }
+        
         delete user.password;
 
         return user;

@@ -15,7 +15,9 @@ import {UserUpdate} from './dto/user-update.dto';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {SessionAuthGuard} from '../auth/guards/session-auth.guard';
 import {User} from './user.entity';
+import { ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Profile')
 @Controller('profile')
 @UseGuards(JWTAuthGuard, SessionAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
