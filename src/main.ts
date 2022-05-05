@@ -6,13 +6,13 @@ import {AppModule} from './app.module';
 import {setupAuth} from './setup-auth';
 import {setupSwagger} from './setup-swagger';
 import { ValidationPipe } from '@nestjs/common';
+import { setupValidation } from './setup-validation';
 
 async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.use(compression());
 
-    app.useGlobalPipes(new ValidationPipe());
-    
+    setupValidation(app);
     setupAuth(app);
 
     if (process.env.API_DOCS) {
