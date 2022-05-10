@@ -10,10 +10,26 @@ import {
     BeforeUpdate,
 } from 'typeorm';
 
+export enum SocialProviderTypes {
+    GOOGLE = 'google',
+    GITHUB = 'github',
+}
+
 @Entity()
 export class User {
     @PrimaryGeneratedColumn()
     id?: number;
+
+    @Column({
+        name: 'provider',
+        nullable: true,
+        type: 'enum',
+        enum: SocialProviderTypes,
+    })
+    provider?: SocialProviderTypes;
+
+    @Column()
+    username?: string;
 
     @Column()
     name?: string;
