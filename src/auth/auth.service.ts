@@ -31,32 +31,12 @@ export class AuthService {
             user.email = authCredentialsDto.email;
             user.password = authCredentialsDto.password;
             user.username = authCredentialsDto.username;
+
             return await user.save();
         } else {
             throw new UnauthorizedException('Email or username already exists');
         }
     }
-
-    // async login(email: string, password: string): Promise<User> {
-    //     let user: User;
-
-    //     try {
-    //         user = await this.userService.findOne({where: {email}});
-    //     } catch (err) {
-    //         throw new UnauthorizedException(
-    //             `There isn't any user with email: ${email}`,
-    //         );
-    //     }
-
-    //     if (!(await user.checkPassword(password))) {
-    //         throw new UnauthorizedException(
-    //             `Wrong password for user with email: ${email}`,
-    //         );
-    //     }
-    //     delete user.password;
-
-    //     return user;
-    // }
 
     async loginWeb3(walletAddress: string): Promise<User> {
         let user: User;
