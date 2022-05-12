@@ -11,13 +11,19 @@ import {
 import {JwtAuthService} from './jwt/jwt-auth.service';
 import {GithubOauthGuard} from './guards/login-github.guards';
 import {UserService} from '../user/user.service';
-import {Repository} from 'typeorm';
+import {SocialProviderTypes} from '../user/user.entity';
+import {UserGithub} from './shared';
+import {Request, Response} from 'express';
+import {LoginGithubService} from './login-github.service';
+import {HttpService} from '@nestjs/axios';
+import {firstValueFrom} from 'rxjs';
 
 @Controller('login-github')
 export class LoginGithubController {
     constructor(
         private readonly jwtAuthService: JwtAuthService,
         private readonly userService: UserService,
+        private readonly http: HttpService,
     ) {}
 
     @Get()
@@ -26,25 +32,39 @@ export class LoginGithubController {
 
     @Get('callback')
     @UseGuards(GithubOauthGuard)
-    async githubAuthCallback(@Req() req) {
-        const username = req.user.user.username;
-        console.log(req);
-        console.log(req.user);
+    async githubAuthCallback(
+        @Req() req: Request,
+        @Res({passthrough: true}) res: Response,
+    ) {
+        const user = req.user as UserGithub;
+        const getUser = await firstValueFrom(
+            this.http
+                .get('https://api.github.com/user', {
+                    headers: {Authorization: `Bearer ${user.accessToken}`},
+                })
+                .pipe((res) => res),
+        );
+
+        const userGithub = getUser.data;
+        const username = user.user.username;
         try {
-            const findUser = await this.userService.findOne({
+            await this.userService.findOne({
                 where: {username},
             });
 
-            return {data: req.user, statusCode: HttpStatus.OK};
+            const {accessToken} = this.jwtAuthService.login(user);
+            res.cookie('jwt', accessToken);
+            return {access_token: accessToken};
         } catch (e) {
-            await this.userService.createGithub({
+            await this.userService.create({
                 username: username,
-                name: req.user.user.displayName,
-                email: req.user.user.displayName,
-                walletAddress: username,
+                password: username,
+                provider: SocialProviderTypes.GITHUB,
+                email: username,
             });
-            return {data: req.user, statusCode: HttpStatus.OK};
+            const {accessToken} = this.jwtAuthService.login(user);
+            res.cookie('jwt', accessToken);
+            return {access_token: accessToken};
         }
     }
 }
-

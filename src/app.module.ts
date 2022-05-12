@@ -20,6 +20,7 @@ import { LoginGithubController } from './login-github/login-github.controller';
 import { GithubOauthStrategy } from './login-github/strategies/login-github.strategy';
 import { LoginGithubService } from './login-github/login-github.service';
 import { UserService } from './user/user.service';
+import { LoginRegistrationModule } from './login-registration/login-registration.module';
 
 @Module({
     imports: [
@@ -38,6 +39,7 @@ import { UserService } from './user/user.service';
         MetadiscsModule,
         AuthModule,
         LoginGithubModule,
+        LoginRegistrationModule,
     ],
     controllers: [AppController, ReadController, UploadController],
     providers: [

@@ -4,8 +4,8 @@ import { PassportStrategy } from '@nestjs/passport';
 import { Request } from 'express';
 import { ExtractJwt, Strategy } from 'passport-jwt';
 
-import { AppConfig } from '../../config/interfaces';
-import { JwtPayload } from '../../shared';
+import { AppConfig } from '../config/interfaces';
+import { JwtPayload } from '../shared';
 
 @Injectable()
 export class JwtAuthStrategy extends PassportStrategy(Strategy) {
@@ -28,7 +28,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
 				4,
 			)}`,
 		);
-		const { displayName, photo } = payload;
-		return { displayName, photo };
+		const { displayName } = payload;
+		return { displayName };
 	}
 }

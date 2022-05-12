@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 export enum SocialProviderTypes {
+    USERNAME = 'username',
     GOOGLE = 'google',
     GITHUB = 'github',
 }
@@ -30,9 +31,6 @@ export class User {
 
     @Column()
     username?: string;
-
-    @Column()
-    name?: string;
 
     @Column()
     email?: string;

@@ -4,7 +4,6 @@ import {Repository, FindOneOptions} from 'typeorm';
 
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
-import { AuthProvider, UserGithub } from '../shared';
 
 @Injectable()
 export class UserService {
@@ -14,10 +13,6 @@ export class UserService {
     ) {}
 
     async create(data: Partial<User>): Promise<User> {
-        return this.userRepository.save(new User(data));
-    }
-
-    async createGithub(data: Partial<User>): Promise<User> {
         return this.userRepository.save(new User(data));
     }
 
@@ -43,17 +38,4 @@ export class UserService {
 
         return this.userRepository.save(user);
     }
-
-    async findOrCreate(userId: string, provider: AuthProvider): Promise<UserGithub> {
-		// TODO Perform database lookup to extract more information about the user
-		// or to create the user if the UserId is unknown to us.
-		// For now, we'll skip this and always return the same dummy user, regardless of the `userId`.
-		return {
-			id: '84052083',
-			provider,
-			providerId: '123',
-			displayName: 'NSHIT99',
-			photos: [{ value: 'https://avatars.githubusercontent.com/u/84052083?v=4' }],
-		};
-	}
 }
