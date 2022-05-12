@@ -21,20 +21,18 @@ export class AuthService {
     ): Promise<User | undefined> {
         const user = new User();
         user.email = authCredentialsDto.email;
-        console.log('123');
 
         const result = await this.userService.any({
             where: {email: user.email},
         });
 
         if (result == null) {
-            console.log('user null');
-            user.username = authCredentialsDto.username;
+            user.email = authCredentialsDto.email;
             user.password = authCredentialsDto.password;
 
             return await user.save();
         } else {
-            throw new UnauthorizedException('Username already exists');
+            throw new UnauthorizedException('Email already exists');
         }
     }
 
