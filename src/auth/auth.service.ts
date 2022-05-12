@@ -21,41 +21,42 @@ export class AuthService {
     ): Promise<User | undefined> {
         const user = new User();
         user.email = authCredentialsDto.email;
+        user.username = authCredentialsDto.username;
 
         const result = await this.userService.any({
-            where: {email: user.email},
+            where: {email: user.email, username: user.username},
         });
 
         if (result == null) {
             user.email = authCredentialsDto.email;
             user.password = authCredentialsDto.password;
-
+            user.username = authCredentialsDto.username;
             return await user.save();
         } else {
-            throw new UnauthorizedException('Email already exists');
+            throw new UnauthorizedException('Email or username already exists');
         }
     }
 
-    async login(email: string, password: string): Promise<User> {
-        let user: User;
+    // async login(email: string, password: string): Promise<User> {
+    //     let user: User;
 
-        try {
-            user = await this.userService.findOne({where: {email}});
-        } catch (err) {
-            throw new UnauthorizedException(
-                `There isn't any user with email: ${email}`,
-            );
-        }
+    //     try {
+    //         user = await this.userService.findOne({where: {email}});
+    //     } catch (err) {
+    //         throw new UnauthorizedException(
+    //             `There isn't any user with email: ${email}`,
+    //         );
+    //     }
 
-        if (!(await user.checkPassword(password))) {
-            throw new UnauthorizedException(
-                `Wrong password for user with email: ${email}`,
-            );
-        }
-        delete user.password;
+    //     if (!(await user.checkPassword(password))) {
+    //         throw new UnauthorizedException(
+    //             `Wrong password for user with email: ${email}`,
+    //         );
+    //     }
+    //     delete user.password;
 
-        return user;
-    }
+    //     return user;
+    // }
 
     async loginWeb3(walletAddress: string): Promise<User> {
         let user: User;

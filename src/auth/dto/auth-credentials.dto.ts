@@ -1,5 +1,13 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsNotEmpty, Length, Matches, MinLength} from 'class-validator';
+import {
+    IsEmail,
+    IsNotEmpty,
+    Length,
+    Matches,
+    MinLength,
+    Validate,
+} from 'class-validator';
+import {IsEmailAvailable} from '../../user/constraints/is-email-available.validator';
 
 export class AuthCredentialsDto {
     @ApiProperty()
@@ -8,6 +16,8 @@ export class AuthCredentialsDto {
 
     @ApiProperty()
     @IsNotEmpty()
+    @Validate(IsEmailAvailable)
+    @IsEmail()
     email?: string;
 
     @ApiProperty()

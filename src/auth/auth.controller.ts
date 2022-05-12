@@ -8,14 +8,13 @@ import {
     HttpStatus,
     Post,
     Query,
-    Req,
     UseGuards,
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
 
 import {AuthUser} from '../user/user.decorator';
-import {SocialProviderTypes, User} from '../user/user.entity';
+import {User} from '../user/user.entity';
 import {AuthService} from './auth.service';
 import {JWTAuthGuard} from './guards/jwt-auth.guard';
 import {LocalAuthGuard} from './guards/local-auth.guard';
@@ -24,7 +23,6 @@ import {TokenInterceptor} from './interceptors/token.interceptor';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {UserService} from '../user/user.service';
-import {AuthGuard} from '@nestjs/passport';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,13 +42,13 @@ export class AuthController {
         return result;
     }
 
-    @Post('/login')
-    @UseGuards(LocalAuthGuard)
-    @HttpCode(HttpStatus.OK)
-    @UseInterceptors(TokenInterceptor)
-    async login(@AuthUser() user: User): Promise<User> {
-        return user;
-    }
+    // @Post('/login')
+    // @UseGuards(LocalAuthGuard)
+    // @HttpCode(HttpStatus.OK)
+    // @UseInterceptors(TokenInterceptor)
+    // async login(@AuthUser() user: User): Promise<User> {
+    //     return user;
+    // }
 
     @Post('web3')
     @UseGuards(Web3AuthGuard)
@@ -69,45 +67,5 @@ export class AuthController {
     @UseGuards(SessionAuthGuard, JWTAuthGuard)
     me(@AuthUser() user: User): User {
         return user;
-    }
-
-    @Get('')
-    @UseGuards(AuthGuard('google'))
-    async googleAuth(@Req() req): Promise<any> {
-        return HttpStatus.OK;
-    }
-
-    @Get('redirect')
-    @UseGuards(AuthGuard('google'))
-    async googleAuthRedirect(@Req() req) {
-        const provider = req.user.provider;
-        const displayName = req.user.displayName;
-        const firstName = req.user.firstName;
-        const lastName = req.user.lastName;
-        const email = req.user.email;
-        try {
-            await this.userService.findOne({
-                where: {
-                    email,
-                    provider,
-                    firstName,
-                    lastName,
-                    displayName,
-                },
-            });
-            return {data: req.user, statusCode: HttpStatus.OK};
-        } catch (error) {
-            await this.userService.create({
-                email: email,
-                username: email,
-                firstName: firstName,
-                lastName: lastName,
-                displayName: displayName,
-                provider: SocialProviderTypes.GOOGLE,
-                password: 'google',
-                walletAddress: email,
-            });
-            return {data: req.user, statusCode: HttpStatus.OK};
-        }
     }
 }
