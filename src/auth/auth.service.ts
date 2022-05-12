@@ -21,6 +21,7 @@ export class AuthService {
     ): Promise<User | undefined> {
         const user = new User();
         user.email = authCredentialsDto.email;
+        user.username = authCredentialsDto.username;
 
         const result = await this.userService.any({
             where: {email: user.email},
@@ -29,6 +30,7 @@ export class AuthService {
         if (result == null) {
             user.email = authCredentialsDto.email;
             user.password = authCredentialsDto.password;
+            user.username = authCredentialsDto.username;
 
             return await user.save();
         } else {
