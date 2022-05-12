@@ -4001,6 +4001,11 @@
   "resolved" "https://registry.npmjs.org/get-stream/-/get-stream-6.0.1.tgz"
   "version" "6.0.1"
 
+"github2@^2.4.0":
+  "integrity" "sha1-UZFZvYNWPi+0v+oCIM51d1ohuxQ="
+  "resolved" "https://registry.npmjs.org/github2/-/github2-2.4.0.tgz"
+  "version" "2.4.0"
+
 "glob-parent@^5.1.2", "glob-parent@~5.1.2":
   "integrity" "sha512-AOIgSQCepiJYwP3ARnGx+5VnTu2HBYdzbGP45eLw1vr3zB3vZLeyed1sC9hnbcOc9/SrMyM5RPQrkGz4aS9Zow=="
   "resolved" "https://registry.npmjs.org/glob-parent/-/glob-parent-5.1.2.tgz"
@@ -5910,11 +5915,6 @@
   dependencies:
     "mimic-fn" "^2.1.0"
 
-"openid@0.5.x":
-  "integrity" "sha1-G462yox67m3WJktp2vua14UsKk0="
-  "resolved" "https://registry.npmjs.org/openid/-/openid-0.5.13.tgz"
-  "version" "0.5.13"
-
 "optional-require@^1.1.8":
   "integrity" "sha512-jq83qaUb0wNg9Krv1c5OQ+58EK+vHde6aBPzLvPPqJm89UQWsvSuFy9X/OSNJnFeSOKo7btE0n8Nl2+nE+z5nA=="
   "resolved" "https://registry.npmjs.org/optional-require/-/optional-require-1.1.8.tgz"
@@ -6081,13 +6081,6 @@
   dependencies:
     "passport-strategy" "1.x.x"
 
-"passport-facebook@^3.0.0":
-  "integrity" "sha512-K/qNzuFsFISYAyC1Nma4qgY/12V3RSLFdFVsPKXiKZt434wOvthFW1p7zKa1iQihQMRhaWorVE1o3Vi1o+ZgeQ=="
-  "resolved" "https://registry.npmjs.org/passport-facebook/-/passport-facebook-3.0.0.tgz"
-  "version" "3.0.0"
-  dependencies:
-    "passport-oauth2" "1.x.x"
-
 "passport-github@^1.1.0":
   "integrity" "sha1-jOHj/NYa11eOsd9ZWDnkrqEjVdQ="
   "resolved" "https://registry.npmjs.org/passport-github/-/passport-github-1.1.0.tgz"
@@ -6143,15 +6136,6 @@
     "uid2" "0.0.x"
     "utils-merge" "1.x.x"
 
-"passport-openid@0.3.x":
-  "integrity" "sha1-5k3gSFn6UbZSlIAXQSJiHgj6Iss="
-  "resolved" "https://registry.npmjs.org/passport-openid/-/passport-openid-0.3.1.tgz"
-  "version" "0.3.1"
-  dependencies:
-    "openid" "0.5.x"
-    "passport" "~0.1.3"
-    "pkginfo" "0.2.x"
-
 "passport-strategy@^1.0.0", "passport-strategy@1.x.x":
   "integrity" "sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ="
   "resolved" "https://registry.npmjs.org/passport-strategy/-/passport-strategy-1.0.0.tgz"
@@ -6173,14 +6157,6 @@
   dependencies:
     "passport-strategy" "1.x.x"
     "pause" "0.0.1"
-
-"passport@~0.1.3":
-  "integrity" "sha1-yCZEedy2QUytu2Z1LRKzfgtlJaE="
-  "resolved" "https://registry.npmjs.org/passport/-/passport-0.1.18.tgz"
-  "version" "0.1.18"
-  dependencies:
-    "pause" "0.0.1"
-    "pkginfo" "0.2.x"
 
 "path-exists@^4.0.0":
   "integrity" "sha512-ak9Qy5Q7jYb2Wwcey5Fpvg2KoAc/ZIhLSLOSBmRmygPsGwkVVt0fZa0qrtMz+m6tJTAHfZQ8FnmB4MG4LWy7/w=="
@@ -6305,11 +6281,6 @@
   "version" "4.2.0"
   dependencies:
     "find-up" "^4.0.0"
-
-"pkginfo@0.2.x":
-  "integrity" "sha1-cjnEKl72wwuPMoQ52bn/cQQkkPg="
-  "resolved" "https://registry.npmjs.org/pkginfo/-/pkginfo-0.2.3.tgz"
-  "version" "0.2.3"
 
 "pluralize@8.0.0":
   "integrity" "sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA=="

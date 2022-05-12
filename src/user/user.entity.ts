@@ -13,9 +13,14 @@ import {
 } from 'typeorm';
 
 export enum SocialProviderTypes {
+    // GOOGLE = 'google',
+    // GITHUB = 'github',
+
+    USERNAME = 'username',
     GOOGLE = 'google',
     GITHUB = 'github',
 }
+
 @Entity()
 export class User extends BaseEntity {
     @ApiProperty()
@@ -23,15 +28,19 @@ export class User extends BaseEntity {
     id?: number;
 
     @Column({
+        name: 'provider',
         nullable: true,
         type: 'enum',
         enum: SocialProviderTypes,
     })
     provider?: SocialProviderTypes;
 
-    @ApiProperty()
     @Column()
     username?: string;
+
+    // @ApiProperty()
+    // @Column()
+    // username?: string;
 
     @Column({
         unique: true,
