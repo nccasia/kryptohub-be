@@ -8,11 +8,12 @@ import {ProfileController} from './profile.controller';
 import {UserService} from './user.service';
 import {Profile} from './profile.entity';
 import { IsWalletAvailable } from './constraints/is-wallet-available.validatr';
+import { IsUsernameAvailable } from './constraints/is-username-available.validator';
 
 @Module({
     imports: [TypeOrmModule.forFeature([User, Profile])],
     controllers: [ProfileController],
-    providers: [UserService, IsEmailAvailable, IsWalletAvailable, IsEtherAddress],
+    providers: [UserService, IsEmailAvailable, IsWalletAvailable, IsEtherAddress, IsUsernameAvailable],
     exports: [UserService],
 })
 export class UserModule {}

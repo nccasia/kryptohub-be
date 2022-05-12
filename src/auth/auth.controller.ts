@@ -8,13 +8,14 @@ import {
     HttpStatus,
     Post,
     Query,
+    Req,
     UseGuards,
     UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
 
 import {AuthUser} from '../user/user.decorator';
-import {User} from '../user/user.entity';
+import {SocialProviderTypes, User} from '../user/user.entity';
 import {AuthService} from './auth.service';
 import {JWTAuthGuard} from './guards/jwt-auth.guard';
 import {LocalAuthGuard} from './guards/local-auth.guard';
@@ -22,11 +23,16 @@ import {SessionAuthGuard} from './guards/session-auth.guard';
 import {TokenInterceptor} from './interceptors/token.interceptor';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
+import {UserService} from '../user/user.service';
+import {AuthGuard} from '@nestjs/passport';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(private readonly authService: AuthService) {}
+    constructor(
+        private readonly authService: AuthService,
+        private readonly userService: UserService,
+    ) {}
 
     @Post('/register')
     @HttpCode(HttpStatus.CREATED)
@@ -63,5 +69,45 @@ export class AuthController {
     @UseGuards(SessionAuthGuard, JWTAuthGuard)
     me(@AuthUser() user: User): User {
         return user;
+    }
+
+    @Get('')
+    @UseGuards(AuthGuard('google'))
+    async googleAuth(@Req() req): Promise<any> {
+        return HttpStatus.OK;
+    }
+
+    @Get('redirect')
+    @UseGuards(AuthGuard('google'))
+    async googleAuthRedirect(@Req() req) {
+        const provider = req.user.provider;
+        const displayName = req.user.displayName;
+        const firstName = req.user.firstName;
+        const lastName = req.user.lastName;
+        const email = req.user.email;
+        try {
+            await this.userService.findOne({
+                where: {
+                    email,
+                    provider,
+                    firstName,
+                    lastName,
+                    displayName,
+                },
+            });
+            return {data: req.user, statusCode: HttpStatus.OK};
+        } catch (error) {
+            await this.userService.create({
+                email: email,
+                username: email,
+                firstName: firstName,
+                lastName: lastName,
+                displayName: displayName,
+                provider: SocialProviderTypes.GOOGLE,
+                password: 'google',
+                walletAddress: email,
+            });
+            return {data: req.user, statusCode: HttpStatus.OK};
+        }
     }
 }
