@@ -34,7 +34,7 @@ import {firstValueFrom} from 'rxjs';
 import {Request, Response} from 'express';
 
 @ApiTags('Auth')
-@Controller('')
+@Controller('auth')
 export class AuthController {
     constructor(
         private readonly authService: AuthService,
@@ -43,7 +43,7 @@ export class AuthController {
         private readonly userService: UserService,
     ) {}
 
-    @Post('auth/register')
+    @Post('/register')
     @HttpCode(HttpStatus.CREATED)
     @UseInterceptors(TokenInterceptor)
     async register(
@@ -53,7 +53,7 @@ export class AuthController {
         return result;
     }
 
-    @Get('/login-github/callback')
+    @Get('/github')
     @UseGuards(GithubOauthGuard)
     async githubAuthCallback(
         @Req() req: Request,
@@ -90,7 +90,7 @@ export class AuthController {
         }
     }
 
-    @Post('auth/login')
+    @Post('/login')
     @UseGuards(LocalAuthGuard)
     @HttpCode(HttpStatus.OK)
     @UseInterceptors(TokenInterceptor)
@@ -98,32 +98,32 @@ export class AuthController {
         return user;
     }
 
-    @Post('auth/web3')
+    @Post('web3')
     @UseGuards(Web3AuthGuard)
     @HttpCode(HttpStatus.OK)
     async loginWeb3(@AuthUser() user: User): Promise<User> {
         return user;
     }
 
-    @Get('auth/data')
+    @Get('data')
     @HttpCode(HttpStatus.OK)
     async getData(@Query() query: GetAuthDataQueryDTO): Promise<User> {
         return this.authService.getAuthData({walletAddress: query.address});
     }
 
-    @Get('auth/me')
+    @Get('/me')
     @UseGuards(SessionAuthGuard, JWTAuthGuard)
     me(@AuthUser() user: User): User {
         return user;
     }
 
-    @Get('auth/')
+    @Get('')
     @UseGuards(AuthGuard('google'))
     async googleAuth(@Req() req): Promise<any> {
         return HttpStatus.OK;
     }
 
-    @Get('auth/redirect')
+    @Get('redirect')
     @UseGuards(AuthGuard('google'))
     async googleAuthRedirect(@Req() req) {
         const provider = req.user.provider;
