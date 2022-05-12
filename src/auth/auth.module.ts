@@ -10,7 +10,6 @@ import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
 import {GoogleStrategy} from './GoogleAuth/google.strategy';
-import {GoogleController} from './GoogleAuth/google.controller';
 
 @Module({
     imports: [
@@ -34,7 +33,7 @@ import {GoogleController} from './GoogleAuth/google.controller';
         }),
         PassportModule.register({defaultStrategy: 'jwt'}),
     ],
-    controllers: [AuthController, GoogleController],
+    controllers: [AuthController],
     providers: [
         AuthService,
         LocalStrategy,
