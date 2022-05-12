@@ -15,12 +15,6 @@ import {S3fsModule} from './s3fs/s3fs.module';
 import {ConfigModule} from '@nestjs/config';
 import {AppService} from './app.service';
 import {MetadiscsModule} from './metadiscs/metadiscs.module';
-import { LoginGithubModule } from './login-github/login-github.module';
-import { LoginGithubController } from './login-github/login-github.controller';
-import { GithubOauthStrategy } from './login-github/strategies/login-github.strategy';
-import { LoginGithubService } from './login-github/login-github.service';
-import { UserService } from './user/user.service';
-import { LoginRegistrationModule } from './login-registration/login-registration.module';
 
 @Module({
     imports: [
@@ -38,12 +32,8 @@ import { LoginRegistrationModule } from './login-registration/login-registration
         S3fsModule,
         MetadiscsModule,
         AuthModule,
-        LoginGithubModule,
-        LoginRegistrationModule,
     ],
     controllers: [AppController, ReadController, UploadController],
-    providers: [
-        AppService,
-    ],
+    providers: [AppService],
 })
 export class AppModule {}

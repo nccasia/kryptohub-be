@@ -1,11 +1,14 @@
-import { Injectable, UnauthorizedException, NotFoundException } from '@nestjs/common';
+import {
+    Injectable,
+    UnauthorizedException,
+    NotFoundException,
+} from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 
 import {User} from '../user/user.entity';
-import {SignUp} from './dto/sign-up.dto';
 import {JwtPayload} from './interfaces/jwt-payload.interface';
 import {UserService} from '../user/user.service';
-
+import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 @Injectable()
 export class AuthService {
     constructor(
@@ -13,11 +16,24 @@ export class AuthService {
         private readonly jwtService: JwtService,
     ) {}
 
-    async register(signUp: SignUp): Promise<User> {
-        const user = await this.userService.create(signUp);
-        delete user.password;
+    async register(
+        authCredentialsDto: AuthCredentialsDto,
+    ): Promise<User | undefined> {
+        const user = new User();
+        user.email = authCredentialsDto.email;
 
-        return user;
+        const result = await this.userService.any({
+            where: {email: user.email},
+        });
+
+        if (result == null) {
+            user.email = authCredentialsDto.email;
+            user.password = authCredentialsDto.password;
+
+            return await user.save();
+        } else {
+            throw new UnauthorizedException('Email already exists');
+        }
     }
 
     async login(email: string, password: string): Promise<User> {
@@ -51,23 +67,23 @@ export class AuthService {
                 `There isn't any user with wallet: ${walletAddress}`,
             );
         }
-        
+
         delete user.password;
 
         return user;
     }
 
-    async getAuthData({ walletAddress }) {
+    async getAuthData({walletAddress}) {
         let user: User;
 
         try {
-            user = await this.userService.findOne({ where: {walletAddress}});
+            user = await this.userService.findOne({where: {walletAddress}});
         } catch (err) {
             throw new NotFoundException(
                 `There isn't any user with wallet: ${walletAddress}`,
             );
         }
-        
+
         delete user.password;
 
         return user;
