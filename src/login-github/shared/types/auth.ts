@@ -7,5 +7,5 @@ export type JwtPayload = {
 
 	exp?: number;
 
-	displayName: string;
+	username: string;
 };

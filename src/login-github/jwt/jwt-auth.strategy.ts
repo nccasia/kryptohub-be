@@ -28,7 +28,7 @@ export class JwtAuthStrategy extends PassportStrategy(Strategy) {
 				4,
 			)}`,
 		);
-		const { displayName } = payload;
-		return { displayName };
+		const { username } = payload;
+		return { username };
 	}
 }

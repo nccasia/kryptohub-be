@@ -8,10 +8,10 @@ export class JwtAuthService {
 	constructor(private jwtService: JwtService) {}
 
 	login(user: UserGithub) {
-		const { id, displayName, photos } = user.user;
+		const { id, username } = user.user;
 		const payload: JwtPayload = {
 			sub: id,
-			displayName,
+			username,
 		};
 
 		return {
