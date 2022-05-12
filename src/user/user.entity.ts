@@ -35,12 +35,9 @@ export class User extends BaseEntity {
     })
     provider?: SocialProviderTypes;
 
+    @ApiProperty()
     @Column()
     username?: string;
-
-    // @ApiProperty()
-    // @Column()
-    // username?: string;
 
     @Column({
         unique: true,

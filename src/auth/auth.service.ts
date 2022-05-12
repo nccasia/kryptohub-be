@@ -24,7 +24,7 @@ export class AuthService {
         user.username = authCredentialsDto.username;
 
         const result = await this.userService.any({
-            where: {email: user.email},
+            where: {email: user.email, username: user.username},
         });
 
         if (result == null) {
@@ -34,29 +34,8 @@ export class AuthService {
 
             return await user.save();
         } else {
-            throw new UnauthorizedException('Email already exists');
+            throw new UnauthorizedException('Email or username already exists');
         }
-    }
-
-    async login(email: string, password: string): Promise<User> {
-        let user: User;
-
-        try {
-            user = await this.userService.findOne({where: {email}});
-        } catch (err) {
-            throw new UnauthorizedException(
-                `There isn't any user with email: ${email}`,
-            );
-        }
-
-        if (!(await user.checkPassword(password))) {
-            throw new UnauthorizedException(
-                `Wrong password for user with email: ${email}`,
-            );
-        }
-        delete user.password;
-
-        return user;
     }
 
     async loginWeb3(walletAddress: string): Promise<User> {
