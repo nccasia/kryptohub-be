@@ -1,15 +1,16 @@
-import { ConfigService, ConfigModule } from '@nestjs/config';
+import {ConfigService, ConfigModule} from '@nestjs/config';
 import {Module} from '@nestjs/common';
 import {JwtModule, JwtModuleOptions} from '@nestjs/jwt';
-import {PassportModule, PassportStrategy} from '@nestjs/passport';
-
+import {PassportModule} from '@nestjs/passport';
 import {UserModule} from '../user/user.module';
 import {AuthController} from './auth.controller';
 import {AuthService} from './auth.service';
 import {SessionSerializer} from './session.serializer';
 import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
-import { Web3Strategy } from './strategies/web3.strategy';
+import {Web3Strategy} from './strategies/web3.strategy';
+import {GoogleStrategy} from './GoogleAuth/google.strategy';
+import {GoogleController} from './GoogleAuth/google.controller';
 
 @Module({
     imports: [
@@ -17,7 +18,9 @@ import { Web3Strategy } from './strategies/web3.strategy';
         UserModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
-            useFactory: async (env: ConfigService): Promise<JwtModuleOptions> => ({
+            useFactory: async (
+                env: ConfigService,
+            ): Promise<JwtModuleOptions> => ({
                 secret: env.get('JWT_SECRET'),
                 signOptions: {
                     expiresIn: '1d',
@@ -27,12 +30,19 @@ import { Web3Strategy } from './strategies/web3.strategy';
                     algorithms: ['HS384'],
                 },
             }),
-            inject: [ConfigService]
+            inject: [ConfigService],
         }),
-        PassportModule.register({defaultStrategy: 'web3'}),
+        PassportModule.register({defaultStrategy: 'jwt'}),
     ],
-    controllers: [AuthController],
-    providers: [AuthService, LocalStrategy, JwtStrategy, Web3Strategy, SessionSerializer],
-    exports: [PassportModule]
+    controllers: [AuthController, GoogleController],
+    providers: [
+        AuthService,
+        LocalStrategy,
+        JwtStrategy,
+        Web3Strategy,
+        SessionSerializer,
+        GoogleStrategy,
+    ],
+    exports: [PassportModule],
 })
 export class AuthModule {}

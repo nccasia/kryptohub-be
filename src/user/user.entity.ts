@@ -1,3 +1,4 @@
+import {ApiProperty} from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import {Exclude} from 'class-transformer';
 import {
@@ -8,19 +9,51 @@ import {
     UpdateDateColumn,
     BeforeInsert,
     BeforeUpdate,
+    BaseEntity,
 } from 'typeorm';
 
+export enum SocialProviderTypes {
+    GOOGLE = 'google',
+    GITHUB = 'github',
+}
 @Entity()
-export class User {
+export class User extends BaseEntity {
+    @ApiProperty()
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column()
-    name?: string;
+    @Column({
+        nullable: true,
+        type: 'enum',
+        enum: SocialProviderTypes,
+    })
+    provider?: SocialProviderTypes;
 
+    @ApiProperty()
     @Column()
+    username?: string;
+
+    @Column({
+        unique: true,
+        length: 200,
+    })
+    displayName?: string;
+
+    @Column({
+        length: 200,
+    })
+    firstName?: string;
+
+    @Column({
+        length: 200,
+    })
+    lastName?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
     email?: string;
 
+    @ApiProperty()
     @Column()
     @Exclude()
     password?: string;
@@ -28,7 +61,7 @@ export class User {
     @Column()
     nonce?: string;
 
-    @Column({ unique: true })
+    @Column()
     walletAddress?: string;
 
     @CreateDateColumn()
@@ -38,6 +71,7 @@ export class User {
     updatedAt?: Date;
 
     constructor(data: Partial<User> = {}) {
+        super();
         Object.assign(this, data);
     }
 

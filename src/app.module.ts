@@ -34,8 +34,6 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
         AuthModule,
     ],
     controllers: [AppController, ReadController, UploadController],
-    providers: [
-        AppService,
-    ],
+    providers: [AppService],
 })
 export class AppModule {}
