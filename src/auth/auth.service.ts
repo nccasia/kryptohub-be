@@ -74,6 +74,12 @@ export class AuthService {
                 );
             }
 
+            if (!password) {
+                throw new UnauthorizedException(
+                    `password should not be empty`,
+                );
+            }
+
             if (!(await user.checkPassword(password as string))) {
                 throw new UnauthorizedException(
                     `Wrong password for user with email: ${email}`,

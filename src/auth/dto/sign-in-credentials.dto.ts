@@ -25,8 +25,7 @@ export class SignInRegistration {
     @ApiProperty({required: false})
     // @IsDefined()
     @IsOptional()
-    @IsNotEmpty()
-    @MinLength(8)
+    // @IsNotEmpty()
     readonly password?: string = '';
 
 }
