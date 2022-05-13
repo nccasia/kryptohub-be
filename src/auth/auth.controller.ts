@@ -32,6 +32,7 @@ import {HttpService} from '@nestjs/axios';
 import {JwtAuthService} from './githubAuth/jwt/jwt-auth.service';
 import {firstValueFrom} from 'rxjs';
 import {Request, Response} from 'express';
+import { SignInRegistration } from './dto/sign-in-credentials.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -90,12 +91,10 @@ export class AuthController {
         }
     }
 
-    @Post('/login')
-    @UseGuards(LocalAuthGuard)
+    @Post('login')
     @HttpCode(HttpStatus.OK)
-    @UseInterceptors(TokenInterceptor)
-    async login(@AuthUser() user: User): Promise<User> {
-        return user;
+    async login(@Body() signInRegistration: SignInRegistration) {
+        return this.authService.loginAccount(signInRegistration);
     }
 
     @Post('web3')

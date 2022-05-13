@@ -9,6 +9,7 @@ import {User} from '../user/user.entity';
 import {JwtPayload} from './interfaces/jwt-payload.interface';
 import {UserService} from '../user/user.service';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
+import {SignInRegistration} from './dto/sign-in-credentials.dto';
 @Injectable()
 export class AuthService {
     constructor(
@@ -35,6 +36,61 @@ export class AuthService {
             return await user.save();
         } else {
             throw new UnauthorizedException('Email or username already exists');
+        }
+    }
+
+    async loginAccount(signInRegistration: SignInRegistration) {
+        let user: User;
+        const username = signInRegistration.username;
+        const password = signInRegistration.password;
+        const email = signInRegistration.email;
+
+        if (username) {
+            try {
+                user = await this.userService.findOne({where: {username}});
+            } catch (err) {
+                throw new UnauthorizedException(
+                    `There isn't any user with username: ${username}`,
+                );
+            }
+
+            if (!(await user.checkPassword(password as string))) {
+                throw new UnauthorizedException(
+                    `Wrong password for user with username: ${username}`,
+                );
+            }
+
+            delete user.password;
+            const payload = {username: user.username, sub: user.id};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
+        } else {
+            try {
+                user = await this.userService.findOne({where: {email}});
+            } catch (err) {
+                throw new UnauthorizedException(
+                    `There isn't any user with email: ${email}`,
+                );
+            }
+
+            if (!password) {
+                throw new UnauthorizedException(
+                    `password should not be empty`,
+                );
+            }
+
+            if (!(await user.checkPassword(password as string))) {
+                throw new UnauthorizedException(
+                    `Wrong password for user with email: ${email}`,
+                );
+            }
+
+            delete user.password;
+            const payload = {email: user.email, sub: user.id};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
         }
     }
 
