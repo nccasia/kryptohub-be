@@ -5,11 +5,11 @@ import {SwaggerModule, DocumentBuilder} from '@nestjs/swagger';
 import {AppModule} from './app.module';
 import {setupAuth} from './setup-auth';
 import {setupSwagger} from './setup-swagger';
-import { ValidationPipe } from '@nestjs/common';
-import { setupValidation } from './setup-validation';
+import {ValidationPipe} from '@nestjs/common';
+import {setupValidation} from './setup-validation';
 
 async function bootstrap() {
-    console.log(process.env.DB_NAME,'process.env.DB_NAME');
+    console.log(process.env.DB_NAME, 'process.env.DB_NAME');
     const app = await NestFactory.create(AppModule);
     app.use(compression());
 
@@ -20,6 +20,6 @@ async function bootstrap() {
         setupSwagger(app);
     }
 
-    await app.listen(process.env.PORT || 3000, process.env.HOST || '0.0.0.0');
+    await app.listen(process.env.PORT || 3001, process.env.HOST || '0.0.0.0');
 }
 bootstrap();

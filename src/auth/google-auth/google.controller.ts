@@ -1,19 +1,11 @@
-import {HttpService} from '@nestjs/axios';
-import {Controller, Get, HttpStatus, Req, Res, UseGuards} from '@nestjs/common';
+import {Controller, Get, HttpStatus, Req, UseGuards} from '@nestjs/common';
 import {AuthGuard} from '@nestjs/passport';
-import {firstValueFrom} from 'rxjs';
 import {SocialProviderTypes} from '../../user/user.entity';
 import {UserService} from '../../user/user.service';
-import {JwtAuthService} from '../github-auth/jwt/jwt-auth.service';
-import {Request, Response} from 'express';
-import {UserGoogleReq} from '../github-auth/shared';
+
 @Controller('google')
 export class GoogleController {
-    constructor(
-        private readonly userService: UserService,
-        private readonly http: HttpService,
-        private readonly jwtAuthService: JwtAuthService,
-    ) {}
+    constructor(private readonly userService: UserService) {}
 
     @Get('')
     @UseGuards(AuthGuard('google'))
@@ -23,25 +15,12 @@ export class GoogleController {
 
     @Get('redirect')
     @UseGuards(AuthGuard('google'))
-    async googleAuthRedirect(
-        @Req() req: Request,
-        @Res({passthrough: true}) res: Response,
-    ) {
-        const user = req.user as UserGoogleReq;
-        const provider = user.provider;
-        const displayName = user.displayName;
-        const firstName = user.firstName;
-        const lastName = user.lastName;
-        const email = user.email;
-
-        const getUser = await firstValueFrom(
-            this.http
-                .get('https://accounts.google.com/o/oauth2/v2/auth', {
-                    headers: {Authorization: `Bearer ${user.accessToken}`},
-                })
-                .pipe((res) => res),
-        );
-        const userGoogle = getUser.data;
+    async googleAuthRedirect(@Req() req) {
+        const provider = req.user.provider;
+        const displayName = req.user.displayName;
+        const firstName = req.user.firstName;
+        const lastName = req.user.lastName;
+        const email = req.user.email;
         try {
             await this.userService.findOne({
                 where: {
@@ -52,9 +31,7 @@ export class GoogleController {
                     displayName,
                 },
             });
-            const {accessToken} = this.jwtAuthService.loginGooge(user);
-            res.cookie('jwt', accessToken);
-            return {accessToken: accessToken};
+            return {data: req.user, statusCode: HttpStatus.OK};
         } catch (error) {
             await this.userService.create({
                 email: email,
@@ -64,10 +41,9 @@ export class GoogleController {
                 displayName: displayName,
                 provider: SocialProviderTypes.GOOGLE,
                 password: 'google',
+                walletAddress: email,
             });
-            const {accessToken} = this.jwtAuthService.loginGooge(user);
-            res.cookie('jwt', accessToken);
-            return {accessToken: accessToken};
+            return {data: req.user, statusCode: HttpStatus.OK};
         }
     }
 }

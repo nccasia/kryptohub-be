@@ -1,24 +1,10 @@
 import {AuthProvider} from '..';
-import {GoogleProvider} from './auth';
 
 export interface UserGithub {
     user: UserReq;
-    accessToken: string;
+    accessToken: string
 }
 
-export interface UserGoogleReq {
-    provider: GoogleProvider;
-
-    displayName: string;
-
-    email: string;
-
-    firstName: string;
-
-    lastName: string;
-
-    accessToken: string;
-}
 export interface UserReq {
     id: string;
 
@@ -31,6 +17,6 @@ export interface UserReq {
     username: string;
 
     photos: {
-        value: string;
+        value: string; 
     }[];
 }
