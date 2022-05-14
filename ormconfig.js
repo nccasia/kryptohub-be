@@ -17,13 +17,5 @@ module.exports = {
   synchronize: false,
   ssl: {
     rejectUnauthorized: false
-  },
-  extra: {
-    ssl:
-      process.env.SSL_MODE === 'require'
-        ? {
-            rejectUnauthorized: false,
-          }
-        : false,
-  },
+  }
 };
