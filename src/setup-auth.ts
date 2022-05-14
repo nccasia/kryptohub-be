@@ -3,7 +3,7 @@ import { useContainer } from 'class-validator';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
-import * as connectPgSimple from 'connect-pg-simple';
+import connectPgSimple from 'connect-pg-simple';
 
 import { AppModule } from './app.module';
 
@@ -17,7 +17,6 @@ export function setupAuth(app: INestApplication): INestApplication {
   );
   
   app.use(cookieParser(process.env.JWT_SECRET));
-  console.log(connectPgSimple)
 
   app.use(
     session({
