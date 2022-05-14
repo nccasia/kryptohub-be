@@ -11,7 +11,6 @@ import {
     Req,
     Res,
     UseGuards,
-    UseInterceptors,
     ValidationPipe,
 } from '@nestjs/common';
 
@@ -19,20 +18,17 @@ import {AuthUser} from '../user/user.decorator';
 import {SocialProviderTypes, User} from '../user/user.entity';
 import {AuthService} from './auth.service';
 import {JWTAuthGuard} from './guards/jwt-auth.guard';
-import {LocalAuthGuard} from './guards/local-auth.guard';
 import {SessionAuthGuard} from './guards/session-auth.guard';
-import {TokenInterceptor} from './interceptors/token.interceptor';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {UserService} from '../user/user.service';
-import {AuthGuard} from '@nestjs/passport';
 import {GithubOauthGuard} from './guards/githubAuth.guards';
-import {UserGithub} from './githubAuth/shared';
+import {UserGithub} from './github-auth/shared';
 import {HttpService} from '@nestjs/axios';
-import {JwtAuthService} from './githubAuth/jwt/jwt-auth.service';
+import {JwtAuthService} from './github-auth/jwt/jwt-auth.service';
 import {firstValueFrom} from 'rxjs';
 import {Request, Response} from 'express';
-import { SignInRegistration } from './dto/sign-in-credentials.dto';
+import {SignInRegistration} from './dto/sign-in-credentials.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -44,11 +40,10 @@ export class AuthController {
         private readonly userService: UserService,
     ) {}
 
-    @Post('/register')
+    @Post('register')
     @HttpCode(HttpStatus.CREATED)
-    @UseInterceptors(TokenInterceptor)
     async register(
-        @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto,
+        @Body(new ValidationPipe()) authCredentialsDto: AuthCredentialsDto,
     ): Promise<User | undefined> {
         const result = await this.authService.register(authCredentialsDto);
         return result;

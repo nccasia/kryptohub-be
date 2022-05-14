@@ -13,9 +13,6 @@ import {
 } from 'typeorm';
 
 export enum SocialProviderTypes {
-    // GOOGLE = 'google',
-    // GITHUB = 'github',
-
     USERNAME = 'username',
     GOOGLE = 'google',
     GITHUB = 'github',
@@ -63,6 +60,11 @@ export class User extends BaseEntity {
     @Column()
     @Exclude()
     password?: string;
+
+    // @ApiProperty()
+    // @Column()
+    // @Exclude()
+    // confirmPassword?: string;
 
     @Column()
     nonce?: string;
