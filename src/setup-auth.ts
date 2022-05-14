@@ -17,6 +17,7 @@ export function setupAuth(app: INestApplication): INestApplication {
   );
   
   app.use(cookieParser(process.env.JWT_SECRET));
+  console.log(connectPgSimple)
 
   app.use(
     session({
