@@ -49,7 +49,7 @@ export class AuthController {
         return result;
     }
 
-    @Get('/github')
+    @Get('github')
     @UseGuards(GithubOauthGuard)
     async githubAuthCallback(
         @Req() req: Request,

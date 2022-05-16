@@ -72,59 +72,34 @@ export class AuthService {
 
     async loginAccount(signInRegistration: SignInRegistration) {
         let user: User;
-        const username = signInRegistration.username;
+        const usernameOrEmail = signInRegistration.usernameOrEmail;
         const password = signInRegistration.password;
-        const email = signInRegistration.email;
 
-        if (username) {
-            try {
-                user = await this.userService.findOne({where: {username}});
-            } catch (err) {
-                throw new UnauthorizedException(
-                    `There isn't any user with username: ${username}`,
-                );
-            }
-
-            if (!password && password === '') {
-                throw new UnauthorizedException(`password should not be empty`);
-            }
-
-            if (!(await user.checkPassword(password as string))) {
-                throw new UnauthorizedException(
-                    `Wrong password for user with username: ${username}`,
-                );
-            }
-
-            delete user.password;
-            const payload = {username: user.username, sub: user.id};
-            return {
-                accessToken: this.jwtService.sign(payload),
-            };
-        } else {
-            try {
-                user = await this.userService.findOne({where: {email}});
-            } catch (err) {
-                throw new UnauthorizedException(
-                    `There isn't any user with email: ${email}`,
-                );
-            }
-
-            if (!password && password === '') {
-                throw new UnauthorizedException(`password should not be empty`);
-            }
-
-            if (!(await user.checkPassword(password as string))) {
-                throw new UnauthorizedException(
-                    `Wrong password for user with email: ${email}`,
-                );
-            }
-
-            delete user.password;
-            const payload = {email: user.email, sub: user.id};
-            return {
-                accessToken: this.jwtService.sign(payload),
-            };
+        try {
+            user = await this.userService.findOne({
+                where: [{username: usernameOrEmail}, {email: usernameOrEmail}],
+            });
+        } catch (err) {
+            throw new UnauthorizedException(
+                `There isn't any user with usernameOrEmail: ${usernameOrEmail}`,
+            );
         }
+
+        if (!password && password === '') {
+            throw new UnauthorizedException(`password should not be empty`);
+        }
+
+        if (!(await user.checkPassword(password as string))) {
+            throw new UnauthorizedException(
+                `Wrong password for user with username: ${usernameOrEmail}`,
+            );
+        }
+
+        delete user.password;
+        const payload = {username: user.username, sub: user.id};
+        return {
+            accessToken: this.jwtService.sign(payload),
+        };
     }
 
     async loginWeb3(walletAddress: string): Promise<User> {
