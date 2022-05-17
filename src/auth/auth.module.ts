@@ -9,8 +9,6 @@ import {SessionSerializer} from './session.serializer';
 import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
-import {GoogleStrategy} from './google-auth/google.strategy';
-import {GoogleController} from './google-auth/google.controller';
 import {HttpModule} from '@nestjs/axios';
 
 @Module({
@@ -36,14 +34,13 @@ import {HttpModule} from '@nestjs/axios';
         }),
         PassportModule.register({defaultStrategy: 'jwt'}),
     ],
-    controllers: [AuthController, GoogleController],
+    controllers: [AuthController],
     providers: [
         AuthService,
         LocalStrategy,
         JwtStrategy,
         Web3Strategy,
         SessionSerializer,
-        GoogleStrategy,
     ],
     exports: [PassportModule],
 })
