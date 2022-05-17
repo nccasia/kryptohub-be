@@ -217,13 +217,10 @@ export class AuthService {
             const user = await this.userService.create({
                 email: decoded.email,
                 username: decoded.name,
-                firstName: decoded.family_name,
-                lastName: decoded.given_name,
-                displayName: decoded.name,
                 provider: SocialProviderTypes.GOOGLE,
             });
             delete user.password;
-            const payload = {email: decoded.email, name: decoded.name};
+            const payload = {email: decoded.email, username: decoded.name};
             return {
                 accessToken: this.jwtService.sign(payload),
             };

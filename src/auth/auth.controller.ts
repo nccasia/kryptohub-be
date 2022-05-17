@@ -21,6 +21,7 @@ import {ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {SignInRegistration} from './dto/sign-in-credentials.dto';
 import {GithubRegistration} from './dto/github-auth.dto';
+import {GoogleAuthDto} from './dto/google-auth.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -40,6 +41,12 @@ export class AuthController {
     @HttpCode(HttpStatus.OK)
     async githubAuth(@Body() githubRegistration: GithubRegistration) {
         return this.authService.loginGithub(githubRegistration);
+    }
+
+    @Post('google')
+    @HttpCode(HttpStatus.OK)
+    async googleAuth(@Body() googleAuthDto: GoogleAuthDto) {
+        return this.authService.loginGoogle(googleAuthDto);
     }
 
     @Post('login')
