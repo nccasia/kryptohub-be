@@ -8,38 +8,24 @@ import {
     HttpStatus,
     Post,
     Query,
-    Req,
-    Res,
     UseGuards,
     ValidationPipe,
 } from '@nestjs/common';
 
 import {AuthUser} from '../user/user.decorator';
-import {SocialProviderTypes, User} from '../user/user.entity';
+import {User} from '../user/user.entity';
 import {AuthService} from './auth.service';
 import {JWTAuthGuard} from './guards/jwt-auth.guard';
 import {SessionAuthGuard} from './guards/session-auth.guard';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
-import {UserService} from '../user/user.service';
-import {GithubOauthGuard} from './guards/githubAuth.guards';
-import {UserGithub} from './github-auth/shared';
-import {HttpService} from '@nestjs/axios';
-import {JwtAuthService} from './github-auth/jwt/jwt-auth.service';
-import {firstValueFrom} from 'rxjs';
-import {Request, Response} from 'express';
 import {SignInRegistration} from './dto/sign-in-credentials.dto';
-import {GoogleAuthDto} from './dto/google-auth.dto';
+import {GithubRegistration} from './dto/github-auth.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
 export class AuthController {
-    constructor(
-        private readonly authService: AuthService,
-        private readonly http: HttpService,
-        private readonly jwtAuthService: JwtAuthService,
-        private readonly userService: UserService,
-    ) {}
+    constructor(private readonly authService: AuthService) {}
 
     @Post('register')
     @HttpCode(HttpStatus.CREATED)
@@ -50,47 +36,10 @@ export class AuthController {
         return result;
     }
 
-    @Post('google')
+    @Post('github')
     @HttpCode(HttpStatus.OK)
-    async githubAuth(@Body() googleAuthDto: GoogleAuthDto) {
-        return this.authService.loginGoogle(googleAuthDto);
-    }
-
-    @Get('github')
-    @UseGuards(GithubOauthGuard)
-    async githubAuthCallback(
-        @Req() req: Request,
-        @Res({passthrough: true}) res: Response,
-    ) {
-        const user = req.user as UserGithub;
-        const getUser = await firstValueFrom(
-            this.http
-                .get('https://api.github.com/user', {
-                    headers: {Authorization: `Bearer ${user.accessToken}`},
-                })
-                .pipe((res) => res),
-        );
-
-        const userGithub = getUser.data;
-        const username = user.user.username;
-        try {
-            await this.userService.findOne({
-                where: {username},
-            });
-
-            const {accessToken} = this.jwtAuthService.login(user);
-            res.cookie('jwt', accessToken);
-            return {access_token: accessToken};
-        } catch (e) {
-            await this.userService.create({
-                username: username,
-                provider: SocialProviderTypes.GITHUB,
-                email: userGithub.email,
-            });
-            const {accessToken} = this.jwtAuthService.login(user);
-            res.cookie('jwt', accessToken);
-            return {access_token: accessToken};
-        }
+    async githubAuth(@Body() githubRegistration: GithubRegistration) {
+        return this.authService.loginGithub(githubRegistration);
     }
 
     @Post('login')

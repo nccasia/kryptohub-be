@@ -4,7 +4,7 @@ import {
     NotFoundException,
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
-import {HttpService} from '@nestjs/axios';
+
 import {SocialProviderTypes, User} from '../user/user.entity';
 import {JwtPayload} from './interfaces/jwt-payload.interface';
 import {UserService} from '../user/user.service';
@@ -13,12 +13,15 @@ import {SignInRegistration} from './dto/sign-in-credentials.dto';
 import {GoogleAuthDto, GoogleAuthReq} from './dto/google-auth.dto';
 import jwt_decode from 'jwt-decode';
 
+import {GithubRegistration} from './dto/github-auth.dto';
+import {firstValueFrom} from 'rxjs';
+import {HttpService} from '@nestjs/axios';
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
-        private readonly jwtService: JwtService,
         private readonly http: HttpService,
+        private readonly jwtService: JwtService,
     ) {}
 
     async register(
@@ -110,6 +113,42 @@ export class AuthService {
         return {
             accessToken: this.jwtService.sign(payload),
         };
+    }
+
+    async loginGithub(githubRegistration: GithubRegistration) {
+        const getUser = await firstValueFrom(
+            this.http
+                .get('https://api.github.com/user', {
+                    headers: {
+                        Authorization: `Bearer ${githubRegistration.accessToken}`,
+                    },
+                })
+                .pipe((res) => res),
+        );
+        const userGithub = getUser.data;
+        const username = userGithub.login;
+        try {
+            const user = await this.userService.findOne({
+                where: {username},
+            });
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
+        } catch (e) {
+            const user = await this.userService.create({
+                username: username,
+                provider: SocialProviderTypes.GITHUB,
+                email: githubRegistration.email,
+            });
+
+            delete user.password;
+
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
+        }
     }
 
     async loginWeb3(walletAddress: string): Promise<User> {
