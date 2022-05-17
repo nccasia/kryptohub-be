@@ -122,7 +122,10 @@ export class AuthService {
             const user = await this.userService.findOne({
                 where: {username},
             });
-            return user;
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
         } catch (e) {
             const user = await this.userService.create({
                 username: username,
@@ -132,7 +135,10 @@ export class AuthService {
 
             delete user.password;
 
-            return user;
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
         }
     }
 
