@@ -12,7 +12,7 @@ async function bootstrap() {
     console.log(process.env.DB_NAME, 'process.env.DB_NAME');
     const app = await NestFactory.create(AppModule);
     app.use(compression());
-
+    app.setGlobalPrefix('api');
     setupValidation(app);
     setupAuth(app);
 

@@ -29,6 +29,7 @@ import {JwtAuthService} from './github-auth/jwt/jwt-auth.service';
 import {firstValueFrom} from 'rxjs';
 import {Request, Response} from 'express';
 import {SignInRegistration} from './dto/sign-in-credentials.dto';
+import {GoogleAuthDto} from './dto/google-auth.dto';
 
 @ApiTags('Auth')
 @Controller('auth')
@@ -47,6 +48,12 @@ export class AuthController {
     ): Promise<User | undefined> {
         const result = await this.authService.register(authCredentialsDto);
         return result;
+    }
+
+    @Post('google')
+    @HttpCode(HttpStatus.OK)
+    async githubAuth(@Body() googleAuthDto: GoogleAuthDto) {
+        return this.authService.loginGoogle(googleAuthDto);
     }
 
     @Get('github')
