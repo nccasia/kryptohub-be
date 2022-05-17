@@ -184,8 +184,10 @@ export class AuthService {
                 provider: SocialProviderTypes.GOOGLE,
             });
             delete user.password;
-
-            return user;
+            const payload = {email: decoded.email, name: decoded.name};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
         }
     }
 }
