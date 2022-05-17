@@ -11,16 +11,13 @@ import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
 import {GoogleStrategy} from './google-auth/google.strategy';
 import {GoogleController} from './google-auth/google.controller';
-import {GithubOauthStrategy} from './strategies/githubAuth.strategy';
 import {HttpModule} from '@nestjs/axios';
-import {JwtAuthModule} from './github-auth/jwt/jwt-auth.module';
 
 @Module({
     imports: [
         ConfigModule,
         UserModule,
         HttpModule,
-        JwtAuthModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
             useFactory: async (
@@ -47,7 +44,6 @@ import {JwtAuthModule} from './github-auth/jwt/jwt-auth.module';
         Web3Strategy,
         SessionSerializer,
         GoogleStrategy,
-        GithubOauthStrategy,
     ],
     exports: [PassportModule],
 })
