@@ -5,15 +5,19 @@ import {
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
 
-import {User} from '../user/user.entity';
+import {SocialProviderTypes, User} from '../user/user.entity';
 import {JwtPayload} from './interfaces/jwt-payload.interface';
 import {UserService} from '../user/user.service';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {SignInRegistration} from './dto/sign-in-credentials.dto';
+import {GithubRegistration} from './dto/github-auth.dto';
+import {firstValueFrom} from 'rxjs';
+import {HttpService} from '@nestjs/axios';
 @Injectable()
 export class AuthService {
     constructor(
         private readonly userService: UserService,
+        private readonly http: HttpService,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -100,6 +104,42 @@ export class AuthService {
         return {
             accessToken: this.jwtService.sign(payload),
         };
+    }
+
+    async loginGithub(githubRegistration: GithubRegistration) {
+        const getUser = await firstValueFrom(
+            this.http
+                .get('https://api.github.com/user', {
+                    headers: {
+                        Authorization: `Bearer ${githubRegistration.accessToken}`,
+                    },
+                })
+                .pipe((res) => res),
+        );
+        const userGithub = getUser.data;
+        const username = userGithub.login;
+        try {
+            const user = await this.userService.findOne({
+                where: {username},
+            });
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
+        } catch (e) {
+            const user = await this.userService.create({
+                username: username,
+                provider: SocialProviderTypes.GITHUB,
+                email: githubRegistration.email,
+            });
+
+            delete user.password;
+
+            const payload = {username: user.username, sub: user.email};
+            return {
+                accessToken: this.jwtService.sign(payload),
+            };
+        }
     }
 
     async loginWeb3(walletAddress: string): Promise<User> {
