@@ -1,20 +1,20 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsNotEmpty} from 'class-validator';
+import {IsNotEmpty, IsOptional} from 'class-validator';
 
 export class AuthCredentialsDto {
     @ApiProperty({required: true})
-    @IsNotEmpty()
-    username?: string;
+    @IsOptional()
+    readonly username?: string = '';
 
     @ApiProperty({required: true})
-    @IsNotEmpty()
-    email?: string;
+    @IsOptional()
+    readonly email?: string = '';
 
     @ApiProperty({required: true})
-    @IsNotEmpty()
-    password?: string;
+    @IsOptional()
+    readonly password?: string = '';
 
     @ApiProperty()
-    @IsNotEmpty()
-    confirmPassword?: string;
+    @IsOptional()
+    readonly confirmPassword?: string = '';
 }

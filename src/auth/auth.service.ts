@@ -27,60 +27,54 @@ export class AuthService {
     async register(
         authCredentialsDto: AuthCredentialsDto,
     ): Promise<User | undefined> {
-        try {
-            const user = new User();
+        const user = new User();
+        user.email = authCredentialsDto.email;
+        user.username = authCredentialsDto.username;
+        user.password = authCredentialsDto.password;
+
+        const result = await this.userService.any({
+            where: {email: user.email, username: user.username},
+        });
+
+        if (!user.email && user.email == '') {
+            throw new UnauthorizedException('Email should not be empty');
+        }
+
+        if (!user.username && user.username == '') {
+            throw new UnauthorizedException('User name should not be empty');
+        }
+
+        const checkLength = (authCredentialsDto.password as string).length;
+        if (checkLength <= 8) {
+            throw new UnauthorizedException(
+                `Password must contain at least 8 characters`,
+            );
+        }
+
+        if (
+            !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
+                authCredentialsDto.password as string,
+            )
+        ) {
+            throw new UnauthorizedException(
+                `Password must includes lowercase, uppercase, number and special character`,
+            );
+        }
+
+        if (user.password !== authCredentialsDto.confirmPassword) {
+            throw new UnauthorizedException(`Password does not match`);
+        }
+
+        if (result == null) {
             user.email = authCredentialsDto.email;
-            user.username = authCredentialsDto.username;
             user.password = authCredentialsDto.password;
-
-            const result = await this.userService.any({
-                where: {email: user.email, username: user.username},
-            });
-
-            if (!user.email && user.email == '') {
-                throw new UnauthorizedException('Email should not be empty');
-            }
-
-            if (!user.username && user.username == '') {
-                throw new UnauthorizedException(
-                    'User name should not be empty',
-                );
-            }
-
-            const checkLength = (authCredentialsDto.password as string).length;
-            if (checkLength <= 8) {
-                throw new UnauthorizedException(
-                    `Password must contain at least 8 characters`,
-                );
-            }
-
-            if (
-                !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
-                    authCredentialsDto.password as string,
-                )
-            ) {
-                throw new UnauthorizedException(
-                    `Password must includes lowercase, uppercase, number and special character`,
-                );
-            }
-
-            if (user.password !== authCredentialsDto.confirmPassword) {
-                throw new UnauthorizedException(`Password does not match`);
-            }
-
-            if (result == null) {
-                user.email = authCredentialsDto.email;
-                user.password = authCredentialsDto.password;
-                user.username = authCredentialsDto.username;
-                const saveUser = await user.save();
-                delete user.password;
-                return saveUser;
-            } else {
-                throw new UnauthorizedException(
-                    'Email or username already exists',
-                );
-            }
-        } catch (error) {}
+            user.username = authCredentialsDto.username;
+            const saveUser = await user.save();
+            delete user.password;
+            return saveUser;
+        } else {
+            throw new UnauthorizedException('Email or username already exists');
+        }
     }
 
     async loginAccount(signInRegistration: SignInRegistration) {
