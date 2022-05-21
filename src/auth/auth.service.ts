@@ -182,7 +182,7 @@ export class AuthService {
 
         try {
             user = await this.userService.findOne({
-                where: {email: payload.sub},
+                where: {username: payload.username},
             });
         } catch (error) {
             throw new UnauthorizedException(
