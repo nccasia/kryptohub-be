@@ -1,38 +1,38 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsNotEmpty, IsOptional} from 'class-validator';
+import {IsOptional} from 'class-validator';
 
 export class CreateTeamDto {
     @ApiProperty()
     @IsOptional()
-    readonly teamName?: string = '';
+    teamName?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly quantity?: string = '';
+    teamSize?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly timeZone?: string = '';
+    timeZone?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly project?: string = '';
+    organization?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly skill?: string = '';
+    skill?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly workingTime?: string = '';
+    workingTime?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly description?: string = '';
+    description?: string;
 
     @ApiProperty()
     @IsOptional()
-    readonly wallet?: string = '';
+    avatar?: string;
 }
 
 export interface CreateTeamInterface {

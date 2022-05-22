@@ -8,20 +8,20 @@ export class TeamService {
     async createTeam(createTeamDto: CreateTeamDto, user: User) {
         const {
             teamName,
-            quantity,
+            teamSize,
             timeZone,
             skill,
             workingTime,
-            project,
+            organization,
             description,
-            wallet,
+            avatar,
         } = createTeamDto;
         const team = new Team();
         team.description = description;
-        team.project = project;
-        team.quantity = quantity;
+        team.organization = organization;
+        team.teamSize = teamSize;
         team.teamName = teamName;
-        team.wallet = wallet;
+        team.avatar = avatar;
         team.timeZone = timeZone;
         team.skill = skill;
         team.workingTime = workingTime;

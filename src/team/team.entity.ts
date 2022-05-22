@@ -8,11 +8,6 @@ import {
 } from 'typeorm';
 import {User} from '../user/user.entity';
 
-// export enum CreateTeamEnum {
-//     Play,
-//     Free,
-// }
-
 @Entity()
 export class Team extends BaseEntity {
     @ApiProperty()
@@ -23,13 +18,13 @@ export class Team extends BaseEntity {
     teamName?: string;
 
     @Column()
-    quantity?: string;
+    teamSize?: string;
 
     @Column()
     timeZone?: string;
 
     @Column()
-    project?: string;
+    organization?: string;
 
     @Column()
     skill?: string;
@@ -41,7 +36,7 @@ export class Team extends BaseEntity {
     description?: string;
 
     @Column()
-    wallet?: string;
+    avatar?: string;
 
     @ManyToOne((type) => User, (user) => user.team, {eager: false})
     user?: User;

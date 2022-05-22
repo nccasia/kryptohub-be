@@ -8,10 +8,8 @@ import {
     Request,
     UseGuards,
 } from '@nestjs/common';
-import {AuthGuard} from '@nestjs/passport';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
-import {SessionAuthGuard} from '../auth/guards/session-auth.guard';
-import {AuthUser, GetUser} from '../user/user.decorator';
+import {AuthUser} from '../user/user.decorator';
 import {User} from '../user/user.entity';
 import {CreateTeamDto} from './dto/create-team.dto';
 import {TeamService} from './team.service';
