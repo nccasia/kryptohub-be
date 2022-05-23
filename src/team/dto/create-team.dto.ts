@@ -20,7 +20,7 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    skill?: string;
+    skill?: string[];
 
     @ApiProperty()
     @IsOptional()

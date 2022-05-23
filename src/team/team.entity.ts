@@ -26,8 +26,8 @@ export class Team extends BaseEntity {
     @Column()
     organization?: string;
 
-    @Column()
-    skill?: string;
+    @Column({type: 'text', array: true})
+    skill?: string[];
 
     @Column()
     workingTime?: string;
