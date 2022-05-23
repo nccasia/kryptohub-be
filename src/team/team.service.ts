@@ -13,6 +13,8 @@ export class TeamService {
             skill,
             workingTime,
             organization,
+            hour,
+            week,
             description,
             avatar,
         } = createTeamDto;
@@ -25,6 +27,8 @@ export class TeamService {
         team.timeZone = timeZone;
         team.skill = skill;
         team.workingTime = workingTime;
+        team.hour = hour;
+        team.week = week;
         team.user = user;
 
         await team.save();

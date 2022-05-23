@@ -28,6 +28,14 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
+    hour?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    week?: string;
+
+    @ApiProperty()
+    @IsOptional()
     description?: string;
 
     @ApiProperty()

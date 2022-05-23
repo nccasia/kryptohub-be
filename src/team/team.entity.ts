@@ -33,6 +33,12 @@ export class Team extends BaseEntity {
     workingTime?: string;
 
     @Column()
+    hour?: string;
+
+    @Column()
+    week?: string;
+
+    @Column()
     description?: string;
 
     @Column()
