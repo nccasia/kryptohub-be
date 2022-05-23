@@ -17,8 +17,8 @@ export class IsEmailAvailable implements ValidatorConstraintInterface {
         private readonly userRepository: Repository<User>,
     ) {}
 
-    async validate(email: string): Promise<boolean> {
-        const user = await this.userRepository.findOne({email});
+    async validate(emailAddress: string): Promise<boolean> {
+        const user = await this.userRepository.findOne({emailAddress});
 
         return isNullOrUndefined(user);
     }

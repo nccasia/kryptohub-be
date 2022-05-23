@@ -28,15 +28,15 @@ export class AuthService {
         authCredentialsDto: AuthCredentialsDto,
     ): Promise<User | undefined> {
         const user = new User();
-        user.email = authCredentialsDto.email;
+        user.emailAddress = authCredentialsDto.emailAddress;
         user.username = authCredentialsDto.username;
         user.password = authCredentialsDto.password;
 
         const result = await this.userService.any({
-            where: {email: user.email, username: user.username},
+            where: {emailAddress: user.emailAddress, username: user.username},
         });
 
-        if (!user.email && user.email == '') {
+        if (!user.emailAddress && user.emailAddress == '') {
             throw new UnauthorizedException('Email should not be empty');
         }
 
@@ -66,9 +66,10 @@ export class AuthService {
         }
 
         if (result == null) {
-            user.email = authCredentialsDto.email;
+            user.emailAddress = authCredentialsDto.emailAddress;
             user.password = authCredentialsDto.password;
             user.username = authCredentialsDto.username;
+            user.status = 'isNew';
             const saveUser = await user.save();
             delete user.password;
             return saveUser;
@@ -84,7 +85,10 @@ export class AuthService {
 
         try {
             user = await this.userService.findOne({
-                where: [{username: usernameOrEmail}, {email: usernameOrEmail}],
+                where: [
+                    {username: usernameOrEmail},
+                    {emailAddress: usernameOrEmail},
+                ],
             });
         } catch (err) {
             throw new UnauthorizedException(
@@ -103,7 +107,7 @@ export class AuthService {
         }
 
         delete user.password;
-        const payload = {username: user.username, sub: user.id};
+        const payload = {username: user.username, sub: user.emailAddress};
         return {
             accessToken: this.jwtService.sign(payload),
         };
@@ -125,7 +129,7 @@ export class AuthService {
             const user = await this.userService.findOne({
                 where: {username},
             });
-            const payload = {username: user.username, sub: user.email};
+            const payload = {username: user.username, sub: user.emailAddress};
             return {
                 accessToken: this.jwtService.sign(payload),
             };
@@ -133,12 +137,13 @@ export class AuthService {
             const user = await this.userService.create({
                 username: username,
                 provider: SocialProviderTypes.GITHUB,
-                email: githubRegistration.email,
+                emailAddress: githubRegistration.emailAddress,
+                status: 'isNew',
             });
 
             delete user.password;
 
-            const payload = {username: user.username, sub: user.email};
+            const payload = {username: user.username, sub: user.emailAddress};
             return {
                 accessToken: this.jwtService.sign(payload),
             };
@@ -182,7 +187,7 @@ export class AuthService {
 
         try {
             user = await this.userService.findOne({
-                where: {email: payload.sub},
+                where: {username: payload.username},
             });
         } catch (error) {
             throw new UnauthorizedException(
@@ -196,7 +201,7 @@ export class AuthService {
 
     signToken(user: User): string {
         const payload = {
-            sub: user.email,
+            sub: user.emailAddress,
         };
 
         return this.jwtService.sign(payload);
@@ -209,12 +214,16 @@ export class AuthService {
             );
 
             const user = await this.userService.create({
-                email: decoded.email,
+                emailAddress: decoded.emailAddress,
                 username: decoded.name,
                 provider: SocialProviderTypes.GOOGLE,
+                status: 'isNew',
             });
             delete user.password;
-            const payload = {email: decoded.email, username: decoded.name};
+            const payload = {
+                emailAddress: decoded.emailAddress,
+                username: decoded.name,
+            };
             return {
                 accessToken: this.jwtService.sign(payload),
             };
