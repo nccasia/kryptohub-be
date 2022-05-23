@@ -47,6 +47,9 @@ export class Team extends BaseEntity {
     @ManyToOne((type) => User, (user) => user.team, {eager: false})
     user?: User;
 
+    @Column()
+    userId?: number;
+
     constructor(data: Partial<Team> = {}) {
         super();
         Object.assign(this, data);
