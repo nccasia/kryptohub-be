@@ -19,21 +19,21 @@ import {AuthUser} from './user.decorator';
 
 @ApiTags('Profile')
 @Controller('profile')
-@UseGuards(JWTAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProfileController {
     constructor(private readonly userService: UserService) {}
 
     @Get('')
+    @UseGuards(JWTAuthGuard)
     me(@AuthUser() user: User): User {
         return user;
     }
 
-    // @Put(':id')
-    // update(
-    //     @Param('id', new ParseIntPipe()) id: number,
-    //     @Body() updatesUser: UserUpdate,
-    // ) {
-    //     return this.userService.update(id, updatesUser);
-    // }
+    @Put(':id')
+    update(
+        @Param('id', new ParseIntPipe()) id: number,
+        @Body() updatesUser: UserUpdate,
+    ) {
+        return this.userService.update(id, updatesUser);
+    }
 }

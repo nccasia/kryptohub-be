@@ -14,7 +14,7 @@ import {HttpModule} from '@nestjs/axios';
 @Module({
     imports: [
         ConfigModule,
-        forwardRef(() => UserModule),
+        UserModule,
         HttpModule,
         JwtModule.registerAsync({
             imports: [ConfigModule],
