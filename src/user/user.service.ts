@@ -3,10 +3,14 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Repository, FindOneOptions} from 'typeorm';
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
+import {AuthService} from '../auth/auth.service';
+import {SignInRegistration} from '../auth/dto/sign-in-credentials.dto';
+// import {JwtService} from '@nestjs/jwt';
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
+        // private readonly jwtService: JwtService,
         private readonly userRepository: Repository<User>,
     ) {}
 
@@ -31,14 +35,24 @@ export class UserService {
 
         return user;
     }
-    async update(id: number, updates: UserUpdate): Promise<User> {
-        const user = await this.userRepository.findOne(id);
 
-        if (!user) {
-            throw new NotFoundException(`There isn't any user with id: ${id}`);
-        }
-        Object.assign(user, updates);
+    // async update(id: number, updates: UserUpdate) {
+    //     const user = await this.userRepository.findOne(id);
 
-        return this.userRepository.save(user);
-    }
+    //     if (!user) {
+    //         throw new NotFoundException(`There isn't any user with id: ${id}`);
+    //     }
+    //     Object.assign(user, updates);
+
+    //     const password = user.password;
+    //     const usernameOrEmail = updates.username;
+    //     let signInRegistration: SignInRegistration = {
+    //         password,
+    //         usernameOrEmail,
+    //     };
+    //     return {
+    //         accessToken: this.authService.loginAccount(signInRegistration),
+    //         user: this.userRepository.save(user),
+    //     };
+    // }
 }

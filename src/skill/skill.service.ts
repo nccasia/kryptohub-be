@@ -1,26 +1,64 @@
-import { Injectable } from '@nestjs/common';
-import { CreateSkillDto } from './dto/create-skill.dto';
-import { UpdateSkillDto } from './dto/update-skill.dto';
+import {
+    Injectable,
+    NotFoundException,
+    UnauthorizedException,
+} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {FindOneOptions, Repository} from 'typeorm';
+import {User} from '../user/user.entity';
+import {CreateSkillDto} from './dto/create-skill.dto';
+import {UpdateSkillDto} from './dto/update-skill.dto';
+import {Skill} from './entities/skill.entity';
 
 @Injectable()
 export class SkillService {
-  create(createSkillDto: CreateSkillDto) {
-    return 'This action adds a new skill';
-  }
+    constructor(
+        @InjectRepository(Skill)
+        private readonly skillRepository: Repository<Skill>,
+    ) {}
 
-  findAll() {
-    return `This action returns all skill`;
-  }
+    async create(
+        createSkillDto: CreateSkillDto,
+        user: User,
+    ): Promise<Skill | undefined> {
+        const skill = new Skill();
+        skill.skillId = createSkillDto.skillId;
+        skill.skillName = createSkillDto.skillName;
 
-  findOne(id: number) {
-    return `This action returns a #${id} skill`;
-  }
+        const result = await this.findOne({
+            where: {skillName: skill.skillName},
+        });
 
-  update(id: number, updateSkillDto: UpdateSkillDto) {
-    return `This action updates a #${id} skill`;
-  }
+        if (skill.skillName == '') {
+            throw new UnauthorizedException('Skill should not be empty');
+        }
 
-  remove(id: number) {
-    return `This action removes a #${id} skill`;
-  }
+        if (result == null) {
+            skill.skillId = createSkillDto.skillId;
+            skill.skillName = createSkillDto.skillName;
+            const saveSkill = await skill.save();
+            return saveSkill;
+        } else {
+            throw new UnauthorizedException('skillname already exists');
+        }
+    }
+
+    findAll() {
+        return `This action returns all skill`;
+    }
+
+    async findOne(where: FindOneOptions<Skill>) {
+        const skill = await this.skillRepository.findOne(where);
+
+        return skill;
+    }
+
+    update(id: number, updateSkillDto: UpdateSkillDto) {
+        return `This action updates a #${id} skill`;
+    }
+
+    remove(id: number) {
+        return `This action removes a #${id} skill`;
+    }
 }
+

@@ -95,7 +95,7 @@ export class AuthService {
                 `There isn't any user with usernameOrEmail: ${usernameOrEmail}`,
             );
         }
-
+                                                                                                                                                                                                                                                                                                                                                                       
         if (!password && password === '') {
             throw new UnauthorizedException(`password should not be empty`);
         }
@@ -191,7 +191,7 @@ export class AuthService {
             });
         } catch (error) {
             throw new UnauthorizedException(
-                `There isn't any user with email: ${payload.sub}`,
+                `There isn't any user with username: ${payload.username}`,
             );
         }
         delete user.password;
