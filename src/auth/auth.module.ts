@@ -10,6 +10,7 @@ import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
 import {HttpModule} from '@nestjs/axios';
+import {JWTAuthGuard} from './guards/jwt-auth.guard';
 
 @Module({
     imports: [

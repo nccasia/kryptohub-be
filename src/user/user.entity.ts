@@ -10,7 +10,9 @@ import {
     BeforeInsert,
     BeforeUpdate,
     BaseEntity,
+    OneToMany,
 } from 'typeorm';
+import {Team} from '../team/team.entity';
 
 export enum SocialProviderTypes {
     USERNAME = 'username',
@@ -70,6 +72,9 @@ export class User extends BaseEntity {
 
     @UpdateDateColumn()
     updatedAt?: Date;
+
+    @OneToMany((type) => Team, (team) => team.user, {eager: true})
+    team?: Team[];
 
     constructor(data: Partial<User> = {}) {
         super();

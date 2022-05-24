@@ -10,6 +10,7 @@ import {ConfigModule} from '@nestjs/config';
 import {AppService} from './app.service';
 import {SkillModule} from './skill/skill.module';
 import {TokenModule} from './token/token.module';
+import {TeamModule} from './team/team.module';
 
 @Module({
     imports: [
@@ -24,6 +25,7 @@ import {TokenModule} from './token/token.module';
         S3fsModule,
         AuthModule,
         SkillModule,
+        TeamModule,
     ],
     controllers: [AppController],
     providers: [AppService],
