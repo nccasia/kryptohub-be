@@ -213,20 +213,44 @@ export class AuthService {
                 googleAuthDto.accessToken,
             );
 
-            const user = await this.userService.create({
-                emailAddress: decoded.emailAddress,
-                username: decoded.name,
-                provider: SocialProviderTypes.GOOGLE,
-                status: 'isNew',
-            });
-            delete user.password;
-            const payload = {
-                emailAddress: decoded.emailAddress,
-                username: decoded.name,
-            };
-            return {
-                accessToken: this.jwtService.sign(payload),
-            };
+//             const userExisted = await this.userService.findOne({
+//                 where: {email: decoded.email},
+//             });
+
+//             let accessToken = '';
+//             if (userExisted === null) {
+//                 const user = await this.userService.create({
+//                     email: decoded.email,
+//                     username: decoded.name,
+//                     provider: SocialProviderTypes.GOOGLE,
+//                 });
+//                 delete user.password;
+//                 const payload = {email: decoded.email, username: decoded.name};
+//                 accessToken = this.jwtService.sign(payload);
+//             } else {
+//                 const payload = {
+//                     email: userExisted.email,
+//                     username: userExisted.username,
+//                 };
+//                 accessToken = this.jwtService.sign(payload);
+//             }
+//             return {accessToken};
+
+//             const user = await this.userService.create({
+//                 emailAddress: decoded.emailAddress,
+//                 username: decoded.name,
+//                 provider: SocialProviderTypes.GOOGLE,
+//                 status: 'isNew',
+//             });
+//             delete user.password;
+//             const payload = {
+//                 emailAddress: decoded.emailAddress,
+//                 username: decoded.name,
+//             };
+//             return {
+//                 accessToken: this.jwtService.sign(payload),
+//             };
+
         }
     }
 }
