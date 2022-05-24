@@ -29,7 +29,7 @@ export class ProfileController {
         return user;
     }
 
-    @Put(':id')
+    @Put('update/:id')
     update(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updatesUser: UserUpdate,

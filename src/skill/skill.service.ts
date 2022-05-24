@@ -1,4 +1,6 @@
 import {
+    HttpException,
+    HttpStatus,
     Injectable,
     NotFoundException,
     UnauthorizedException,
@@ -25,13 +27,13 @@ export class SkillService {
         skill.skillId = createSkillDto.skillId;
         skill.skillName = createSkillDto.skillName;
 
-        const result = await this.findOne({
-            where: {skillName: skill.skillName},
-        });
-
         if (skill.skillName == '') {
             throw new UnauthorizedException('Skill should not be empty');
         }
+
+        const result = await this.findOne({
+            where: {skillName: skill.skillName},
+        });
 
         if (result == null) {
             skill.skillId = createSkillDto.skillId;
@@ -43,22 +45,39 @@ export class SkillService {
         }
     }
 
-    findAll() {
-        return `This action returns all skill`;
+    async findAll() {
+        const skill = await this.skillRepository.find();
+
+        return skill;
     }
 
     async findOne(where: FindOneOptions<Skill>) {
         const skill = await this.skillRepository.findOne(where);
 
+        // if (!skill) {
+        //     throw new NotFoundException(
+        //         `There isn't any skill with identifier: ${where}`,
+        //     );
+        // }
         return skill;
     }
 
-    update(id: number, updateSkillDto: UpdateSkillDto) {
-        return `This action updates a #${id} skill`;
+    async update(skillId: number, updatesSkill: UpdateSkillDto) {
+        const skill = await this.skillRepository.findOne(skillId);
+
+        if (!skill) {
+            throw new NotFoundException(
+                `There isn't any skill with id: ${skillId}`,
+            );
+        }
+        Object.assign(skill, updatesSkill);
+
+        return await this.skillRepository.save(skill);
     }
 
-    remove(id: number) {
-        return `This action removes a #${id} skill`;
+    async remove(skillId: number) {
+        await this.skillRepository.delete(skillId);
+        throw new HttpException('Delete nft success', HttpStatus.OK);
     }
 }
 
