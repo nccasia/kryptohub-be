@@ -223,6 +223,7 @@ export class AuthService {
                     emailAddress: decoded.emailAddress,
                     username: decoded.name,
                     provider: SocialProviderTypes.GOOGLE,
+                    status: 'isNew',
                 });
                 delete user.password;
                 const payload = {
