@@ -15,6 +15,7 @@ import {S3fsModule} from './s3fs/s3fs.module';
 import {ConfigModule} from '@nestjs/config';
 import {AppService} from './app.service';
 import {MetadiscsModule} from './metadiscs/metadiscs.module';
+import {TeamModule} from './team/team.module';
 
 @Module({
     imports: [
@@ -32,6 +33,7 @@ import {MetadiscsModule} from './metadiscs/metadiscs.module';
         S3fsModule,
         MetadiscsModule,
         AuthModule,
+        TeamModule,
     ],
     controllers: [AppController, ReadController, UploadController],
     providers: [AppService],
