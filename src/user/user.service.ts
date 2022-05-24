@@ -1,13 +1,16 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository, FindOneOptions} from 'typeorm';
+import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
+import {JwtService} from '@nestjs/jwt';
+
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+        private readonly jwtService: JwtService,
     ) {}
 
     async create(data: Partial<User>): Promise<User> {
@@ -31,7 +34,8 @@ export class UserService {
 
         return user;
     }
-    async update(id: number, updates: UserUpdate): Promise<User> {
+
+    async update(id: number, updates: UserUpdate) {
         const user = await this.userRepository.findOne(id);
 
         if (!user) {
@@ -39,6 +43,11 @@ export class UserService {
         }
         Object.assign(user, updates);
 
-        return this.userRepository.save(user);
+        const updateUSer = await this.userRepository.save(user);
+        const payload = {username: user.username, sub: user.emailAddress};
+        return {
+            accessToken: this.jwtService.sign(payload),
+            user: updateUSer,
+        };
     }
 }

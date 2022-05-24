@@ -50,7 +50,7 @@ describe('Auth Controller', () => {
     it('should register a new user', async () => {
         const register = {
             name: 'John Doe',
-            email: 'john@doe.me',
+            emailAddress: 'john@doe.me',
             password: 'Pa$$w0rd',
         };
         repositoryMock.save.mockResolvedValueOnce(
@@ -66,7 +66,7 @@ describe('Auth Controller', () => {
         const user = userBuilder({
             overrides: {
                 name: 'John Doe',
-                email: 'john@doe.me',
+                ememailAddressail: 'john@doe.me',
             },
         });
 
@@ -79,7 +79,7 @@ describe('Auth Controller', () => {
         const user = userBuilder({
             overrides: {
                 name: 'John Doe',
-                email: 'john@doe.me',
+                emailAddress: 'john@doe.me',
             },
         });
 

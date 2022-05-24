@@ -8,7 +8,7 @@ export class AuthCredentialsDto {
 
     @ApiProperty({required: true})
     @IsOptional()
-    readonly email?: string = '';
+    readonly emailAddress?: string = '';
 
     @ApiProperty({required: true})
     @IsOptional()

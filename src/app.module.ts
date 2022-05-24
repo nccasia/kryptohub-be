@@ -4,17 +4,12 @@ import {DatabaseModule} from './database/database.module';
 import {Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {IpfsModule} from './ipfs/ipfs.module';
-import {ReadModule} from './meta/read/read.module';
-import {ReadController} from './meta/read/read.controller';
-import {UploadModule} from './meta/upload/upload.module';
-import {UploadController} from './meta/upload/upload.controller';
-import {MetaModule} from './meta/meta.module';
-import {TokenModule} from './token/token.module';
 import {SubsgraphModule} from './subsgraph/subsgraph.module';
 import {S3fsModule} from './s3fs/s3fs.module';
 import {ConfigModule} from '@nestjs/config';
 import {AppService} from './app.service';
-import {MetadiscsModule} from './metadiscs/metadiscs.module';
+import {SkillModule} from './skill/skill.module';
+import {TokenModule} from './token/token.module';
 import {TeamModule} from './team/team.module';
 
 @Module({
@@ -25,17 +20,14 @@ import {TeamModule} from './team/team.module';
         TerminusModule,
         DatabaseModule,
         IpfsModule,
-        ReadModule,
-        UploadModule,
-        MetaModule,
         TokenModule,
         SubsgraphModule,
         S3fsModule,
-        MetadiscsModule,
         AuthModule,
+        SkillModule,
         TeamModule,
     ],
-    controllers: [AppController, ReadController, UploadController],
+    controllers: [AppController],
     providers: [AppService],
 })
 export class AppModule {}

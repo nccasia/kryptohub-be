@@ -19,6 +19,6 @@ export class GithubRegistration {
     // @IsDefined()
     @IsOptional()
     // @IsNotEmpty()
-    readonly email?: string = '';
+    readonly emailAddress?: string = '';
 
 }
