@@ -1,17 +1,13 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
 
-export class GoogleAuthDto {
+export class CreateSkillDto {
     @ApiProperty({required: false})
     @IsOptional()
-    readonly accessToken?: string = '';
+    skillId?: number;
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly emailAddress?: string = '';
+    readonly skillName?: string = '';
 }
 
-export interface GoogleAuthReq {
-    emailAddress: string;
-    name: string;
-}

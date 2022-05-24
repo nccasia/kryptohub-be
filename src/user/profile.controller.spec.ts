@@ -13,7 +13,7 @@ const userBuilder = build<Partial<User>>({
     fields: {
         id: sequence(),
         name: perBuild(() => faker.name.findName()),
-        email: perBuild(() => faker.internet.exampleEmail()),
+        emailAddress: perBuild(() => faker.internet.exampleEmail()),
         password: perBuild(() => faker.datatype.uuid()),
         createdAt: perBuild(() => new Date()),
         updatedAt: perBuild(() => new Date()),

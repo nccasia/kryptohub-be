@@ -1,5 +1,5 @@
 import {ConfigService, ConfigModule} from '@nestjs/config';
-import {Module} from '@nestjs/common';
+import {forwardRef, Module} from '@nestjs/common';
 import {JwtModule, JwtModuleOptions} from '@nestjs/jwt';
 import {PassportModule} from '@nestjs/passport';
 import {UserModule} from '../user/user.module';

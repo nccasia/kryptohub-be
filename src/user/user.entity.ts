@@ -38,36 +38,34 @@ export class User extends BaseEntity {
     @Column()
     username?: string;
 
-    @Column({
-        unique: true,
-        length: 200,
-    })
-    displayName?: string;
-
-    @Column({
-        length: 200,
-    })
-    firstName?: string;
-
-    @Column({
-        length: 200,
-    })
-    lastName?: string;
-
     @ApiProperty()
     @Column({unique: true})
-    email?: string;
+    emailAddress?: string;
 
     @ApiProperty()
     @Column()
     @Exclude()
     password?: string;
 
-    @Column()
-    nonce?: string;
+    @ApiProperty()
+    @Column({unique: true})
+    avatar?: string;
 
-    @Column()
-    walletAddress?: string;
+    @ApiProperty()
+    @Column({unique: true})
+    github?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
+    google?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
+    skills?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
+    status?: string;
 
     @CreateDateColumn()
     createdAt?: Date;
@@ -90,12 +88,6 @@ export class User extends BaseEntity {
         if (this.password && !/^\$2a\$\d+\$/.test(this.password)) {
             this.password = await bcrypt.hash(this.password, salt);
         }
-    }
-
-    @BeforeInsert()
-    async genNonce() {
-        const salt = await bcrypt.genSalt();
-        this.nonce = salt;
     }
 
     async checkPassword(plainPassword: string): Promise<boolean> {

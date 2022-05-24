@@ -13,27 +13,27 @@ import {
 import {UserService} from './user.service';
 import {UserUpdate} from './dto/user-update.dto';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
-import {SessionAuthGuard} from '../auth/guards/session-auth.guard';
 import {User} from './user.entity';
-import { ApiTags } from '@nestjs/swagger';
+import {ApiTags} from '@nestjs/swagger';
+import {AuthUser} from './user.decorator';
 
 @ApiTags('Profile')
 @Controller('profile')
-@UseGuards(JWTAuthGuard, SessionAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProfileController {
     constructor(private readonly userService: UserService) {}
 
-    @Get(':id')
-    get(@Param('id', new ParseIntPipe()) id: number): Promise<User> {
-        return this.userService.findOne({where: {id}});
+    @Get('')
+    @UseGuards(JWTAuthGuard)
+    me(@AuthUser() user: User): User {
+        return user;
     }
 
-    @Put(':id')
+    @Put('update/:id')
     update(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updatesUser: UserUpdate,
-    ): Promise<User> {
+    ) {
         return this.userService.update(id, updatesUser);
     }
 }
