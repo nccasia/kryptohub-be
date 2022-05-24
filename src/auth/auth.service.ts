@@ -207,17 +207,28 @@ export class AuthService {
             const decoded: GoogleAuthReq = jwt_decode(
                 googleAuthDto.accessToken,
             );
-
-            const user = await this.userService.create({
-                email: decoded.email,
-                username: decoded.name,
-                provider: SocialProviderTypes.GOOGLE,
+            const userExisted = await this.userService.findOne({
+                where: {email: decoded.email},
             });
-            delete user.password;
-            const payload = {email: decoded.email, username: decoded.name};
-            return {
-                accessToken: this.jwtService.sign(payload),
-            };
+
+            let accessToken = '';
+            if (userExisted === null) {
+                const user = await this.userService.create({
+                    email: decoded.email,
+                    username: decoded.name,
+                    provider: SocialProviderTypes.GOOGLE,
+                });
+                delete user.password;
+                const payload = {email: decoded.email, username: decoded.name};
+                accessToken = this.jwtService.sign(payload);
+            } else {
+                const payload = {
+                    email: userExisted.email,
+                    username: userExisted.username,
+                };
+                accessToken = this.jwtService.sign(payload);
+            }
+            return {accessToken};
         }
     }
 }
