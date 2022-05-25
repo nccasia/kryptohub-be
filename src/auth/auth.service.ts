@@ -212,33 +212,29 @@ export class AuthService {
             const decoded: GoogleAuthReq = jwt_decode(
                 googleAuthDto.accessToken,
             );
-
-            const userExisted = await this.userService.findOne({
-                where: {emailAddress: decoded.emailAddress},
-            });
-
-            let accessToken = '';
-            if (userExisted === null) {
+            try {
+                const userExisted = await this.userService.findOne({
+                    where: {emailAddress: decoded.email},
+                });
+                const payload = {
+                    emailAddress: userExisted.emailAddress,
+                    username: userExisted.username,
+                };
+                return {accessToken: this.jwtService.sign(payload)};
+            } catch (e) {
                 const user = await this.userService.create({
-                    emailAddress: decoded.emailAddress,
+                    emailAddress: decoded.email,
                     username: decoded.name,
                     provider: SocialProviderTypes.GOOGLE,
                     status: 'isNew',
                 });
                 delete user.password;
                 const payload = {
-                    emailAddress: decoded.emailAddress,
+                    emailAddress: decoded.email,
                     username: decoded.name,
                 };
-                accessToken = this.jwtService.sign(payload);
-            } else {
-                const payload = {
-                    emailAddress: userExisted.emailAddress,
-                    username: userExisted.username,
-                };
-                accessToken = this.jwtService.sign(payload);
+                return {accessToken: this.jwtService.sign(payload)};
             }
-            return {accessToken};
         }
     }
 }
