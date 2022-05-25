@@ -12,6 +12,6 @@ export class GoogleAuthDto {
 }
 
 export interface GoogleAuthReq {
-    emailAddress: string;
+    email: string;
     name: string;
 }
