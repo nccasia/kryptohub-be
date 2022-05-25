@@ -73,4 +73,20 @@ export class AuthController {
     me(@AuthUser() user: User): User {
         return user;
     }
+
+    @Post('/check-email')
+    async checkExistEmail(@Body() emailAddress: any) {
+        console.log(emailAddress, 'emailAddress');
+
+        return await this.authService.checkExistEmail(
+            emailAddress.emailAddress,
+        );
+    }
+
+    @Post('/check-username')
+    async checkExistUsername(@Body() username: any) {
+        console.log(username, 'emailAddress');
+
+        return await this.authService.checkExistUsername(username.username);
+    }
 }
