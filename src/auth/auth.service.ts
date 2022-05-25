@@ -33,7 +33,7 @@ export class AuthService {
         user.password = authCredentialsDto.password;
 
         const result = await this.userService.any({
-            where: {emailAddress: user.emailAddress, username: user.username},
+            where: [{emailAddress: user.emailAddress, username: user.username}],
         });
 
         if (!user.emailAddress && user.emailAddress == '') {
@@ -75,6 +75,26 @@ export class AuthService {
             return saveUser;
         } else {
             throw new UnauthorizedException('Email or username already exists');
+        }
+    }
+
+    async checkExistEmail(emailAddress: any) {
+        const result = await this.userService.any({
+            where: [{emailAddress: emailAddress}],
+        });
+
+        if (result != null) {
+            throw new UnauthorizedException('This email already exists');
+        }
+    }
+
+    async checkExistUsername(username: any) {
+        const result = await this.userService.any({
+            where: [{username: username}],
+        });
+
+        if (result != null) {
+            throw new UnauthorizedException('This user name already exists');
         }
     }
 
