@@ -5,7 +5,7 @@ export class createUsers1651602940909 implements MigrationInterface {
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
-            `CREATE TABLE "user" ("id" SERIAL NOT NULL, "provider" character varying NULL, "username" character varying NULL, "emailAddress" character varying NULL, "password" character varying NULL, "avatar" character varying NULL, "github" character varying NULL, "google" character varying NULL, "skills" character varying NULL, "teamId" integer, "status" character varying NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("emailAddress"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
+            `CREATE TABLE "user" ("id" SERIAL NOT NULL, "username" character varying NULL, "emailAddress" character varying NULL, "password" character varying NULL, "avatar" character varying NULL, "link" character varying NULL,"githubAddress" character varying NULL, "googleAddress" character varying NULL, "skills" character varying NULL, "teamId" integer, "status" character varying NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "UQ_e12875dfb3b1d92d7d7c5377e22" UNIQUE ("emailAddress"), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`,
         );
     }
 

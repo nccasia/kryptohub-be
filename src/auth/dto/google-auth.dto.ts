@@ -8,7 +8,7 @@ export class GoogleAuthDto {
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly emailAddress?: string = '';
+    readonly googleAddress?: string = '';
 }
 
 export interface GoogleAuthReq {

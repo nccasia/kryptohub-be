@@ -74,19 +74,17 @@ export class AuthController {
         return user;
     }
 
+    @HttpCode(HttpStatus.OK)
     @Post('/check-email')
     async checkExistEmail(@Body() emailAddress: any) {
-        console.log(emailAddress, 'emailAddress');
-
         return await this.authService.checkExistEmail(
             emailAddress.emailAddress,
         );
     }
 
     @Post('/check-username')
+    @HttpCode(HttpStatus.OK)
     async checkExistUsername(@Body() username: any) {
-        console.log(username, 'emailAddress');
-
         return await this.authService.checkExistUsername(username.username);
     }
 }
