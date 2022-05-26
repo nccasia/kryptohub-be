@@ -26,14 +26,6 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id?: number;
 
-    @Column({
-        name: 'provider',
-        nullable: true,
-        type: 'enum',
-        enum: SocialProviderTypes,
-    })
-    provider?: SocialProviderTypes;
-
     @ApiProperty()
     @Column()
     username?: string;
@@ -49,15 +41,17 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({unique: true})
-    avatar?: string;
+    @ApiProperty()
+    @Column({unique: true})
+    link?: string;
 
     @ApiProperty()
     @Column({unique: true})
-    github?: string;
+    githubAddress?: string;
 
     @ApiProperty()
     @Column({unique: true})
-    google?: string;
+    googleAddress?: string;
 
     @ApiProperty()
     @Column({unique: true})

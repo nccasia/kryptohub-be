@@ -84,7 +84,7 @@ export class AuthService {
         });
 
         if (result != null) {
-            throw new UnauthorizedException('This email already exists');
+            return {message: 'This email already exists'};
         }
     }
 
@@ -94,7 +94,7 @@ export class AuthService {
         });
 
         if (result != null) {
-            throw new UnauthorizedException('This user name already exists');
+            return {message: 'This user name already exists'};
         }
     }
 
@@ -143,27 +143,36 @@ export class AuthService {
                 })
                 .pipe((res) => res),
         );
+
         const userGithub = getUser.data;
         const username = userGithub.login;
         try {
             const user = await this.userService.findOne({
                 where: {username},
             });
-            const payload = {username: user.username, sub: user.emailAddress};
+
+            const payload = {
+                username: user.username,
+                sub: user.githubAddress,
+            };
+
             return {
                 accessToken: this.jwtService.sign(payload),
             };
         } catch (e) {
             const user = await this.userService.create({
                 username: username,
-                provider: SocialProviderTypes.GITHUB,
-                emailAddress: githubRegistration.emailAddress,
+                link: userGithub.html_url,
+                githubAddress: githubRegistration.githubAddress,
                 status: 'isNew',
             });
 
             delete user.password;
+            const payload = {
+                username: user.username,
+                sub: user.githubAddress,
+            };
 
-            const payload = {username: user.username, sub: user.emailAddress};
             return {
                 accessToken: this.jwtService.sign(payload),
             };
@@ -232,25 +241,25 @@ export class AuthService {
             const decoded: GoogleAuthReq = jwt_decode(
                 googleAuthDto.accessToken,
             );
+
             try {
                 const userExisted = await this.userService.findOne({
-                    where: {emailAddress: decoded.email},
+                    where: {googleAddress: decoded.email},
                 });
                 const payload = {
-                    emailAddress: userExisted.emailAddress,
+                    googleAddress: userExisted.googleAddress,
                     username: userExisted.username,
                 };
                 return {accessToken: this.jwtService.sign(payload)};
             } catch (e) {
                 const user = await this.userService.create({
-                    emailAddress: decoded.email,
+                    googleAddress: decoded.email,
                     username: decoded.name,
-                    provider: SocialProviderTypes.GOOGLE,
                     status: 'isNew',
                 });
                 delete user.password;
                 const payload = {
-                    emailAddress: decoded.email,
+                    googleAddress: decoded.email,
                     username: decoded.name,
                 };
                 return {accessToken: this.jwtService.sign(payload)};
