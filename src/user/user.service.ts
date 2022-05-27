@@ -46,6 +46,7 @@ export class UserService {
 
         const updateSkill = await this.userRepository.save({
             id: id,
+            provider: user.provider,
             username: updates.username,
             emailAddress: updates.emailAddress,
             githubAddress: updates.githubAddress,
@@ -55,10 +56,16 @@ export class UserService {
             status: updates.status,
             skills: skills,
         });
+
         const payload = {username: user.username, sub: user.emailAddress};
         return {
             accessToken: this.jwtService.sign(payload),
             user: updateSkill,
         };
+    }
+
+    async getSkillByUserId(id: number) {
+        const skill = await this.userRepository.find({where: {id: id}});
+        return skill;
     }
 }

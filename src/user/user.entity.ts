@@ -29,6 +29,14 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id?: number;
 
+    @Column({
+        name: 'provider',
+        nullable: true,
+        type: 'enum',
+        enum: SocialProviderTypes,
+    })
+    provider?: SocialProviderTypes;
+
     @ApiProperty()
     @Column()
     username?: string;

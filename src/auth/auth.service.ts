@@ -70,6 +70,7 @@ export class AuthService {
             user.password = authCredentialsDto.password;
             user.username = authCredentialsDto.username;
             user.status = 'isNew';
+            user.provider = SocialProviderTypes.USERNAME;
             const saveUser = await user.save();
             delete user.password;
             return saveUser;
@@ -165,6 +166,7 @@ export class AuthService {
                 link: userGithub.html_url,
                 githubAddress: githubRegistration.githubAddress,
                 status: 'isNew',
+                provider: SocialProviderTypes.GITHUB,
             });
 
             delete user.password;
@@ -256,6 +258,7 @@ export class AuthService {
                     googleAddress: decoded.email,
                     username: decoded.name,
                     status: 'isNew',
+                    provider: SocialProviderTypes.GOOGLE,
                 });
                 delete user.password;
                 const payload = {
