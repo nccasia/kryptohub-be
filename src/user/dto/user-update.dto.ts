@@ -1,5 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {IsDefined, IsString, IsNotEmpty, IsOptional} from 'class-validator';
+import { Skill } from '../../skill/entities/skill.entity';
 
 export class UserUpdate {
     @ApiProperty({required: false})
@@ -12,13 +13,17 @@ export class UserUpdate {
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly github?: string = '';
+    readonly githubAddress?: string = '';
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly google?: string = '';
+    readonly googleAddress?: string = '';
 
     @ApiProperty({required: false})
     @IsOptional()
     readonly status?: string = 'isChanged';
+
+    @ApiProperty()
+    @IsOptional()
+    skills?: Skill[];
 }

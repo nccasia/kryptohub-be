@@ -16,12 +16,16 @@ import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {User} from './user.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthUser} from './user.decorator';
+import {SkillService} from '../skill/skill.service';
 
 @ApiTags('Profile')
 @Controller('profile')
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProfileController {
-    constructor(private readonly userService: UserService) {}
+    constructor(
+        private readonly userService: UserService,
+        private readonly skillService: SkillService,
+    ) {}
 
     @Get('')
     @UseGuards(JWTAuthGuard)
@@ -30,10 +34,13 @@ export class ProfileController {
     }
 
     @Put('update/:id')
-    update(
+    async update(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updatesUser: UserUpdate,
     ) {
-        return this.userService.update(id, updatesUser);
+        const skills = await this.skillService.getSkillByIds(
+            updatesUser.skills as any,
+        );
+        return this.userService.update(id, updatesUser, skills);
     }
 }

@@ -28,8 +28,8 @@ export class SkillController {
 
     @Post('create')
     @HttpCode(HttpStatus.OK)
-    create(@Body() createSkillDto: CreateSkillDto, @AuthUser() user: User) {
-        return this.skillService.create(createSkillDto, user);
+    create(@Body() createSkillDto: CreateSkillDto) {
+        return this.skillService.create(createSkillDto);
     }
 
     @Get()
@@ -50,7 +50,7 @@ export class SkillController {
     @Get('get/:skillId')
     @HttpCode(HttpStatus.OK)
     findOne(@Param('skillId') skillId) {
-        return this.skillService.findOne(skillId);
+        return this.skillService.finById(skillId);
     }
 
     @Delete('delete/:skillId')
@@ -59,4 +59,3 @@ export class SkillController {
         return this.skillService.remove(skillId);
     }
 }
-

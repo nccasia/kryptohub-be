@@ -13,9 +13,11 @@ import {Repository} from 'typeorm';
 import {JwtStrategy} from '../auth/strategies/jwt.strategy';
 import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SkillModule } from '../skill/skill.module';
 
 @Module({
     imports: [
+        SkillModule,
         TypeOrmModule.forFeature([User, Profile]),
         JwtModule.registerAsync({
             imports: [ConfigModule],

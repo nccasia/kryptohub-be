@@ -11,7 +11,10 @@ import {
     BeforeUpdate,
     BaseEntity,
     OneToMany,
+    ManyToMany,
+    JoinTable,
 } from 'typeorm';
+import {Skill} from '../skill/entities/skill.entity';
 import {Team} from '../team/team.entity';
 
 export enum SocialProviderTypes {
@@ -41,21 +44,16 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({unique: true})
-    @ApiProperty()
-    @Column({unique: true})
-    link?: string;
-
-    @ApiProperty()
-    @Column({unique: true})
     githubAddress?: string;
-
+    
     @ApiProperty()
     @Column({unique: true})
     googleAddress?: string;
 
     @ApiProperty()
     @Column({unique: true})
-    skills?: string;
+    @ApiProperty()
+    link?: string;
 
     @ApiProperty()
     @Column({unique: true})
@@ -69,6 +67,10 @@ export class User extends BaseEntity {
 
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
     team?: Team[];
+
+    @ManyToMany(() => Skill, skill => skill.users)
+    @JoinTable()
+    skills?: Skill[];
 
     constructor(data: Partial<User> = {}) {
         super();
