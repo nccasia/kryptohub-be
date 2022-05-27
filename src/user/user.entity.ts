@@ -42,7 +42,7 @@ export class User extends BaseEntity {
     username?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     emailAddress?: string;
 
     @ApiProperty()
@@ -51,11 +51,11 @@ export class User extends BaseEntity {
     password?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     githubAddress?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     googleAddress?: string;
 
     @ApiProperty()
