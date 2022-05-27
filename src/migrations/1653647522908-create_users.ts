@@ -1,10 +1,11 @@
 import {MigrationInterface, QueryRunner} from "typeorm";
 
-export class createUsers1653645293087 implements MigrationInterface {
-    name = 'createUsers1653645293087'
+export class createUsers1653647522908 implements MigrationInterface {
+    name = 'createUsers1653647522908'
 
     public async up(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(`CREATE TABLE "skill" ("id" SERIAL NOT NULL, "skillName" character varying NOT NULL, CONSTRAINT "PK_a0d33334424e64fb78dc3ce7196" PRIMARY KEY ("id"))`);
+        await queryRunner.query(`CREATE TYPE "public"."user_provider_enum" AS ENUM('username', 'google', 'github')`);
         await queryRunner.query(`CREATE TABLE "user" ("id" SERIAL NOT NULL, "provider" "public"."user_provider_enum", "username" character varying NULL, "emailAddress" character varying NULL, "password" character varying NULL, "githubAddress" character varying NULL, "googleAddress" character varying NULL, "description" character varying NULL, "avatarPath" character varying NULL, "link" character varying NULL, "status" character varying NULL, "createdAt" TIMESTAMP NOT NULL DEFAULT now(), "updatedAt" TIMESTAMP NOT NULL DEFAULT now(), CONSTRAINT "PK_cace4a159ff9f2512dd42373760" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "team" ("id" SERIAL NOT NULL, "teamName" character varying NOT NULL, "teamSize" character varying NOT NULL, "timeZone" character varying NOT NULL, "organization" character varying NOT NULL, "skill" text array NOT NULL, "workingTime" character varying NOT NULL, "hour" character varying NOT NULL, "week" character varying NOT NULL, "description" character varying NOT NULL, "avatar" character varying NOT NULL, "userId" integer NOT NULL, CONSTRAINT "PK_f57d8293406df4af348402e4b74" PRIMARY KEY ("id"))`);
         await queryRunner.query(`CREATE TABLE "profile" ("id" SERIAL NOT NULL, "phone" character varying NOT NULL, "birthday" date NOT NULL, "website" character varying NOT NULL, "occupation" character varying NOT NULL, "userId" integer, CONSTRAINT "REL_a24972ebd73b106250713dcddd" UNIQUE ("userId"), CONSTRAINT "PK_3dd8bfc97e4a77c70971591bdcb" PRIMARY KEY ("id"))`);
@@ -28,6 +29,7 @@ export class createUsers1653645293087 implements MigrationInterface {
         await queryRunner.query(`DROP TABLE "profile"`);
         await queryRunner.query(`DROP TABLE "team"`);
         await queryRunner.query(`DROP TABLE "user"`);
+        await queryRunner.query(`DROP TYPE "public"."user_provider_enum"`);
         await queryRunner.query(`DROP TABLE "skill"`);
     }
 
