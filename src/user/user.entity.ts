@@ -59,20 +59,20 @@ export class User extends BaseEntity {
     googleAddress?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     description?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     avatarPath?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     @ApiProperty()
     link?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     status?: string;
 
     @CreateDateColumn()
