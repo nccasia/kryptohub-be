@@ -45,10 +45,18 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column({unique: true})
     githubAddress?: string;
-    
+
     @ApiProperty()
     @Column({unique: true})
     googleAddress?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
+    description?: string;
+
+    @ApiProperty()
+    @Column({unique: true})
+    avatarPath?: string;
 
     @ApiProperty()
     @Column({unique: true})
@@ -68,7 +76,7 @@ export class User extends BaseEntity {
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
     team?: Team[];
 
-    @ManyToMany(() => Skill, skill => skill.users)
+    @ManyToMany(() => Skill, (skill) => skill.users)
     @JoinTable()
     skills?: Skill[];
 

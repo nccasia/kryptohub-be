@@ -46,12 +46,15 @@ export class UserService {
 
         const updateSkill = await this.userRepository.save({
             id: id,
+            username: updates.username,
             emailAddress: updates.emailAddress,
             githubAddress: updates.githubAddress,
             googleAddress: updates.googleAddress,
+            avatarPath: updates.avatarPath,
+            description: updates.description,
             status: updates.status,
             skills: skills,
-        })
+        });
         const payload = {username: user.username, sub: user.emailAddress};
         return {
             accessToken: this.jwtService.sign(payload),
