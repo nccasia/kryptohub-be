@@ -60,6 +60,7 @@ export class UserService {
             avatarPath: updates.avatarPath,
             description: updates.description,
             status: updates.status,
+            link: updates.link,
             skills: skills,
         });
 

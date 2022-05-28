@@ -27,6 +27,11 @@ export class UserUpdate {
     @IsOptional()
     readonly avatarPath?: string = '';
 
+    
+    @ApiProperty({required: false})
+    @IsOptional()
+    readonly link?: string = '';
+
     @ApiProperty({required: false})
     @IsOptional()
     readonly status?: string = 'isChanged';
