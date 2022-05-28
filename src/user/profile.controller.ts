@@ -29,8 +29,9 @@ export class ProfileController {
 
     @Get('')
     @UseGuards(JWTAuthGuard)
-    me(@AuthUser() user: User): User {
-        return user;
+    async me(@AuthUser() user: User) {
+        const getUser = await this.userService.getSkillById(user.id as number);
+        return getUser;
     }
 
     @Put('update/:id')

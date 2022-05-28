@@ -37,6 +37,12 @@ export class UserService {
         return user;
     }
 
+    async getSkillById(id: number) {
+        return await this.userRepository.findOne(id, {
+            relations: ['skills'],
+        });
+    }
+
     async update(id: number, updates: UserUpdate, skills: Array<Skill>) {
         const user = await this.userRepository.findOne(id);
 
