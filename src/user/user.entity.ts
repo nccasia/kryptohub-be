@@ -73,10 +73,9 @@ export class User extends BaseEntity {
     @Column()
     avatarPath?: string;
 
-    @ApiProperty()
-    @Column()
-    @ApiProperty()
-    link?: string;
+    // @ApiProperty()
+    // @Column()
+    // link?: string;
 
     @ApiProperty()
     @Column()
