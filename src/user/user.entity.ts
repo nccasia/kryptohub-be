@@ -55,17 +55,15 @@ export class User extends BaseEntity {
     password?: string;
 
     @ApiProperty()
-<<<<<<< HEAD
     @Column()
     githubAddress?: string;
 
     @ApiProperty()
     @Column()
     googleAddress?: string;
-=======
+
     @Column({unique: true})
     profileLink?: string;
->>>>>>> develop
 
     @ApiProperty()
     @Column()
