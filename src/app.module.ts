@@ -11,11 +11,15 @@ import {AppService} from './app.service';
 import {SkillModule} from './skill/skill.module';
 import {TokenModule} from './token/token.module';
 import {TeamModule} from './team/team.module';
+import {MulterModule} from '@nestjs/platform-express';
 
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
+        }),
+        MulterModule.register({
+            dest: './files',
         }),
         TerminusModule,
         DatabaseModule,

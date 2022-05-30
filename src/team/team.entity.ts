@@ -44,6 +44,9 @@ export class Team extends BaseEntity {
     @Column()
     avatar?: string;
 
+    @Column()
+    avatarUrl?: string;
+
     @ManyToOne((type) => User, (user) => user.team, {eager: false})
     user?: User;
 
