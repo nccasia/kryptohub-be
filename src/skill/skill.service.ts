@@ -6,7 +6,7 @@ import {
     UnauthorizedException,
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {FindOneOptions, Repository} from 'typeorm';
+import {FindOneOptions, In, Repository} from 'typeorm';
 import {User} from '../user/user.entity';
 import {CreateSkillDto} from './dto/create-skill.dto';
 import {UpdateSkillDto} from './dto/update-skill.dto';
@@ -19,12 +19,9 @@ export class SkillService {
         private readonly skillRepository: Repository<Skill>,
     ) {}
 
-    async create(
-        createSkillDto: CreateSkillDto,
-        user: User,
-    ): Promise<Skill | undefined> {
+    async create(createSkillDto: CreateSkillDto): Promise<Skill | undefined> {
         const skill = new Skill();
-        skill.skillId = createSkillDto.skillId;
+        skill.id = createSkillDto.id;
         skill.skillName = createSkillDto.skillName;
 
         if (skill.skillName == '') {
@@ -36,7 +33,7 @@ export class SkillService {
         });
 
         if (result == null) {
-            skill.skillId = createSkillDto.skillId;
+            skill.id = createSkillDto.id;
             skill.skillName = createSkillDto.skillName;
             const saveSkill = await skill.save();
             return saveSkill;
@@ -51,14 +48,24 @@ export class SkillService {
         return skill;
     }
 
+    async getSkillByIds(ids: Array<number>) {
+        const skill = await this.skillRepository.find({where: {id: In(ids)}});
+        return skill;
+    }
+
     async findOne(where: FindOneOptions<Skill>) {
         const skill = await this.skillRepository.findOne(where);
+        return skill;
+    }
 
-        // if (!skill) {
-        //     throw new NotFoundException(
-        //         `There isn't any skill with identifier: ${where}`,
-        //     );
-        // }
+    async finById(where: FindOneOptions<Skill>) {
+        const skill = await this.skillRepository.findOne(where);
+
+        if (!skill) {
+            throw new NotFoundException(
+                `There isn't any skill with identifier: ${where}`,
+            );
+        }
         return skill;
     }
 
@@ -77,7 +84,6 @@ export class SkillService {
 
     async remove(skillId: number) {
         await this.skillRepository.delete(skillId);
-        throw new HttpException('Delete nft success', HttpStatus.OK);
+        throw new HttpException('Delete skill success', HttpStatus.OK);
     }
 }
-

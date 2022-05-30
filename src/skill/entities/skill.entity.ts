@@ -5,6 +5,8 @@ import {
     Column,
     BaseEntity,
     ManyToOne,
+    ManyToMany,
+    JoinTable,
 } from 'typeorm';
 import {User} from '../../user/user.entity';
 
@@ -12,18 +14,17 @@ import {User} from '../../user/user.entity';
 export class Skill extends BaseEntity {
     @ApiProperty()
     @PrimaryGeneratedColumn()
-    skillId?: number;
+    id?: number;
 
     @ApiProperty()
     @Column()
     skillName?: string;
 
-    @ManyToOne((type) => User, (user) => user.skills, {eager: false})
-    user?: User;
+    @ManyToMany(() => User, (user)=> user.skills)
+    users?: User[];
 
     constructor(data: Partial<Skill> = {}) {
         super();
         Object.assign(this, data);
     }
 }
-

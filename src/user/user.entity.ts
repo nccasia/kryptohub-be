@@ -11,7 +11,10 @@ import {
     BeforeUpdate,
     BaseEntity,
     OneToMany,
+    ManyToMany,
+    JoinTable,
 } from 'typeorm';
+import {Skill} from '../skill/entities/skill.entity';
 import {Team} from '../team/team.entity';
 
 export enum SocialProviderTypes {
@@ -26,12 +29,24 @@ export class User extends BaseEntity {
     @PrimaryGeneratedColumn()
     id?: number;
 
+    @Column({
+        name: 'provider',
+        nullable: true,
+        type: 'enum',
+        enum: SocialProviderTypes,
+    })
+    provider?: SocialProviderTypes;
+
     @ApiProperty()
     @Column()
     username?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
+    company?: string;
+
+    @ApiProperty()
+    @Column()
     emailAddress?: string;
 
     @ApiProperty()
@@ -40,24 +55,46 @@ export class User extends BaseEntity {
     password?: string;
 
     @ApiProperty()
-    @Column({unique: true})
-    profileLink?: string;
-
-    @ApiProperty()
-    @Column({unique: true})
+<<<<<<< HEAD
+    @Column()
     githubAddress?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
     googleAddress?: string;
+=======
+    @Column({unique: true})
+    profileLink?: string;
+>>>>>>> develop
 
     @ApiProperty()
-    @Column({unique: true})
-    skills?: string;
+    @Column()
+    description?: string;
 
     @ApiProperty()
-    @Column({unique: true})
+    @Column()
+    avatarPath?: string;
+
+    @ApiProperty()
+    @Column()
+    @ApiProperty()
+    link?: string;
+
+    @ApiProperty()
+    @Column()
     status?: string;
+
+    @ApiProperty()
+    @Column()
+    location?: string;
+
+    @ApiProperty()
+    @Column()
+    industry?: string;
+
+    @ApiProperty()
+    @Column()
+    headline?: string;
 
     @CreateDateColumn()
     createdAt?: Date;
@@ -67,6 +104,10 @@ export class User extends BaseEntity {
 
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
     team?: Team[];
+
+    @ManyToMany(() => Skill, (skill) => skill.users)
+    @JoinTable()
+    skills?: Skill[];
 
     constructor(data: Partial<User> = {}) {
         super();

@@ -4,7 +4,7 @@ import {IsOptional} from 'class-validator';
 export class CreateSkillDto {
     @ApiProperty({required: false})
     @IsOptional()
-    skillId?: number;
+    id?: number;
 
     @ApiProperty({required: false})
     @IsOptional()
