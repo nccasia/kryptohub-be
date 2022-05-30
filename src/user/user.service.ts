@@ -54,6 +54,7 @@ export class UserService {
             id: id,
             provider: user.provider,
             username: updates.username,
+            company: updates.company,
             emailAddress: updates.emailAddress,
             githubAddress: updates.githubAddress,
             googleAddress: updates.googleAddress,
@@ -61,6 +62,9 @@ export class UserService {
             description: updates.description,
             status: updates.status,
             link: updates.link,
+            location: updates.location,
+            industry: updates.industry,
+            headline: updates.headline,
             skills: skills,
         });
 
