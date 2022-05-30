@@ -41,9 +41,7 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({unique: true})
-    @ApiProperty()
-    @Column({unique: true})
-    link?: string;
+    profileGithubLink?: string;
 
     @ApiProperty()
     @Column({unique: true})

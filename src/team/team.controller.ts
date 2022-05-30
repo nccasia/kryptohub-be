@@ -9,8 +9,12 @@ import {
     ParseIntPipe,
     Post,
     Put,
+    Res,
+    UploadedFile,
     UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
+import {FileInterceptor} from '@nestjs/platform-express';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {AuthUser} from '../user/user.decorator';
 import {User} from '../user/user.entity';
@@ -18,7 +22,9 @@ import {CreateTeamDto} from './dto/create-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {TeamService} from './team.service';
-
+import {Response} from 'express';
+import {diskStorage} from 'multer';
+import {HelperFile} from '../utils/helper';
 @Controller('team')
 export class TeamController {
     constructor(private readonly teamService: TeamService) {}
@@ -33,14 +39,12 @@ export class TeamController {
         return await this.teamService.createTeam(createTeamDto, user);
     }
 
-    @UseGuards(JWTAuthGuard)
     @Get('getAll')
     @HttpCode(HttpStatus.OK)
     async getAllTeam(): Promise<Team[]> {
         return await this.teamService.getAllTeam();
     }
 
-    @UseGuards(JWTAuthGuard)
     @Get('/:id')
     @HttpCode(HttpStatus.OK)
     async getTeamById(
@@ -66,5 +70,39 @@ export class TeamController {
         @Param('id', new ParseIntPipe()) id: number,
     ): Promise<void> {
         return await this.teamService.deleteTeam(id);
+    }
+
+    @UseGuards(JWTAuthGuard)
+    @Post('file-upload')
+    @UseInterceptors(
+        FileInterceptor('avatar', {
+            storage: diskStorage({
+                destination: './upload/avatar',
+                filename: HelperFile.customFilename,
+            }),
+            limits: {
+                fileSize: 1024 * 1024 * 5,
+            },
+        }),
+    )
+    async uploadFile(
+        @Param('id') id: number,
+        @UploadedFile() file: Express.Multer.File,
+    ) {
+        return await this.teamService.uploadAvatar(
+            id,
+            file.path,
+            file.fieldname,
+        );
+    }
+
+    @Get('profile-image/:imagename')
+    findProfileImage(
+        @Param('imagename') imagename: string,
+        @Res() res: Response,
+    ) {
+        return res.sendFile(imagename, {
+            root: './upload/avatar',
+        });
     }
 }

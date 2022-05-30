@@ -162,7 +162,7 @@ export class AuthService {
         } catch (e) {
             const user = await this.userService.create({
                 username: username,
-                link: userGithub.html_url,
+                profileGithubLink: userGithub.html_url,
                 githubAddress: githubRegistration.githubAddress,
                 status: 'isNew',
             });

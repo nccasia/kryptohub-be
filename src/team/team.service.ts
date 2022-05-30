@@ -2,6 +2,7 @@ import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
 import {User} from '../user/user.entity';
+import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
@@ -71,5 +72,27 @@ export class TeamService {
         if (result.affected === 0) {
             throw new NotFoundException(`Team with ID ${id} not found`);
         }
+    }
+
+    async uploadAvatar(id: number, file: string, fileName: string) {
+        const userAvatar = await this.teamRepository.findOne(id);
+
+        if (userAvatar?.avatar === null || userAvatar?.avatar === '') {
+            await this.teamRepository.update(id, {
+                avatar: file,
+                avatarUrl:
+                    'http://localhost:3000' + '/team/profile-image/' + fileName,
+            });
+        } else {
+            await HelperFile.removeFile(userAvatar?.avatar as string);
+
+            await this.teamRepository.update(id, {
+                avatar: file,
+                avatarUrl:
+                    'http://localhost:3000' + '/team/profile-image/' + fileName,
+            });
+        }
+        const user = await this.teamRepository.findOne(id);
+        return user;
     }
 }
