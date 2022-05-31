@@ -61,8 +61,9 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column()
     googleAddress?: string;
-
-    @Column({unique: true})
+    
+    @ApiProperty()
+    @Column()
     profileLink?: string;
 
     @ApiProperty()
@@ -72,11 +73,6 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column()
     avatarPath?: string;
-
-    @ApiProperty()
-    @Column()
-    @ApiProperty()
-    link?: string;
 
     @ApiProperty()
     @Column()

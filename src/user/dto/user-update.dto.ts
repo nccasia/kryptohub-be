@@ -33,7 +33,7 @@ export class UserUpdate {
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly link?: string = '';
+    readonly profileLink?: string = '';
 
     @ApiProperty({required: false})
     @IsOptional()

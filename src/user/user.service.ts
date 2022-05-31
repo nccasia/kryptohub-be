@@ -61,7 +61,7 @@ export class UserService {
             avatarPath: updates.avatarPath,
             description: updates.description,
             status: updates.status,
-            link: updates.link,
+            profileLink: updates.profileLink,
             location: updates.location,
             industry: updates.industry,
             headline: updates.headline,
