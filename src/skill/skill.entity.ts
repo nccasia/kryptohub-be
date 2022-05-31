@@ -1,14 +1,13 @@
+import { User } from '@/user/user.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {
     Entity,
     PrimaryGeneratedColumn,
     Column,
     BaseEntity,
-    ManyToOne,
     ManyToMany,
     JoinTable,
 } from 'typeorm';
-import {User} from '../../user/user.entity';
 
 @Entity()
 export class Skill extends BaseEntity {

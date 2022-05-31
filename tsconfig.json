@@ -19,6 +19,12 @@
       "es2017",
       "es2018.asynciterable",
       "dom"
-    ]
+    ],
+    "baseUrl": "src",
+    "paths": {
+      "@utils/*": ["utils/*"],
+      "@constants/*": ["constants/*"],
+      "@/*": ["./*"]
+    }
   }
 }
