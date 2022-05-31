@@ -25,9 +25,15 @@ import {TeamService} from './team.service';
 import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
+import {SkillService} from '../skill/skill.service';
+import {FocusService} from '../focus/focus.service';
 @Controller('team')
 export class TeamController {
-    constructor(private readonly teamService: TeamService) {}
+    constructor(
+        private readonly teamService: TeamService,
+        private readonly skillService: SkillService,
+        private readonly focusService: FocusService,
+    ) {}
 
     @UseGuards(JWTAuthGuard)
     @Post('create')
@@ -35,8 +41,21 @@ export class TeamController {
     async createTeam(
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
-    ): Promise<Team> {
-        return await this.teamService.createTeam(createTeamDto, user);
+    ) {
+        const skill = await this.skillService.getSkillByIds(
+            createTeamDto.skills as any,
+        );
+
+        const focus = await this.focusService.getFocusById(
+            createTeamDto.focus as any,
+        );
+
+        return await this.teamService.createTeam(
+            createTeamDto,
+            user,
+            skill,
+            focus,
+        );
     }
 
     @Get('getAll')

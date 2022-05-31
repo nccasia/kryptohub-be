@@ -14,6 +14,7 @@ import {
     ManyToMany,
     JoinTable,
 } from 'typeorm';
+import {Focus} from '../focus/focus.entity';
 import {Skill} from '../skill/entities/skill.entity';
 import {Team} from '../team/team.entity';
 
@@ -61,7 +62,7 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column()
     googleAddress?: string;
-    
+
     @ApiProperty()
     @Column()
     profileLink?: string;
@@ -97,6 +98,7 @@ export class User extends BaseEntity {
     updatedAt?: Date;
 
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
+    @JoinTable()
     team?: Team[];
 
     @ManyToMany(() => Skill, (skill) => skill.users)

@@ -1,6 +1,8 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
+import {Focus} from '../focus/focus.entity';
+import {Skill} from '../skill/entities/skill.entity';
 import {User} from '../user/user.entity';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
@@ -13,35 +15,56 @@ export class TeamService {
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>,
     ) {}
-    async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Team> {
+    async createTeam(
+        createTeamDto: CreateTeamDto,
+        user: User,
+        skill: Array<Skill>,
+        focus: Array<Focus>,
+    ) {
         const {
             teamName,
             teamSize,
             timeZone,
-            skill,
             workingTime,
             organization,
             hour,
             week,
+            avatarUrl,
             description,
-            userId,
             avatar,
+            createAt,
+            founded,
+            linkWebsite,
+            location,
+            projectSize,
+            status,
+            updateAt,
         } = createTeamDto;
+
         const team = new Team();
         team.description = description;
         team.organization = organization;
         team.teamSize = teamSize;
         team.teamName = teamName;
         team.avatar = avatar;
+        team.avatarUrl = avatarUrl;
         team.timeZone = timeZone;
-        team.skill = skill;
+        team.skills = skill;
+        team.focus = focus;
         team.workingTime = workingTime;
         team.hour = hour;
         team.week = week;
+        team.location = location;
+        team.createAt = createAt;
+        team.updateAt = updateAt;
+        team.founded = founded;
+        team.linkWebsite = linkWebsite;
+        team.projectSize = projectSize;
+        team.status = status;
         team.user = user;
-        team.userId = userId;
         await team.save();
         delete team.user;
+
         return team;
     }
 
