@@ -54,17 +54,11 @@ export class UserService {
             id: id,
             provider: user.provider,
             username: updates.username,
-            company: updates.company,
             emailAddress: updates.emailAddress,
             githubAddress: updates.githubAddress,
             googleAddress: updates.googleAddress,
             avatarPath: updates.avatarPath,
-            description: updates.description,
             status: updates.status,
-            profileLink: updates.profileLink,
-            location: updates.location,
-            industry: updates.industry,
-            headline: updates.headline,
             skills: skills,
         });
 

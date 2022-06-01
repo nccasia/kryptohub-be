@@ -43,10 +43,6 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    company?: string;
-
-    @ApiProperty()
-    @Column()
     emailAddress?: string;
 
     @ApiProperty()
@@ -64,31 +60,11 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    profileLink?: string;
-
-    @ApiProperty()
-    @Column()
-    description?: string;
-
-    @ApiProperty()
-    @Column()
     avatarPath?: string;
 
     @ApiProperty()
     @Column()
     status?: string;
-
-    @ApiProperty()
-    @Column()
-    location?: string;
-
-    @ApiProperty()
-    @Column()
-    industry?: string;
-
-    @ApiProperty()
-    @Column()
-    headline?: string;
 
     @CreateDateColumn()
     createdAt?: Date;
