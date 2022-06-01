@@ -1,6 +1,6 @@
+import {Skill} from '@/skill/skill.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
-import {Skill} from '../../skill/entities/skill.entity';
 
 export class UpdateTeamDto {
     @ApiProperty()

@@ -26,13 +26,13 @@ import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
 import {SkillService} from '../skill/skill.service';
-import {FocusService} from '../focus/focus.service';
+import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
 @Controller('team')
 export class TeamController {
     constructor(
         private readonly teamService: TeamService,
         private readonly skillService: SkillService,
-        private readonly focusService: FocusService,
+        private readonly skillDistributionService: SkillDistributionService,
     ) {}
 
     @UseGuards(JWTAuthGuard)
@@ -42,19 +42,20 @@ export class TeamController {
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
     ) {
-        const skill = await this.skillService.getSkillByIds(
-            createTeamDto.skills as any,
-        );
+        // const skill = await this.skillService.getSkillByIds(
+        //     createTeamDto.skills as any,
+        // );
 
-        const focus = await this.focusService.getFocusById(
-            createTeamDto.focus as any,
-        );
+        const skillDistribution =
+            await this.skillDistributionService.getSkillDistributionById(
+                createTeamDto.skillDistribution as any,
+            );
 
         return await this.teamService.createTeam(
             createTeamDto,
             user,
-            skill,
-            focus,
+            // skill,
+            skillDistribution,
         );
     }
 

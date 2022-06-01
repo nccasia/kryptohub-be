@@ -3,33 +3,32 @@ import {
     BaseEntity,
     Column,
     Entity,
-    JoinTable,
     ManyToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {Team} from '../team/team.entity';
 
-export interface IFocusValue {
+export interface ISkillDistributionValue {
     field: string;
     quantity: string;
 }
 
 @Entity()
-export class Focus extends BaseEntity {
+export class SkillDistribution extends BaseEntity {
     @ApiProperty()
     @PrimaryGeneratedColumn()
     id?: number;
 
     @Column()
-    focusName?: string;
+    skillDistributionName?: string;
 
     @Column({type: 'jsonb'})
-    focusValue?: string;
+    skillDistributionValue?: string;
 
-    @ManyToMany(() => Team, (team) => team.focus)
+    @ManyToMany(() => Team, (team) => team.skillDistribution)
     team?: Team[];
 
-    constructor(data: Partial<Focus> = {}) {
+    constructor(data: Partial<SkillDistribution> = {}) {
         super();
         Object.assign(this, data);
     }

@@ -1,7 +1,7 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skill/skill.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
-import {Focus} from '../../focus/focus.entity';
-import {Skill} from '../../skill/entities/skill.entity';
 
 export class CreateTeamDto {
     @ApiProperty()
@@ -26,7 +26,7 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    focus?: Focus[];
+    skillDistribution?: SkillDistribution[];
 
     @ApiProperty()
     @IsOptional()

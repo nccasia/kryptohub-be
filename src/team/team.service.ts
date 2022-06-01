@@ -1,8 +1,8 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skill/skill.entity';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
-import {Focus} from '../focus/focus.entity';
-import {Skill} from '../skill/entities/skill.entity';
 import {User} from '../user/user.entity';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
@@ -18,8 +18,8 @@ export class TeamService {
     async createTeam(
         createTeamDto: CreateTeamDto,
         user: User,
-        skill: Array<Skill>,
-        focus: Array<Focus>,
+        // skill: Array<Skill>,
+        skillDistribution: Array<SkillDistribution>,
     ) {
         const {
             teamName,
@@ -29,6 +29,7 @@ export class TeamService {
             organization,
             hour,
             week,
+            skills,
             avatarUrl,
             description,
             avatar,
@@ -50,8 +51,8 @@ export class TeamService {
         team.avatar = avatar;
         team.avatarUrl = avatarUrl;
         team.timeZone = timeZone;
-        team.skills = skill;
-        team.focus = focus;
+        team.skills = skills;
+        team.skillDistribution = skillDistribution;
         team.workingTime = workingTime;
         team.slogan = slogan;
         team.hour = hour;

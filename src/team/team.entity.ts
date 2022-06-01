@@ -1,3 +1,5 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skill/skill.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {
     BaseEntity,
@@ -8,8 +10,6 @@ import {
     ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import {Focus} from '../focus/focus.entity';
-import {Skill} from '../skill/entities/skill.entity';
 import {User} from '../user/user.entity';
 
 @Entity()
@@ -76,15 +76,14 @@ export class Team extends BaseEntity {
     @Column()
     location?: string;
 
-    @ManyToMany((type) => Focus, (focus) => focus.team, {eager: false})
+    @ManyToMany((type) => SkillDistribution, (skill) => skill.team, {
+        eager: false,
+    })
     @JoinTable()
-    focus?: Focus[];
+    skillDistribution?: SkillDistribution[];
 
     @ManyToOne((type) => User, (user) => user.team, {eager: false})
     user?: User;
-
-    // @Column()
-    // userId?: number;
 
     constructor(data: Partial<Team> = {}) {
         super();
