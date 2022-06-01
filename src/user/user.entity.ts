@@ -1,3 +1,5 @@
+import {Skill} from '@/skill/skill.entity';
+import {Team} from '@/team/team.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import {Exclude} from 'class-transformer';
@@ -14,9 +16,6 @@ import {
     ManyToMany,
     JoinTable,
 } from 'typeorm';
-import {Focus} from '../focus/focus.entity';
-import {Skill} from '../skill/entities/skill.entity';
-import {Team} from '../team/team.entity';
 
 export enum SocialProviderTypes {
     USERNAME = 'username',
