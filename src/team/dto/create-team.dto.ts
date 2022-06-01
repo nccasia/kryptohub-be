@@ -1,5 +1,5 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
-import {Skill} from '@/skill/skill.entity';
+import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
 

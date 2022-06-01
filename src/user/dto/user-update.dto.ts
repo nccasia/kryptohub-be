@@ -1,4 +1,4 @@
-import { Skill } from '@/skill/skill.entity';
+import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsDefined, IsString, IsNotEmpty, IsOptional} from 'class-validator';
 

@@ -3,8 +3,8 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
 import {FindOneOptions, In, Like, Repository} from 'typeorm';
-import {CreateSkillDto, GetListSkillDto} from './dto/skill.dto';
-import {Skill} from './skill.entity';
+import {CreateSkillDto, GetListSkillDto} from './dto/skills.dto';
+import {Skill} from './skills.entity';
 
 @Injectable()
 export class SkillService {
@@ -31,7 +31,6 @@ export class SkillService {
     async getList(queryData: GetListSkillDto): Promise<Paging<Skill>> {
         const {page, size, sort, keyword} = queryData;
         const paging = formatPaging(page, size, sort);
-        
 
         let filter: any = {};
         if (keyword) filter['skillName'] = Like(`%${keyword}%`);
@@ -60,4 +59,3 @@ export class SkillService {
         return skill;
     }
 }
-

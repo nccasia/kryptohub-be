@@ -1,5 +1,5 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
-import {Skill} from '@/skill/skill.entity';
+import {Skill} from '@/skills/skills.entity';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -71,21 +71,53 @@ export class TeamService {
         return team;
     }
 
-    async updateTeam(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
-        await this.teamRepository.update(id, updateTeamDto);
-        const result = await this.teamRepository.findOne(id);
-        if (!result) {
-            throw new NotFoundException(`Team with ID ${id} not found`);
+    async updateTeam(
+        id: number,
+        updateTeamDto: UpdateTeamDto,
+        // skills: Array<Skill>,
+        skillDistribution: Array<SkillDistribution>,
+    ): Promise<Team> {
+        const team = await this.teamRepository.findOne(id);
+
+        if (!team) {
+            throw new NotFoundException(`There isn't any team with id: ${id}`);
         }
-        return result;
+
+        const updateTeam = await this.teamRepository.save({
+            id: id,
+            avatar: updateTeamDto.avatar,
+            description: updateTeamDto.description,
+            linkWebsite: updateTeamDto.linkWebsite,
+            founded: updateTeamDto.founded,
+            location: updateTeamDto.location,
+            skillDistribution: skillDistribution,
+            slogan: updateTeamDto.slogan,
+            skills: updateTeamDto.skills,
+            teamName: updateTeamDto.teamName,
+            teamSize: updateTeamDto.teamSize,
+            projectSize: updateTeamDto.projectSize,
+            timeZone: updateTeamDto.timeZone,
+            workingTime: updateTeamDto.workingTime,
+            week: updateTeamDto.week,
+            hour: updateTeamDto.hour,
+            organization: updateTeamDto.organization,
+            avatarUrl: updateTeamDto.avatarUrl,
+            status: updateTeamDto.status,
+        });
+        return updateTeam;
     }
 
     async getAllTeam(): Promise<Team[]> {
-        return await this.teamRepository.find();
+        return await this.teamRepository.find({
+            relations: ['skills', 'skillDistribution'],
+        });
     }
 
     async getTeamById(id: number): Promise<Team> {
-        const getTeam = await this.teamRepository.findOne(id);
+        const getTeam = await this.teamRepository.findOne({
+            where: {id: id},
+            relations: ['skills', 'skillDistribution'],
+        });
 
         if (!getTeam) {
             throw new NotFoundException(`Team with ID ${id} not found`);

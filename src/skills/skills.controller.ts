@@ -1,8 +1,8 @@
 import {Controller, Get, Query, UseGuards} from '@nestjs/common';
-import {SkillService} from './skill.service';
+import {SkillService} from './skills.service';
 import {ApiTags} from '@nestjs/swagger';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
-import { GetListSkillDto } from './dto/skill.dto';
+import {GetListSkillDto} from './dto/skills.dto';
 
 @ApiTags('Skill')
 @Controller('skill')
@@ -12,7 +12,6 @@ export class SkillController {
 
     @Get('list')
     async getList(@Query() query: GetListSkillDto) {
-        return await this.skillService.getList(query)
+        return await this.skillService.getList(query);
     }
 }
-

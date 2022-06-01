@@ -1,8 +1,8 @@
 import {Module} from '@nestjs/common';
-import {SkillService} from './skill.service';
-import {SkillController} from './skill.controller';
+import {SkillService} from './skills.service';
+import {SkillController} from './skills.controller';
 import {TypeOrmModule} from '@nestjs/typeorm';
-import {Skill} from './skill.entity';
+import {Skill} from './skills.entity';
 
 @Module({
     imports: [TypeOrmModule.forFeature([Skill])],
@@ -11,4 +11,3 @@ import {Skill} from './skill.entity';
     exports: [SkillService],
 })
 export class SkillModule {}
-
