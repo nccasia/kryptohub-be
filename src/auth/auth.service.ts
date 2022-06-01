@@ -52,6 +52,14 @@ export class AuthService {
         }
 
         if (
+            !/^[\w-\.]+@([\w-]+\.)+[\w-]{2,3}$/.test(
+                authCredentialsDto.emailAddress as string,
+            )
+        ) {
+            throw new UnauthorizedException(`Incorrect email format`);
+        }
+
+        if (
             !/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/.test(
                 authCredentialsDto.password as string,
             )

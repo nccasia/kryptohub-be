@@ -14,7 +14,7 @@ export class SkillService {
     ) {}
 
     async create(createSkillDto: CreateSkillDto): Promise<Skill | undefined> {
-        const skill = new Skill();
+        const skill = new Skill(createSkillDto);
         const {skillName} = createSkillDto;
 
         if (!skillName)
@@ -23,7 +23,7 @@ export class SkillService {
         const result = await this.findOne({
             where: {skillName},
         });
-        if (result) throw new BadRequestException('skillname already exists');
+        if (result) throw new BadRequestException('Skill name already exists');
 
         return await this.skillRepository.save(skill);
     }
