@@ -4,12 +4,11 @@ import {IsOptional} from 'class-validator';
 
 export class CreateSkillDto {
     @ApiProperty({required: true})
-    @IsOptional()
     readonly skillName?: string;
 }
 
 export class GetListSkillDto extends Pagable {
-  @ApiProperty({required: true})
+  @ApiProperty({required: false})
   @IsOptional()
   readonly keyword?: string;
 }
