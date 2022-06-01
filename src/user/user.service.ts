@@ -59,7 +59,6 @@ export class UserService {
             googleAddress: updates.googleAddress,
             avatarPath: updates.avatarPath,
             status: updates.status,
-            profileLink: updates.profileLink,
             skills: skills,
         });
 

@@ -25,10 +25,6 @@ export class UserUpdate {
 
     @ApiProperty({required: false})
     @IsOptional()
-    readonly profileLink?: string = '';
-
-    @ApiProperty({required: false})
-    @IsOptional()
     readonly status?: string = 'isChanged';
 
     @ApiProperty()

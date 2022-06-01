@@ -60,10 +60,6 @@ export class User extends BaseEntity {
     
     @ApiProperty()
     @Column()
-    profileLink?: string;
-
-    @ApiProperty()
-    @Column()
     avatarPath?: string;
 
     @ApiProperty()
