@@ -1,5 +1,6 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {Skill} from '@/skills/skills.entity';
+import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -14,56 +15,51 @@ export class TeamService {
     constructor(
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>,
+        private readonly skillService: SkillService,
     ) {}
     async createTeam(
         createTeamDto: CreateTeamDto,
         user: User,
-        // skill: Array<Skill>,
         skillDistribution: Array<SkillDistribution>,
     ) {
-        const {
-            teamName,
-            teamSize,
-            timeZone,
-            workingTime,
-            organization,
-            hour,
-            week,
-            skills,
-            avatarUrl,
-            description,
-            avatar,
-            createAt,
-            founded,
-            linkWebsite,
-            location,
-            projectSize,
-            slogan,
-            status,
-            updateAt,
-        } = createTeamDto;
-
+        const payload = createTeamDto;
         const team = new Team();
-        team.description = description;
-        team.organization = organization;
-        team.teamSize = teamSize;
-        team.teamName = teamName;
-        team.avatar = avatar;
-        team.avatarUrl = avatarUrl;
-        team.timeZone = timeZone;
+
+        let skills = (await Promise.all(
+            payload.skills?.map(async (skill: Skill) => {
+                try {
+                    return await this.skillService.create({
+                        skillName: skill.skillName,
+                    });
+                } catch {
+                    return undefined;
+                }
+            }) || [],
+        )) as Skill[];
+        skills = skills.filter(Boolean);
+        skills = [
+            ...skills,
+            ...(payload.skills?.filter((skill) => !!skill.id) || []),
+        ];
+
+        team.description = payload.description;
+        team.organization = payload.organization;
+        team.teamSize = payload.teamSize;
+        team.teamName = payload.teamName;
+        team.avatar = payload.avatar;
+        team.avatarUrl = payload.avatarUrl;
+        team.timeZone = payload.timeZone;
         team.skills = skills;
         team.skillDistribution = skillDistribution;
-        team.workingTime = workingTime;
-        team.slogan = slogan;
-        team.hour = hour;
-        team.week = week;
-        team.location = location;
-        team.createAt = createAt;
-        team.updateAt = updateAt;
-        team.founded = founded;
-        team.linkWebsite = linkWebsite;
-        team.projectSize = projectSize;
-        team.status = status;
+        team.workingTime = payload.workingTime;
+        team.slogan = payload.slogan;
+        team.hour = payload.hour;
+        team.week = payload.week;
+        team.location = payload.location;
+        team.founded = payload.founded;
+        team.linkWebsite = payload.linkWebsite;
+        team.projectSize = payload.projectSize;
+        team.status = payload.status;
         team.user = user;
         await team.save();
         delete team.user;

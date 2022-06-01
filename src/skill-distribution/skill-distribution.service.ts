@@ -1,6 +1,6 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {In, Repository} from 'typeorm';
+import {FindOneOptions, In, Repository} from 'typeorm';
 import {CreateSkillDistributionDto} from './dto/create-skill-distribution.dto';
 import {SkillDistribution} from './skill-distribution.entity';
 
@@ -55,5 +55,11 @@ export class SkillDistributionService {
             where: {id: In(id)},
         });
         return skill;
+    }
+
+    async findOne(where: FindOneOptions<SkillDistribution>) {
+        const skillDistribution =
+            await this.skillDistributionRepository.findOne(where);
+        return skillDistribution;
     }
 }
