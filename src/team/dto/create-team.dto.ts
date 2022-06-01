@@ -30,6 +30,10 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
+    slogan?: string;
+
+    @ApiProperty()
+    @IsOptional()
     workingTime?: string;
 
     @ApiProperty()

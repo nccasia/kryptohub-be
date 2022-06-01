@@ -37,6 +37,7 @@ export class TeamService {
             linkWebsite,
             location,
             projectSize,
+            slogan,
             status,
             updateAt,
         } = createTeamDto;
@@ -52,6 +53,7 @@ export class TeamService {
         team.skills = skill;
         team.focus = focus;
         team.workingTime = workingTime;
+        team.slogan = slogan;
         team.hour = hour;
         team.week = week;
         team.location = location;

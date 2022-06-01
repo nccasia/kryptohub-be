@@ -53,6 +53,9 @@ export class Team extends BaseEntity {
     avatarUrl?: string;
 
     @Column()
+    slogan?: string;
+
+    @Column()
     founded?: string;
 
     @Column()
