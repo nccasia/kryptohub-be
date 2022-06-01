@@ -1,3 +1,4 @@
+import {Skill} from '@/skill/skill.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
 
@@ -20,7 +21,7 @@ export class UpdateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    skill?: string[];
+    skills?: Skill[];
 
     @ApiProperty()
     @IsOptional()
@@ -38,9 +39,9 @@ export class UpdateTeamDto {
     @IsOptional()
     description?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    userId?: number;
+    // @ApiProperty()
+    // @IsOptional()
+    // userId?: number;
 
     @ApiProperty()
     @IsOptional()

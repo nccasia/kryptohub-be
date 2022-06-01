@@ -1,11 +1,17 @@
+import {SkillDistributionModule} from '@/skill-distribution/skill-distribution.module';
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
+import {SkillModule} from '../skill/skill.module';
 import {TeamController} from './team.controller';
 import {Team} from './team.entity';
 import {TeamService} from './team.service';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([Team])],
+    imports: [
+        SkillModule,
+        SkillDistributionModule,
+        TypeOrmModule.forFeature([Team]),
+    ],
     controllers: [TeamController],
     providers: [TeamService],
     exports: [TeamService],

@@ -1,3 +1,5 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skill/skill.entity';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
@@ -13,35 +15,59 @@ export class TeamService {
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>,
     ) {}
-    async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Team> {
+    async createTeam(
+        createTeamDto: CreateTeamDto,
+        user: User,
+        // skill: Array<Skill>,
+        skillDistribution: Array<SkillDistribution>,
+    ) {
         const {
             teamName,
             teamSize,
             timeZone,
-            skill,
             workingTime,
             organization,
             hour,
             week,
+            skills,
+            avatarUrl,
             description,
-            userId,
             avatar,
+            createAt,
+            founded,
+            linkWebsite,
+            location,
+            projectSize,
+            slogan,
+            status,
+            updateAt,
         } = createTeamDto;
+
         const team = new Team();
         team.description = description;
         team.organization = organization;
         team.teamSize = teamSize;
         team.teamName = teamName;
         team.avatar = avatar;
+        team.avatarUrl = avatarUrl;
         team.timeZone = timeZone;
-        team.skill = skill;
+        team.skills = skills;
+        team.skillDistribution = skillDistribution;
         team.workingTime = workingTime;
+        team.slogan = slogan;
         team.hour = hour;
         team.week = week;
+        team.location = location;
+        team.createAt = createAt;
+        team.updateAt = updateAt;
+        team.founded = founded;
+        team.linkWebsite = linkWebsite;
+        team.projectSize = projectSize;
+        team.status = status;
         team.user = user;
-        team.userId = userId;
         await team.save();
         delete team.user;
+
         return team;
     }
 

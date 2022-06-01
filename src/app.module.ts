@@ -12,6 +12,7 @@ import {SkillModule} from './skill/skill.module';
 import {TokenModule} from './token/token.module';
 import {TeamModule} from './team/team.module';
 import {MulterModule} from '@nestjs/platform-express';
+import {SkillDistributionModule} from './skill-distribution/skill-distribution.module';
 
 @Module({
     imports: [
@@ -30,6 +31,7 @@ import {MulterModule} from '@nestjs/platform-express';
         AuthModule,
         SkillModule,
         TeamModule,
+        SkillDistributionModule,
     ],
     controllers: [AppController],
     providers: [AppService],

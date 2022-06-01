@@ -1,5 +1,5 @@
-import { Skill } from '@/skill/skill.entity';
-import { Team } from '@/team/team.entity';
+import {Skill} from '@/skill/skill.entity';
+import {Team} from '@/team/team.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import {Exclude} from 'class-transformer';
@@ -61,7 +61,7 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column()
     googleAddress?: string;
-    
+
     @ApiProperty()
     @Column()
     profileLink?: string;
@@ -97,6 +97,7 @@ export class User extends BaseEntity {
     updatedAt?: Date;
 
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
+    @JoinTable()
     team?: Team[];
 
     @ManyToMany(() => Skill, (skill) => skill.users)
