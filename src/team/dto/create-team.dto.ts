@@ -45,4 +45,8 @@ export class CreateTeamDto {
     @ApiProperty()
     @IsOptional()
     avatar?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    avatarUrl?: string;
 }

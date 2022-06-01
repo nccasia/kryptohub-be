@@ -1,9 +1,11 @@
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {Repository} from 'typeorm';
+import {Like, Repository} from 'typeorm';
 import {User} from '../user/user.entity';
+import {formatPaging} from '../utils/formatter';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
+import {GetListTeamDto} from './dto/get-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 
@@ -26,6 +28,7 @@ export class TeamService {
             description,
             userId,
             avatar,
+            avatarUrl,
         } = createTeamDto;
         const team = new Team();
         team.description = description;
@@ -33,6 +36,7 @@ export class TeamService {
         team.teamSize = teamSize;
         team.teamName = teamName;
         team.avatar = avatar;
+        team.avatarUrl = avatarUrl;
         team.timeZone = timeZone;
         team.skill = skill;
         team.workingTime = workingTime;
@@ -94,5 +98,26 @@ export class TeamService {
         }
         const user = await this.teamRepository.findOne(id);
         return user;
+    }
+
+    async getAllTeamPagging(queryData: GetListTeamDto) {
+        const {page, size, sort, skillId, timeZone} = queryData;
+        const paging = formatPaging(page, size, sort);
+        let filter: any = {};
+        if (timeZone) filter['timeZone'] = Like(`%${timeZone}%`);
+        if (skillId) filter['skillId'] = {relations: ['skills']};
+
+        const [list, total] = await this.teamRepository.findAndCount({
+            where: filter,
+            ...paging.query,
+        });
+
+        return {
+            content: list,
+            pagable: {
+                total,
+                ...paging.pagable,
+            },
+        };
     }
 }

@@ -9,6 +9,7 @@ import {
     ParseIntPipe,
     Post,
     Put,
+    Query,
     Res,
     UploadedFile,
     UseGuards,
@@ -22,9 +23,10 @@ import {CreateTeamDto} from './dto/create-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {TeamService} from './team.service';
-import {Response} from 'express';
+import {query, Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
+import {GetListTeamDto} from './dto/get-team.dto';
 @Controller('team')
 export class TeamController {
     constructor(private readonly teamService: TeamService) {}
@@ -37,6 +39,12 @@ export class TeamController {
         @AuthUser() user: User,
     ): Promise<Team> {
         return await this.teamService.createTeam(createTeamDto, user);
+    }
+
+    @Get('getAllPaging')
+    @HttpCode(HttpStatus.OK)
+    async getAllPagingTeam(@Query() query: GetListTeamDto) {
+        return await this.teamService.getAllTeamPagging(query);
     }
 
     @Get('getAll')
