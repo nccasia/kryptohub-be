@@ -16,7 +16,7 @@ import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {User} from './user.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthUser} from './user.decorator';
-import {SkillService} from '../skill/skill.service';
+import {SkillService} from '../skills/skills.service';
 
 @ApiTags('Profile')
 @Controller('profile')

@@ -11,9 +11,9 @@ import {IsUsernameAvailable} from './constraints/is-username-available.validator
 import {AuthModule} from '../auth/auth.module';
 import {Repository} from 'typeorm';
 import {JwtStrategy} from '../auth/strategies/jwt.strategy';
-import { JwtModule, JwtModuleOptions } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { SkillModule } from '../skill/skill.module';
+import {JwtModule, JwtModuleOptions} from '@nestjs/jwt';
+import {ConfigModule, ConfigService} from '@nestjs/config';
+import {SkillModule} from '../skills/skills.module';
 
 @Module({
     imports: [

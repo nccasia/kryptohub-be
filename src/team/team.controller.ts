@@ -25,8 +25,10 @@ import {TeamService} from './team.service';
 import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
-import {SkillService} from '../skill/skill.service';
+import {SkillService} from '../skills/skills.service';
 import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
+import {Skill} from '@/skills/skills.entity';
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 @Controller('team')
 export class TeamController {
     constructor(
@@ -80,7 +82,15 @@ export class TeamController {
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateTeamDto: UpdateTeamDto,
     ): Promise<Team> {
-        return await this.teamService.updateTeam(id, updateTeamDto);
+        const skillDistribution =
+            await this.skillDistributionService.getSkillDistributionById(
+                updateTeamDto.skillDistribution as any,
+            );
+        return await this.teamService.updateTeam(
+            id,
+            updateTeamDto,
+            skillDistribution,
+        );
     }
 
     @UseGuards(JWTAuthGuard)

@@ -1,4 +1,4 @@
-import {Skill} from '@/skill/skill.entity';
+import {Skill} from '@/skills/skills.entity';
 import {Team} from '@/team/team.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';

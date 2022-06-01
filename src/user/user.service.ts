@@ -4,7 +4,7 @@ import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
 import {JwtService} from '@nestjs/jwt';
-import { Skill } from '@/skill/skill.entity';
+import {Skill} from '@/skills/skills.entity';
 
 @Injectable()
 export class UserService {

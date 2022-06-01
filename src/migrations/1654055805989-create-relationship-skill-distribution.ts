@@ -9,6 +9,16 @@ export class createRelationshipSkillDistribution1654055805989
         await queryRunner.query(
             `CREATE TABLE "team_skill_distribution_skill_distribution" ("teamId" integer NOT NULL, "skillDistributionId" integer NOT NULL, CONSTRAINT "PK_f9608521c1fa910cadff1534def" PRIMARY KEY ("teamId", "skillDistributionId"))`,
         );
+
+        await queryRunner.query(
+            `CREATE TABLE "team_skills_skill" ("teamId" integer NOT NULL, "skillId" integer NOT NULL, CONSTRAINT "PK_a8d9f50b104d6a6bf17aca9d5e9" PRIMARY KEY ("teamId", "skillId"))`,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_88f5b9015e2192075697cb0d44" ON "team_skills_skill" ("teamId") `,
+        );
+        await queryRunner.query(
+            `CREATE INDEX "IDX_2830e62240ec8b69d3b9a76749" ON "team_skills_skill" ("skillId") `,
+        );
         await queryRunner.query(
             `CREATE INDEX "IDX_b8995858880ea0adcf38e86750" ON "team_skill_distribution_skill_distribution" ("teamId") `,
         );
@@ -38,6 +48,12 @@ export class createRelationshipSkillDistribution1654055805989
 
     public async down(queryRunner: QueryRunner): Promise<void> {
         await queryRunner.query(
+            `ALTER TABLE "team_skills_skill" DROP CONSTRAINT "FK_2830e62240ec8b69d3b9a767497"`,
+        );
+        await queryRunner.query(
+            `ALTER TABLE "team_skills_skill" DROP CONSTRAINT "FK_88f5b9015e2192075697cb0d442"`,
+        );
+        await queryRunner.query(
             `ALTER TABLE "team_skill_distribution_skill_distribution" DROP CONSTRAINT "FK_32b8c46cd38907cd6ece020668d"`,
         );
         await queryRunner.query(
@@ -66,4 +82,3 @@ export class createRelationshipSkillDistribution1654055805989
         );
     }
 }
-
