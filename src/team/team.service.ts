@@ -26,7 +26,7 @@ export class TeamService {
         const team = new Team();
 
         let skills = (await Promise.all(
-            payload.skills?.map(async (skill: Skill) => {
+            payload.skills?.filter(skill => !skill.id).map(async (skill: Skill) => {
                 try {
                     return await this.skillService.create({
                         skillName: skill.skillName,

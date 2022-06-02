@@ -4,14 +4,14 @@ import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
 import {JwtService} from '@nestjs/jwt';
-import {Skill} from '@/skills/skills.entity';
+import { SkillService } from '@/skills/skills.service';
 
 @Injectable()
 export class UserService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-        private readonly skillRepository: Repository<Skill>,
+        private readonly skillService: SkillService,
         private readonly jwtService: JwtService,
     ) {}
 
@@ -43,12 +43,14 @@ export class UserService {
         });
     }
 
-    async update(id: number, updates: UserUpdate, skills: Array<Skill>) {
+    async update(id: number, updates: UserUpdate) {
         const user = await this.userRepository.findOne(id);
 
         if (!user) {
             throw new NotFoundException(`There isn't any user with id: ${id}`);
         }
+
+        const skills = await this.skillService.findOrCreate(updates.skills || [])
 
         const updateSkill = await this.userRepository.save({
             id: id,

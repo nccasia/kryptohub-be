@@ -58,4 +58,14 @@ export class SkillService {
         const skill = await this.skillRepository.findOne(where);
         return skill;
     }
+
+    async findOrCreate(skills: Skill[]) {
+        const skillList = await Promise.all(skills.map(async (skill) => {
+            const _skill = await this.findOne({where: [{id: skill.id}, {skillName: skill.skillName}]})
+            if(_skill) return _skill
+
+            return this.create({skillName: skill.skillName})
+        }))
+        return skillList
+    }
 }

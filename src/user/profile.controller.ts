@@ -39,9 +39,6 @@ export class ProfileController {
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updatesUser: UserUpdate,
     ) {
-        const skills = await this.skillService.getSkillByIds(
-            updatesUser.skills as any,
-        );
-        return this.userService.update(id, updatesUser, skills);
+        return this.userService.update(id, updatesUser);
     }
 }
