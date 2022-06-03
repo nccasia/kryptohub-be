@@ -35,9 +35,7 @@ import { GetListTeamPagingDto } from './dto/get-team.dto';
 @Controller('team')
 @UseGuards(JWTAuthGuard)
 export class TeamController {
-    constructor(
-        private readonly teamService: TeamService,
-    ) {}
+    constructor(private readonly teamService: TeamService) {}
 
     @Post('create')
     @HttpCode(HttpStatus.OK)
@@ -45,11 +43,7 @@ export class TeamController {
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
     ) {
-        
-        return await this.teamService.createTeam(
-            user,
-            createTeamDto,
-        );
+        return await this.teamService.createTeam(user, createTeamDto);
     }
 
     @Get('getAllPaging')
