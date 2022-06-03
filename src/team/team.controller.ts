@@ -27,7 +27,7 @@ import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {GetListTeamDto} from './dto/team.dto';
+import {GetListTeamDto} from './dto/get-list-team.dto';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
 
 @ApiTags('Team')

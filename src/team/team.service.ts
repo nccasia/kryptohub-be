@@ -1,6 +1,5 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
-import {Skill} from '@/skills/skills.entity';
 import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
@@ -10,10 +9,10 @@ import {formatPaging} from '@utils/formatter';
 import {User} from '../user/user.entity';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
-import {GetListTeamDto} from './dto/team.dto';
+import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
-import { GetListTeamPagingDto } from './dto/get-team.dto';
+import {GetListTeamPagingDto} from './dto/get-team.dto';
 
 @Injectable()
 export class TeamService {
@@ -31,7 +30,9 @@ export class TeamService {
         const skillDistributions = (await Promise.all(
             createTeamDto.skillDistribution?.map(
                 async (skillDistribution) =>
-                    await this.skillDistributionService.create(skillDistribution),
+                    await this.skillDistributionService.create(
+                        skillDistribution,
+                    ),
             ) || [],
         )) as SkillDistribution[];
 
@@ -160,7 +161,9 @@ export class TeamService {
         }
 
         if (timeZone_IN) {
-            queryBuilder.andWhere(`"timeZone" IN(:...timeZone)`, {timeZone: timeZone_IN})
+            queryBuilder.andWhere(`"timeZone" IN(:...timeZone)`, {
+                timeZone: timeZone_IN,
+            });
         }
 
         const [list, total] = await queryBuilder.getManyAndCount();
@@ -206,4 +209,3 @@ export class TeamService {
         };
     }
 }
-
