@@ -23,20 +23,20 @@ import {CreateTeamDto} from './dto/create-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {TeamService} from './team.service';
-import {query, Response} from 'express';
+import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GetListTeamDto } from './dto/team.dto';
-import { GetListTeamPagingDto } from './dto/get-team.dto';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {GetListTeamDto} from './dto/team.dto';
+import {GetListTeamPagingDto} from './dto/get-team.dto';
 
 @ApiTags('Team')
 @ApiBearerAuth()
 @Controller('team')
-@UseGuards(JWTAuthGuard)
 export class TeamController {
     constructor(private readonly teamService: TeamService) {}
 
+    @UseGuards(JWTAuthGuard)
     @Post('create')
     @HttpCode(HttpStatus.OK)
     async createTeam(
@@ -125,4 +125,3 @@ export class TeamController {
         });
     }
 }
-
