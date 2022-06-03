@@ -23,7 +23,8 @@
         "typeorm": "ts-node -r dotenv/config -r tsconfig-paths/register ./node_modules/typeorm/cli.js",
         "migration:run": "typeorm migration:run",
         "migration:create": "typeorm migration:create",
-        "migration:generate": "typeorm migration:generate"
+        "migration:generate": "typeorm migration:generate",
+        "migration:revert": "typeorm migration:revert"
     },
     "dependencies": {
         "@golevelup/nestjs-graphql-request": "^0.1.11",

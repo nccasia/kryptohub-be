@@ -51,15 +51,15 @@ export class User extends BaseEntity {
     password?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     githubAddress?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     googleAddress?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     avatarPath?: string;
 
     @ApiProperty()

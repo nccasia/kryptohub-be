@@ -3,12 +3,12 @@ import {ApiProperty} from '@nestjs/swagger';
 import {IsDefined, IsString, IsNotEmpty, IsOptional} from 'class-validator';
 
 export class UserUpdate {
-    @ApiProperty({required: false})
-    @IsOptional()
+    @ApiProperty({required: true})
+    @IsNotEmpty()
     readonly username?: string = '';
 
-    @ApiProperty({required: false})
-    @IsOptional()
+    @ApiProperty({required: true})
+    @IsNotEmpty()
     readonly emailAddress?: string = '';
 
     @ApiProperty({required: false})

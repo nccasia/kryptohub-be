@@ -1,16 +1,19 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
 import {Skill} from '@/skills/skills.entity';
 import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Like, Repository} from 'typeorm';
+import {Paging} from '@utils/commonDto';
+import {formatPaging} from '@utils/formatter';
 import {User} from '../user/user.entity';
-import {formatPaging} from '../utils/formatter';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
-import {GetListTeamDto} from './dto/get-team.dto';
+import {GetListTeamDto} from './dto/team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
+import { GetListTeamPagingDto } from './dto/get-team.dto';
 
 @Injectable()
 export class TeamService {
@@ -18,70 +21,55 @@ export class TeamService {
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>,
         private readonly skillService: SkillService,
+        private readonly skillDistributionService: SkillDistributionService,
     ) {}
-    async createTeam(
-        createTeamDto: CreateTeamDto,
-        user: User,
-        skillDistribution: Array<SkillDistribution>,
-    ) {
-        const payload = createTeamDto;
-        const team = new Team();
+    async createTeam(user: User, createTeamDto: CreateTeamDto) {
+        const skills = await this.skillService.findOrCreate(
+            createTeamDto.skills || [],
+        );
 
-        let skills = (await Promise.all(
-            payload.skills
-                ?.filter((skill) => !skill.id)
-                .map(async (skill: Skill) => {
-                    try {
-                        return await this.skillService.create({
-                            skillName: skill.skillName,
-                        });
-                    } catch {
-                        return undefined;
-                    }
-                }) || [],
-        )) as Skill[];
-        skills = skills.filter(Boolean);
-        skills = [
-            ...skills,
-            ...(payload.skills?.filter((skill) => !!skill.id) || []),
-        ];
+        const skillDistributions = (await Promise.all(
+            createTeamDto.skillDistribution?.map(
+                async (skillDistribution) =>
+                    await this.skillDistributionService.update(
+                        skillDistribution.id,
+                        skillDistribution,
+                    ),
+            ) || [],
+        )) as SkillDistribution[];
 
-        team.description = payload.description;
-        team.organization = payload.organization;
-        team.teamSize = payload.teamSize;
-        team.teamName = payload.teamName;
-        team.avatar = payload.avatar;
-        team.avatarUrl = payload.avatarUrl;
-        team.timeZone = payload.timeZone;
-        team.skills = skills;
-        team.skillDistribution = skillDistribution;
-        team.workingTime = payload.workingTime;
-        team.slogan = payload.slogan;
-        team.hour = payload.hour;
-        team.week = payload.week;
-        team.location = payload.location;
-        team.founded = payload.founded;
-        team.linkWebsite = payload.linkWebsite;
-        team.projectSize = payload.projectSize;
-        team.status = payload.status;
-        team.user = user;
+        const team = new Team({
+            ...createTeamDto,
+            user,
+            skills,
+            skillDistribution: skillDistributions,
+        });
+
         await team.save();
         delete team.user;
 
         return team;
     }
 
-    async updateTeam(
-        id: number,
-        updateTeamDto: UpdateTeamDto,
-        // skills: Array<Skill>,
-        skillDistribution: Array<SkillDistribution>,
-    ): Promise<Team> {
+    async updateTeam(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
         const team = await this.teamRepository.findOne(id);
 
         if (!team) {
             throw new NotFoundException(`There isn't any team with id: ${id}`);
         }
+
+        const skills = await this.skillService.findOrCreate(
+            updateTeamDto.skills || [],
+        );
+        const skillDistributions = await Promise.all(
+            updateTeamDto.skillDistribution?.map(
+                async (skillDistribution) =>
+                    await this.skillDistributionService.update(
+                        skillDistribution.id,
+                        skillDistribution,
+                    ),
+            ) || [],
+        );
 
         const updateTeam = await this.teamRepository.save({
             id: id,
@@ -90,9 +78,9 @@ export class TeamService {
             linkWebsite: updateTeamDto.linkWebsite,
             founded: updateTeamDto.founded,
             location: updateTeamDto.location,
-            skillDistribution: skillDistribution,
+            skillDistribution: skillDistributions,
             slogan: updateTeamDto.slogan,
-            skills: updateTeamDto.skills,
+            skills,
             teamName: updateTeamDto.teamName,
             teamSize: updateTeamDto.teamSize,
             projectSize: updateTeamDto.projectSize,
@@ -154,9 +142,40 @@ export class TeamService {
         return user;
     }
 
-    async getAllTeamPagging(queryData: GetListTeamDto) {
-        const {page, size, sort, skillId, timeZone} = queryData;
+    async getList(queryData: GetListTeamDto): Promise<Paging<Team>> {
+        const {keyword, skill_IN, page, size, sort} = queryData;
+
         const paging = formatPaging(page, size, sort);
+        const queryBuilder = this.teamRepository
+            .createQueryBuilder('team')
+            .leftJoinAndSelect('team.skills', 'skills')
+            .take(paging.query.take)
+            .skip(paging.query.skip);
+
+        if (keyword) {
+            queryBuilder.where(`'teamName' like :keyword`, {
+                keyword: `%${keyword}%`,
+            });
+        }
+
+        if (skill_IN) {
+            queryBuilder.andWhere('skills.id IN(:...ids)', {ids: skill_IN});
+        }
+        const [list, total] = await queryBuilder.getManyAndCount();
+
+        return {
+            content: list,
+            pagable: {
+                total,
+                ...paging.pagable,
+            },
+        };
+    }
+
+    async getAllTeamPagging(
+        queryData: GetListTeamPagingDto,
+    ): Promise<Paging<Team>> {
+        const {page, size, sort, skillId, timeZone} = queryData;
         let filter: any = {};
         if (timeZone) filter['timeZone'] = Like(`%${timeZone}%`);
 
@@ -165,14 +184,16 @@ export class TeamService {
             skills = [skillId];
         } else skills = skillId;
 
-        const [list, total] = await this.teamRepository
+        const paging = formatPaging(page, size, sort);
+        const queryBuilder = await this.teamRepository
             .createQueryBuilder('team')
             .leftJoinAndSelect('team.skills', 'skills')
             .where('skills.id IN(:...ids', {ids: skills})
-            .andWhere('team.timeZone = : timeZone', {timeZone: timeZone})
-            .take(10)
-            .skip(0)
-            .getManyAndCount();
+            .where('team.timeZone = :timeZone', {timeZone: timeZone})
+            .take(paging.query.take)
+            .skip(paging.query.skip);
+
+        const [list, total] = await queryBuilder.getManyAndCount();
 
         return {
             content: list,
