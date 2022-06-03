@@ -10,4 +10,8 @@ export class GetListTeamDto extends Pagable {
   @ApiPropertyOptional()
   @IsOptional()
   readonly skill_IN?: string[]
+
+  @ApiPropertyOptional()
+  @IsOptional()
+  readonly timeZone_IN?: string[]
 }
