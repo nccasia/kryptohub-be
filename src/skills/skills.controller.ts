@@ -7,7 +7,6 @@ import {GetListSkillDto} from './dto/skills.dto';
 @ApiTags('Skill')
 @ApiBearerAuth()
 @Controller('skill')
-@UseGuards(JWTAuthGuard)
 export class SkillController {
     constructor(private readonly skillService: SkillService) {}
 
