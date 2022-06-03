@@ -14,11 +14,12 @@ import {UserService} from './user.service';
 import {UserUpdate} from './dto/user-update.dto';
 import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {User} from './user.entity';
-import {ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {AuthUser} from './user.decorator';
 import {SkillService} from '../skills/skills.service';
 
 @ApiTags('Profile')
+@ApiBearerAuth()
 @Controller('profile')
 @UseInterceptors(ClassSerializerInterceptor)
 export class ProfileController {
@@ -34,11 +35,12 @@ export class ProfileController {
         return getUser;
     }
 
-    @Put('update/:id')
+    @Put('update')
+    @UseGuards(JWTAuthGuard)
     async update(
-        @Param('id', new ParseIntPipe()) id: number,
+        @AuthUser() user: User,
         @Body() updatesUser: UserUpdate,
     ) {
-        return this.userService.update(id, updatesUser);
+        return this.userService.update(user.id as number, updatesUser);
     }
 }

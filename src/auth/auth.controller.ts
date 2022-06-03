@@ -17,13 +17,14 @@ import {User} from '../user/user.entity';
 import {AuthService} from './auth.service';
 import {JWTAuthGuard} from './guards/jwt-auth.guard';
 import {SessionAuthGuard} from './guards/session-auth.guard';
-import {ApiTags} from '@nestjs/swagger';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {AuthCredentialsDto} from './dto/auth-credentials.dto';
 import {SignInRegistration} from './dto/sign-in-credentials.dto';
 import {GithubRegistration} from './dto/github-auth.dto';
 import {GoogleAuthDto} from './dto/google-auth.dto';
 
 @ApiTags('Auth')
+@ApiBearerAuth()
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}

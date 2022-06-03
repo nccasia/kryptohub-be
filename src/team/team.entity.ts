@@ -21,44 +21,44 @@ export class Team extends BaseEntity {
     @Column()
     teamName?: string;
 
-    @Column()
+    @Column({nullable: true})
     teamSize?: string;
 
-    @Column()
+    @Column({nullable: true})
     timeZone?: string;
 
-    @Column()
+    @Column({nullable: true})
     organization?: string;
 
     @ManyToMany(() => Skill, (skill) => skill.team)
     @JoinTable()
     skills?: Skill[];
 
-    @Column()
+    @Column({nullable: true})
     workingTime?: string;
 
-    @Column()
+    @Column({nullable: true})
     hour?: string;
 
-    @Column()
+    @Column({nullable: true})
     week?: string;
 
-    @Column()
+    @Column({nullable: true})
     description?: string;
 
-    @Column()
+    @Column({nullable: true})
     avatar?: string;
 
-    @Column()
+    @Column({nullable: true})
     avatarUrl?: string;
 
-    @Column()
+    @Column({nullable: true})
     slogan?: string;
 
-    @Column()
+    @Column({nullable: true})
     founded?: string;
 
-    @Column()
+    @Column({nullable: true})
     linkWebsite?: string;
 
     @Column()
@@ -67,16 +67,16 @@ export class Team extends BaseEntity {
     @Column()
     updateAt?: Date;
 
-    @Column()
+    @Column({nullable: true})
     projectSize?: string;
 
     @Column({type: 'boolean', default: false})
     status?: boolean;
 
-    @Column()
+    @Column({nullable: true})
     location?: string;
 
-    @ManyToMany((type) => SkillDistribution, (skill) => skill.team, {
+    @ManyToMany(() => SkillDistribution, (skill) => skill.team, {
         eager: false,
     })
     @JoinTable()
@@ -87,6 +87,8 @@ export class Team extends BaseEntity {
 
     constructor(data: Partial<Team> = {}) {
         super();
+        this.createAt = this.createAt || new Date()
+        this.updateAt = new Date()
         Object.assign(this, data);
     }
 }

@@ -59,13 +59,13 @@ export class SkillService {
         return skill;
     }
 
-    async findOrCreate(skills: Skill[]) {
-        const skillList = await Promise.all(skills.map(async (skill) => {
+    async findOrCreate(skills: Skill[]):Promise<Skill[]> {
+        let skillList = await Promise.all(skills.map(async (skill) => {
             const _skill = await this.findOne({where: [{id: skill.id}, {skillName: skill.skillName}]})
             if(_skill) return _skill
 
             return this.create({skillName: skill.skillName})
         }))
-        return skillList
+        return skillList.filter(Boolean) as Skill[]
     }
 }

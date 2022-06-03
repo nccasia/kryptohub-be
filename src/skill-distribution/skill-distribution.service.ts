@@ -62,4 +62,15 @@ export class SkillDistributionService {
             await this.skillDistributionRepository.findOne(where);
         return skillDistribution;
     }
+
+    async update(id, data: SkillDistribution) {
+        const skillDistribution = await this.skillDistributionRepository.findOne({id})
+        if(!skillDistribution) return {}
+
+        skillDistribution.team = data.team
+        skillDistribution.skillDistributionName = data.skillDistributionName
+        skillDistribution.skillDistributionValue = data.skillDistributionValue
+
+        return await skillDistribution.save()
+    }
 }

@@ -1,11 +1,11 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
-import {IsOptional} from 'class-validator';
+import {IsNotEmpty, IsOptional} from 'class-validator';
 
 export class CreateTeamDto {
-    @ApiProperty()
-    @IsOptional()
+    @ApiProperty({required: true})
+    @IsNotEmpty()
     teamName?: string;
 
     @ApiProperty()
