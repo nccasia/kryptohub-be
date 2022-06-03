@@ -1,3 +1,6 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skills/skills.entity';
+import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Like, Repository} from 'typeorm';
@@ -14,56 +17,107 @@ export class TeamService {
     constructor(
         @InjectRepository(Team)
         private readonly teamRepository: Repository<Team>,
+        private readonly skillService: SkillService,
     ) {}
-    async createTeam(createTeamDto: CreateTeamDto, user: User): Promise<Team> {
-        const {
-            teamName,
-            teamSize,
-            timeZone,
-            skill,
-            workingTime,
-            organization,
-            hour,
-            week,
-            description,
-            userId,
-            avatar,
-            avatarUrl,
-        } = createTeamDto;
+    async createTeam(
+        createTeamDto: CreateTeamDto,
+        user: User,
+        skillDistribution: Array<SkillDistribution>,
+    ) {
+        const payload = createTeamDto;
         const team = new Team();
-        team.description = description;
-        team.organization = organization;
-        team.teamSize = teamSize;
-        team.teamName = teamName;
-        team.avatar = avatar;
-        team.avatarUrl = avatarUrl;
-        team.timeZone = timeZone;
-        team.skill = skill;
-        team.workingTime = workingTime;
-        team.hour = hour;
-        team.week = week;
+
+        let skills = (await Promise.all(
+            payload.skills
+                ?.filter((skill) => !skill.id)
+                .map(async (skill: Skill) => {
+                    try {
+                        return await this.skillService.create({
+                            skillName: skill.skillName,
+                        });
+                    } catch {
+                        return undefined;
+                    }
+                }) || [],
+        )) as Skill[];
+        skills = skills.filter(Boolean);
+        skills = [
+            ...skills,
+            ...(payload.skills?.filter((skill) => !!skill.id) || []),
+        ];
+
+        team.description = payload.description;
+        team.organization = payload.organization;
+        team.teamSize = payload.teamSize;
+        team.teamName = payload.teamName;
+        team.avatar = payload.avatar;
+        team.avatarUrl = payload.avatarUrl;
+        team.timeZone = payload.timeZone;
+        team.skills = skills;
+        team.skillDistribution = skillDistribution;
+        team.workingTime = payload.workingTime;
+        team.slogan = payload.slogan;
+        team.hour = payload.hour;
+        team.week = payload.week;
+        team.location = payload.location;
+        team.founded = payload.founded;
+        team.linkWebsite = payload.linkWebsite;
+        team.projectSize = payload.projectSize;
+        team.status = payload.status;
         team.user = user;
-        team.userId = userId;
         await team.save();
         delete team.user;
+
         return team;
     }
 
-    async updateTeam(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
-        await this.teamRepository.update(id, updateTeamDto);
-        const result = await this.teamRepository.findOne(id);
-        if (!result) {
-            throw new NotFoundException(`Team with ID ${id} not found`);
+    async updateTeam(
+        id: number,
+        updateTeamDto: UpdateTeamDto,
+        // skills: Array<Skill>,
+        skillDistribution: Array<SkillDistribution>,
+    ): Promise<Team> {
+        const team = await this.teamRepository.findOne(id);
+
+        if (!team) {
+            throw new NotFoundException(`There isn't any team with id: ${id}`);
         }
-        return result;
+
+        const updateTeam = await this.teamRepository.save({
+            id: id,
+            avatar: updateTeamDto.avatar,
+            description: updateTeamDto.description,
+            linkWebsite: updateTeamDto.linkWebsite,
+            founded: updateTeamDto.founded,
+            location: updateTeamDto.location,
+            skillDistribution: skillDistribution,
+            slogan: updateTeamDto.slogan,
+            skills: updateTeamDto.skills,
+            teamName: updateTeamDto.teamName,
+            teamSize: updateTeamDto.teamSize,
+            projectSize: updateTeamDto.projectSize,
+            timeZone: updateTeamDto.timeZone,
+            workingTime: updateTeamDto.workingTime,
+            week: updateTeamDto.week,
+            hour: updateTeamDto.hour,
+            organization: updateTeamDto.organization,
+            avatarUrl: updateTeamDto.avatarUrl,
+            status: updateTeamDto.status,
+        });
+        return updateTeam;
     }
 
     async getAllTeam(): Promise<Team[]> {
-        return await this.teamRepository.find();
+        return await this.teamRepository.find({
+            relations: ['skills', 'skillDistribution'],
+        });
     }
 
     async getTeamById(id: number): Promise<Team> {
-        const getTeam = await this.teamRepository.findOne(id);
+        const getTeam = await this.teamRepository.findOne({
+            where: {id: id},
+            relations: ['skills', 'skillDistribution'],
+        });
 
         if (!getTeam) {
             throw new NotFoundException(`Team with ID ${id} not found`);
@@ -105,12 +159,20 @@ export class TeamService {
         const paging = formatPaging(page, size, sort);
         let filter: any = {};
         if (timeZone) filter['timeZone'] = Like(`%${timeZone}%`);
-        if (skillId) filter['skillId'] = {relations: ['skills']};
 
-        const [list, total] = await this.teamRepository.findAndCount({
-            where: filter,
-            ...paging.query,
-        });
+        let skills;
+        if (typeof skills === 'string') {
+            skills = [skillId];
+        } else skills = skillId;
+
+        const [list, total] = await this.teamRepository
+            .createQueryBuilder('team')
+            .leftJoinAndSelect('team.skills', 'skills')
+            .where('skills.id IN(:...ids', {ids: skills})
+            .andWhere('team.timeZone = : timeZone', {timeZone: timeZone})
+            .take(10)
+            .skip(0)
+            .getManyAndCount();
 
         return {
             content: list,

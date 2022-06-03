@@ -16,10 +16,10 @@ export class Pagable {
 }
 
 export interface Paging<T> {
-    content: T[];
-    pagable: {
-        page: number;
-        size: number;
-        total: number;
-    };
+  content: T[],
+  pagable: {
+    page: number,
+    size: number,
+    total: number
+  }
 }

@@ -27,9 +27,17 @@ import {query, Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
 import {GetListTeamDto} from './dto/get-team.dto';
+import {SkillService} from '../skills/skills.service';
+import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
+import {Skill} from '@/skills/skills.entity';
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 @Controller('team')
 export class TeamController {
-    constructor(private readonly teamService: TeamService) {}
+    constructor(
+        private readonly teamService: TeamService,
+        private readonly skillService: SkillService,
+        private readonly skillDistributionService: SkillDistributionService,
+    ) {}
 
     @UseGuards(JWTAuthGuard)
     @Post('create')
@@ -37,8 +45,22 @@ export class TeamController {
     async createTeam(
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
-    ): Promise<Team> {
-        return await this.teamService.createTeam(createTeamDto, user);
+    ) {
+        // const skill = await this.skillService.getSkillByIds(
+        //     createTeamDto.skills as any,
+        // );
+
+        const skillDistribution =
+            await this.skillDistributionService.getSkillDistributionById(
+                createTeamDto.skillDistribution as any,
+            );
+
+        return await this.teamService.createTeam(
+            createTeamDto,
+            user,
+            // skill,
+            skillDistribution,
+        );
     }
 
     @Get('getAllPaging')
@@ -68,7 +90,15 @@ export class TeamController {
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateTeamDto: UpdateTeamDto,
     ): Promise<Team> {
-        return await this.teamService.updateTeam(id, updateTeamDto);
+        const skillDistribution =
+            await this.skillDistributionService.getSkillDistributionById(
+                updateTeamDto.skillDistribution as any,
+            );
+        return await this.teamService.updateTeam(
+            id,
+            updateTeamDto,
+            skillDistribution,
+        );
     }
 
     @UseGuards(JWTAuthGuard)

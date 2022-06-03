@@ -16,7 +16,7 @@ import {JWTAuthGuard} from '../auth/guards/jwt-auth.guard';
 import {User} from './user.entity';
 import {ApiTags} from '@nestjs/swagger';
 import {AuthUser} from './user.decorator';
-import {SkillService} from '../skill/skill.service';
+import {SkillService} from '../skills/skills.service';
 
 @ApiTags('Profile')
 @Controller('profile')
@@ -39,9 +39,6 @@ export class ProfileController {
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updatesUser: UserUpdate,
     ) {
-        const skills = await this.skillService.getSkillByIds(
-            updatesUser.skills as any,
-        );
-        return this.userService.update(id, updatesUser, skills);
+        return this.userService.update(id, updatesUser);
     }
 }

@@ -1,3 +1,5 @@
+import {Skill} from '@/skills/skills.entity';
+import {Team} from '@/team/team.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import * as bcrypt from 'bcrypt';
 import {Exclude} from 'class-transformer';
@@ -14,8 +16,6 @@ import {
     ManyToMany,
     JoinTable,
 } from 'typeorm';
-import {Skill} from '../skill/entities/skill.entity';
-import {Team} from '../team/team.entity';
 
 export enum SocialProviderTypes {
     USERNAME = 'username',
@@ -43,10 +43,6 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column()
-    company?: string;
-
-    @ApiProperty()
-    @Column()
     emailAddress?: string;
 
     @ApiProperty()
@@ -61,14 +57,6 @@ export class User extends BaseEntity {
     @ApiProperty()
     @Column()
     googleAddress?: string;
-    
-    @ApiProperty()
-    @Column()
-    profileLink?: string;
-
-    @ApiProperty()
-    @Column()
-    description?: string;
 
     @ApiProperty()
     @Column()
@@ -78,18 +66,6 @@ export class User extends BaseEntity {
     @Column()
     status?: string;
 
-    @ApiProperty()
-    @Column()
-    location?: string;
-
-    @ApiProperty()
-    @Column()
-    industry?: string;
-
-    @ApiProperty()
-    @Column()
-    headline?: string;
-
     @CreateDateColumn()
     createdAt?: Date;
 
@@ -97,6 +73,7 @@ export class User extends BaseEntity {
     updatedAt?: Date;
 
     @OneToMany((type) => Team, (team) => team.user, {eager: true})
+    @JoinTable()
     team?: Team[];
 
     @ManyToMany(() => Skill, (skill) => skill.users)

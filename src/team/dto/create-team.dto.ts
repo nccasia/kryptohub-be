@@ -1,3 +1,5 @@
+import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
 
@@ -20,7 +22,15 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    skill?: string[];
+    skills?: Skill[];
+
+    @ApiProperty()
+    @IsOptional()
+    skillDistribution?: SkillDistribution[];
+
+    @ApiProperty()
+    @IsOptional()
+    slogan?: string;
 
     @ApiProperty()
     @IsOptional()
@@ -40,13 +50,37 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    userId?: number;
-
-    @ApiProperty()
-    @IsOptional()
     avatar?: string;
 
     @ApiProperty()
     @IsOptional()
     avatarUrl?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    founded?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    linkWebsite?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    createAt?: Date;
+
+    @ApiProperty()
+    @IsOptional()
+    updateAt?: Date;
+
+    @ApiProperty()
+    @IsOptional()
+    projectSize?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    location?: string;
+
+    @ApiProperty()
+    @IsOptional()
+    status?: boolean;
 }
