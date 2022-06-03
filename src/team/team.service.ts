@@ -140,7 +140,7 @@ export class TeamService {
     }
 
     async getList(queryData: GetListTeamDto): Promise<Paging<Team>> {
-        const {keyword, skill_IN, page, size, sort} = queryData;
+        const {keyword, skill_IN, timeZone_IN, page, size, sort} = queryData;
 
         const paging = formatPaging(page, size, sort);
         const queryBuilder = this.teamRepository
@@ -150,7 +150,7 @@ export class TeamService {
             .skip(paging.query.skip);
 
         if (keyword) {
-            queryBuilder.where(`'teamName' like :keyword`, {
+            queryBuilder.where(`'teamName' ilike :keyword`, {
                 keyword: `%${keyword}%`,
             });
         }
@@ -158,6 +158,11 @@ export class TeamService {
         if (skill_IN) {
             queryBuilder.andWhere('skills.id IN(:...ids)', {ids: skill_IN});
         }
+
+        if (timeZone_IN) {
+            queryBuilder.andWhere(`"timeZone" IN(:...timeZone)`, {timeZone: timeZone_IN})
+        }
+
         const [list, total] = await queryBuilder.getManyAndCount();
 
         return {
