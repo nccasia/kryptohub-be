@@ -3,7 +3,8 @@ import {
     BaseEntity,
     Column,
     Entity,
-    ManyToMany,
+    ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {Team} from '../team/team.entity';
@@ -25,7 +26,7 @@ export class SkillDistribution extends BaseEntity {
     @Column({type: 'jsonb'})
     skillDistributionValue?: string;
 
-    @ManyToMany(() => Team, (team) => team.skillDistribution)
+    @ManyToOne(() => Team, (team) => team.skillDistribution)
     team?: Team[];
 
     constructor(data: Partial<SkillDistribution> = {}) {
