@@ -7,7 +7,7 @@ import {Like, Repository} from 'typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
 import {User} from '../user/user.entity';
-import {HelperFile} from '../utils/helper';
+import {createQueryBuilder, HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
 import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
@@ -144,14 +144,13 @@ export class TeamService {
         const {keyword, skill_IN, timeZone_IN, page, size, sort} = queryData;
 
         const paging = formatPaging(page, size, sort);
-        const queryBuilder = this.teamRepository
-            .createQueryBuilder('team')
-            .leftJoinAndSelect('team.skills', 'skills')
-            .take(paging.query.take)
-            .skip(paging.query.skip);
+        const queryBuilder = createQueryBuilder(this.teamRepository, 'team', {
+            pagable: {page, size, sort},
+            relations: ['skills'],
+        });
 
         if (keyword) {
-            queryBuilder.where(`'teamName' ilike :keyword`, {
+            queryBuilder.where(`"teamName" ilike :keyword`, {
                 keyword: `%${keyword}%`,
             });
         }
