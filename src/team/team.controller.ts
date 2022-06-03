@@ -26,29 +26,23 @@ import {TeamService} from './team.service';
 import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
-import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { GetListTeamDto } from './dto/team.dto';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {GetListTeamDto} from './dto/team.dto';
 
 @ApiTags('Team')
 @ApiBearerAuth()
 @Controller('team')
-@UseGuards(JWTAuthGuard)
 export class TeamController {
-    constructor(
-        private readonly teamService: TeamService,
-    ) {}
+    constructor(private readonly teamService: TeamService) {}
 
+    @UseGuards(JWTAuthGuard)
     @Post('create')
     @HttpCode(HttpStatus.OK)
     async createTeam(
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
     ) {
-        
-        return await this.teamService.createTeam(
-            user,
-            createTeamDto,
-        );
+        return await this.teamService.createTeam(user, createTeamDto);
     }
 
     @Get('getAll')
@@ -124,4 +118,3 @@ export class TeamController {
         });
     }
 }
-

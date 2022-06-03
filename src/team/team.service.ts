@@ -4,13 +4,13 @@ import {Skill} from '@/skills/skills.entity';
 import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import { Paging } from '@utils/commonDto';
-import { formatPaging } from '@utils/formatter';
+import {Paging} from '@utils/commonDto';
+import {formatPaging} from '@utils/formatter';
 import {Repository} from 'typeorm';
 import {User} from '../user/user.entity';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
-import { GetListTeamDto } from './dto/team.dto';
+import {GetListTeamDto} from './dto/team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 
@@ -22,14 +22,12 @@ export class TeamService {
         private readonly skillService: SkillService,
         private readonly skillDistributionService: SkillDistributionService,
     ) {}
-    async createTeam(
-        user: User,
-        createTeamDto: CreateTeamDto,
-    ) {
+    async createTeam(user: User, createTeamDto: CreateTeamDto) {
+        const skills = await this.skillService.findOrCreate(
+            createTeamDto.skills || [],
+        );
 
-        const skills = await this.skillService.findOrCreate(createTeamDto.skills || [])
-
-        const skillDistributions = await Promise.all(
+        const skillDistributions = (await Promise.all(
             createTeamDto.skillDistribution?.map(
                 async (skillDistribution) =>
                     await this.skillDistributionService.update(
@@ -37,9 +35,14 @@ export class TeamService {
                         skillDistribution,
                     ),
             ) || [],
-        ) as SkillDistribution[];
+        )) as SkillDistribution[];
 
-        const team = new Team({...createTeamDto, user, skills, skillDistribution: skillDistributions});
+        const team = new Team({
+            ...createTeamDto,
+            user,
+            skills,
+            skillDistribution: skillDistributions,
+        });
 
         await team.save();
         delete team.user;
@@ -139,27 +142,32 @@ export class TeamService {
     }
 
     async getList(queryData: GetListTeamDto): Promise<Paging<Team>> {
-        const {keyword, skill_IN, page, size, sort} = queryData
+        const {keyword, skill_IN, page, size, sort} = queryData;
 
         const paging = formatPaging(page, size, sort);
-        const queryBuilder = this.teamRepository.createQueryBuilder('team').leftJoinAndSelect('team.skills', 'skills').take(paging.query.take).skip(paging.query.skip)
+        const queryBuilder = this.teamRepository
+            .createQueryBuilder('team')
+            .leftJoinAndSelect('team.skills', 'skills')
+            .take(paging.query.take)
+            .skip(paging.query.skip);
 
-        if(keyword) {
-            queryBuilder.where(`'teamName' like :keyword`, {keyword: `%${keyword}%`})
+        if (keyword) {
+            queryBuilder.where(`'teamName' like :keyword`, {
+                keyword: `%${keyword}%`,
+            });
         }
 
-        if(skill_IN) {
-            queryBuilder.andWhere('skills.id IN(:...ids)', {ids: skill_IN})
+        if (skill_IN) {
+            queryBuilder.andWhere('skills.id IN(:...ids)', {ids: skill_IN});
         }
-        const [list, total] = await queryBuilder.getManyAndCount()
+        const [list, total] = await queryBuilder.getManyAndCount();
 
         return {
             content: list,
             pagable: {
                 ...paging.pagable,
-                total
-            }
-        }
+                total,
+            },
+        };
     }
 }
-

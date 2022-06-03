@@ -8,6 +8,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {User} from '../user/user.entity';
@@ -76,7 +77,7 @@ export class Team extends BaseEntity {
     @Column({nullable: true})
     location?: string;
 
-    @ManyToMany(() => SkillDistribution, (skill) => skill.team, {
+    @OneToMany(() => SkillDistribution, (skill) => skill.team, {
         eager: false,
     })
     @JoinTable()
@@ -87,8 +88,8 @@ export class Team extends BaseEntity {
 
     constructor(data: Partial<Team> = {}) {
         super();
-        this.createAt = this.createAt || new Date()
-        this.updateAt = new Date()
+        this.createAt = this.createAt || new Date();
+        this.updateAt = new Date();
         Object.assign(this, data);
     }
 }

@@ -38,15 +38,15 @@ export class User extends BaseEntity {
     provider?: SocialProviderTypes;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     username?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     emailAddress?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     @Exclude()
     password?: string;
 
@@ -63,7 +63,7 @@ export class User extends BaseEntity {
     avatarPath?: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     status?: string;
 
     @CreateDateColumn()
