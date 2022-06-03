@@ -4,15 +4,16 @@ import {Skill} from '@/skills/skills.entity';
 import {SkillService} from '@/skills/skills.service';
 import {Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
+import {Like, Repository} from 'typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
-import {Repository} from 'typeorm';
 import {User} from '../user/user.entity';
 import {HelperFile} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
 import {GetListTeamDto} from './dto/team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
+import { GetListTeamPagingDto } from './dto/get-team.dto';
 
 @Injectable()
 export class TeamService {
@@ -165,8 +166,40 @@ export class TeamService {
         return {
             content: list,
             pagable: {
-                ...paging.pagable,
                 total,
+                ...paging.pagable,
+            },
+        };
+    }
+
+    async getAllTeamPagging(
+        queryData: GetListTeamPagingDto,
+    ): Promise<Paging<Team>> {
+        const {page, size, sort, skillId, timeZone} = queryData;
+        let filter: any = {};
+        if (timeZone) filter['timeZone'] = Like(`%${timeZone}%`);
+
+        let skills;
+        if (typeof skills === 'string') {
+            skills = [skillId];
+        } else skills = skillId;
+
+        const paging = formatPaging(page, size, sort);
+        const queryBuilder = await this.teamRepository
+            .createQueryBuilder('team')
+            .leftJoinAndSelect('team.skills', 'skills')
+            .where('skills.id IN(:...ids', {ids: skills})
+            .where('team.timeZone = :timeZone', {timeZone: timeZone})
+            .take(paging.query.take)
+            .skip(paging.query.skip);
+
+        const [list, total] = await queryBuilder.getManyAndCount();
+
+        return {
+            content: list,
+            pagable: {
+                total,
+                ...paging.pagable,
             },
         };
     }
