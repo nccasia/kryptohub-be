@@ -9,6 +9,7 @@ import {
     ParseIntPipe,
     Post,
     Put,
+    Query,
     Res,
     UploadedFile,
     UseGuards,
@@ -25,39 +26,28 @@ import {TeamService} from './team.service';
 import {Response} from 'express';
 import {diskStorage} from 'multer';
 import {HelperFile} from '../utils/helper';
-import {SkillService} from '../skills/skills.service';
-import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
-import {Skill} from '@/skills/skills.entity';
-import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { GetListTeamDto } from './dto/team.dto';
+
+@ApiTags('Team')
+@ApiBearerAuth()
 @Controller('team')
+@UseGuards(JWTAuthGuard)
 export class TeamController {
     constructor(
         private readonly teamService: TeamService,
-        private readonly skillService: SkillService,
-        private readonly skillDistributionService: SkillDistributionService,
     ) {}
 
-    @UseGuards(JWTAuthGuard)
     @Post('create')
     @HttpCode(HttpStatus.OK)
     async createTeam(
         @Body() createTeamDto: CreateTeamDto,
         @AuthUser() user: User,
     ) {
-        // const skill = await this.skillService.getSkillByIds(
-        //     createTeamDto.skills as any,
-        // );
-
-        const skillDistribution =
-            await this.skillDistributionService.getSkillDistributionById(
-                createTeamDto.skillDistribution as any,
-            );
-
+        
         return await this.teamService.createTeam(
-            createTeamDto,
             user,
-            // skill,
-            skillDistribution,
+            createTeamDto,
         );
     }
 
@@ -65,6 +55,12 @@ export class TeamController {
     @HttpCode(HttpStatus.OK)
     async getAllTeam(): Promise<Team[]> {
         return await this.teamService.getAllTeam();
+    }
+
+    @Get('list')
+    @HttpCode(HttpStatus.OK)
+    async getList(@Query() query: GetListTeamDto) {
+        return await this.teamService.getList(query);
     }
 
     @Get('/:id')
@@ -82,15 +78,7 @@ export class TeamController {
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateTeamDto: UpdateTeamDto,
     ): Promise<Team> {
-        const skillDistribution =
-            await this.skillDistributionService.getSkillDistributionById(
-                updateTeamDto.skillDistribution as any,
-            );
-        return await this.teamService.updateTeam(
-            id,
-            updateTeamDto,
-            skillDistribution,
-        );
+        return await this.teamService.updateTeam(id, updateTeamDto);
     }
 
     @UseGuards(JWTAuthGuard)
@@ -136,3 +124,4 @@ export class TeamController {
         });
     }
 }
+
