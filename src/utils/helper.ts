@@ -2,6 +2,8 @@ import {extname} from 'path';
 import {Request} from 'express';
 import {promisify} from 'util';
 import {unlink} from 'fs';
+import { Pagable } from './commonDto';
+import { formatPaging } from './formatter';
 
 const unlinkAsync = promisify(unlink);
 export class HelperFile {
@@ -24,4 +26,24 @@ export class HelperFile {
         }
         return true;
     }
+}
+
+export const createQueryBuilder = (repository, alias: string, {pagable, relations}:{pagable: Pagable, relations: string[]}) => {
+    const {page, size, sort} = pagable
+    const paging = formatPaging(page, size, sort);
+    const query = repository.createQueryBuilder(alias)
+        .take(paging.query.take)
+        .skip(paging.query.skip)
+    
+    const _order: any = {}
+    Object.keys(paging.query.sort).forEach(e => {
+        _order[`${alias}.${e}`] = paging.query.sort[e] 
+    })
+    query.orderBy(_order)
+    
+    relations.forEach(relation => {
+        query.leftJoinAndSelect(`${alias}.${relation}`, relation)
+    })
+
+    return query
 }

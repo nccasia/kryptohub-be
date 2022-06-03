@@ -32,13 +32,11 @@ export class SkillService {
         const {page, size, sort, keyword} = queryData;
         const paging = formatPaging(page, size, sort);
 
-        let filter: any = {};
-        if (keyword) filter['skillName'] = Like(`%${keyword}%`);
+        const queryBuilder = this.skillRepository.createQueryBuilder('skill').take(paging.query.take).skip(paging.query.skip)
 
-        const [list, total] = await this.skillRepository.findAndCount({
-            where: filter,
-            ...paging.query,
-        });
+        if (keyword) queryBuilder.andWhere(`"skillName" ilike :skillName`, {skillName: keyword})
+
+        const [list, total] = await queryBuilder.getManyAndCount()
 
         return {
             content: list,
