@@ -12,18 +12,7 @@ export class SkillDistributionService {
     ) {}
 
     async create(createSkillDistributionDto: CreateSkillDistributionDto) {
-        const skillDistribution = new SkillDistribution();
-        skillDistribution.skillDistributionName =
-            createSkillDistributionDto.skillDistributionName;
-        skillDistribution.skillDistributionValue = JSON.stringify(
-            createSkillDistributionDto.skillDistributionValue,
-        );
-
-        if (skillDistribution.skillDistributionName == '') {
-            throw new NotFoundException(
-                'Skill distribution name should not be empty',
-            );
-        }
+        const skillDistribution = new SkillDistribution(createSkillDistributionDto);
 
         const result = await this.skillDistributionRepository.findOne({
             where: {
@@ -44,9 +33,7 @@ export class SkillDistributionService {
 
         return {
             ...saveSkillDistribution,
-            skillDistributionValue: JSON.parse(
-                saveSkillDistribution.skillDistributionValue || '',
-            ),
+            skillDistributionValue: saveSkillDistribution.skillDistributionValue
         };
     }
 
@@ -67,7 +54,6 @@ export class SkillDistributionService {
         const skillDistribution = await this.skillDistributionRepository.findOne({id})
         if(!skillDistribution) return {}
 
-        skillDistribution.team = data.team
         skillDistribution.skillDistributionName = data.skillDistributionName
         skillDistribution.skillDistributionValue = data.skillDistributionValue
 

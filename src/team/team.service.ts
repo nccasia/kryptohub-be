@@ -31,10 +31,7 @@ export class TeamService {
         const skillDistributions = (await Promise.all(
             createTeamDto.skillDistribution?.map(
                 async (skillDistribution) =>
-                    await this.skillDistributionService.update(
-                        skillDistribution.id,
-                        skillDistribution,
-                    ),
+                    await this.skillDistributionService.create(skillDistribution),
             ) || [],
         )) as SkillDistribution[];
 
@@ -204,3 +201,4 @@ export class TeamService {
         };
     }
 }
+

@@ -4,14 +4,13 @@ import {
     Column,
     Entity,
     ManyToOne,
-    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 import {Team} from '../team/team.entity';
 
 export interface ISkillDistributionValue {
     field: string;
-    quantity: string;
+    quantity: number;
 }
 
 @Entity()
@@ -23,8 +22,8 @@ export class SkillDistribution extends BaseEntity {
     @Column()
     skillDistributionName?: string;
 
-    @Column({type: 'jsonb'})
-    skillDistributionValue?: string;
+    @Column({type: 'simple-json'})
+    skillDistributionValue?: ISkillDistributionValue[];
 
     @ManyToOne(() => Team, (team) => team.skillDistribution)
     team?: Team[];
