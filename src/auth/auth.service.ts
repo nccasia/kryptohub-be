@@ -155,6 +155,7 @@ export class AuthService {
 
         const userGithub = getUser.data;
         const username = userGithub.login;
+
         try {
             const user = await this.userService.findOne({
                 where: {username},
@@ -171,7 +172,9 @@ export class AuthService {
         } catch (e) {
             const user = await this.userService.create({
                 username: username,
-                githubAddress: userGithub.html_url,
+                emailAddress: githubRegistration.githubAddress,
+                profileLink: userGithub.html_url,
+                githubAddress: githubRegistration.githubAddress,
                 status: 'isNew',
                 provider: SocialProviderTypes.GITHUB,
             });
@@ -263,6 +266,7 @@ export class AuthService {
             } catch (e) {
                 const user = await this.userService.create({
                     googleAddress: decoded.email,
+                    emailAddress: decoded.email,
                     username: decoded.name,
                     status: 'isNew',
                     provider: SocialProviderTypes.GOOGLE,

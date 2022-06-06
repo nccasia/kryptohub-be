@@ -23,74 +23,84 @@ export class TeamService {
         private readonly skillDistributionService: SkillDistributionService,
     ) {}
     async createTeam(user: User, createTeamDto: CreateTeamDto) {
-        const skills = await this.skillService.findOrCreate(
-            createTeamDto.skills || [],
-        );
+        try {
+            const skills = await this.skillService.findOrCreate(
+                createTeamDto.skills || [],
+            );
 
-        const skillDistributions = (await Promise.all(
-            createTeamDto.skillDistribution?.map(
-                async (skillDistribution) =>
-                    await this.skillDistributionService.create(
-                        skillDistribution,
-                    ),
-            ) || [],
-        )) as SkillDistribution[];
+            const skillDistributions = (await Promise.all(
+                createTeamDto.skillDistribution?.map(
+                    async (skillDistribution) =>
+                        await this.skillDistributionService.create(
+                            skillDistribution,
+                        ),
+                ) || [],
+            )) as SkillDistribution[];
 
-        const team = new Team({
-            ...createTeamDto,
-            user,
-            skills,
-            skillDistribution: skillDistributions,
-        });
+            const team = new Team({
+                ...createTeamDto,
+                user,
+                skills,
+                skillDistribution: skillDistributions,
+            });
 
-        await team.save();
-        delete team.user;
+            await team.save();
+            delete team.user;
 
-        return team;
+            return team;
+        } catch (error) {
+            throw new NotFoundException('Error cannot create team');
+        }
     }
 
-    async updateTeam(id: number, updateTeamDto: UpdateTeamDto): Promise<Team> {
-        const team = await this.teamRepository.findOne(id);
+    async updateTeam(id: number, updateTeamDto: UpdateTeamDto) {
+        try {
+            const team = await this.teamRepository.findOne(id);
 
-        if (!team) {
-            throw new NotFoundException(`There isn't any team with id: ${id}`);
+            if (!team) {
+                throw new NotFoundException(
+                    `There isn't any team with id: ${id}`,
+                );
+            }
+
+            const skills = await this.skillService.findOrCreate(
+                updateTeamDto.skills || [],
+            );
+            const skillDistributions = await Promise.all(
+                updateTeamDto.skillDistribution?.map(
+                    async (skillDistribution) =>
+                        await this.skillDistributionService.update(
+                            skillDistribution.id,
+                            skillDistribution,
+                        ),
+                ) || [],
+            );
+
+            const updateTeam = await this.teamRepository.save({
+                id: id,
+                avatar: updateTeamDto.avatar,
+                description: updateTeamDto.description,
+                linkWebsite: updateTeamDto.linkWebsite,
+                founded: updateTeamDto.founded,
+                location: updateTeamDto.location,
+                skillDistribution: skillDistributions,
+                slogan: updateTeamDto.slogan,
+                skills,
+                teamName: updateTeamDto.teamName,
+                teamSize: updateTeamDto.teamSize,
+                projectSize: updateTeamDto.projectSize,
+                timeZone: updateTeamDto.timeZone,
+                workingTime: updateTeamDto.workingTime,
+                week: updateTeamDto.week,
+                hour: updateTeamDto.hour,
+                organization: updateTeamDto.organization,
+                avatarUrl: updateTeamDto.avatarUrl,
+                status: updateTeamDto.status,
+            });
+            return updateTeam;
+        } catch (error) {
+            throw new NotFoundException('Error cannot update team');
         }
-
-        const skills = await this.skillService.findOrCreate(
-            updateTeamDto.skills || [],
-        );
-        const skillDistributions = await Promise.all(
-            updateTeamDto.skillDistribution?.map(
-                async (skillDistribution) =>
-                    await this.skillDistributionService.update(
-                        skillDistribution.id,
-                        skillDistribution,
-                    ),
-            ) || [],
-        );
-
-        const updateTeam = await this.teamRepository.save({
-            id: id,
-            avatar: updateTeamDto.avatar,
-            description: updateTeamDto.description,
-            linkWebsite: updateTeamDto.linkWebsite,
-            founded: updateTeamDto.founded,
-            location: updateTeamDto.location,
-            skillDistribution: skillDistributions,
-            slogan: updateTeamDto.slogan,
-            skills,
-            teamName: updateTeamDto.teamName,
-            teamSize: updateTeamDto.teamSize,
-            projectSize: updateTeamDto.projectSize,
-            timeZone: updateTeamDto.timeZone,
-            workingTime: updateTeamDto.workingTime,
-            week: updateTeamDto.week,
-            hour: updateTeamDto.hour,
-            organization: updateTeamDto.organization,
-            avatarUrl: updateTeamDto.avatarUrl,
-            status: updateTeamDto.status,
-        });
-        return updateTeam;
     }
 
     async getAllTeam(): Promise<Team[]> {

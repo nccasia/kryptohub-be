@@ -1,4 +1,4 @@
-import {Controller, Get, Query, UseGuards} from '@nestjs/common';
+import {Controller, Get, Query} from '@nestjs/common';
 import {SkillService} from './skills.service';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {GetListSkillDto} from './dto/skills.dto';

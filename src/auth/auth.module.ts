@@ -1,5 +1,5 @@
 import {ConfigService, ConfigModule} from '@nestjs/config';
-import {forwardRef, Module} from '@nestjs/common';
+import {Module} from '@nestjs/common';
 import {JwtModule, JwtModuleOptions} from '@nestjs/jwt';
 import {PassportModule} from '@nestjs/passport';
 import {UserModule} from '../user/user.module';
@@ -10,7 +10,6 @@ import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
 import {HttpModule} from '@nestjs/axios';
-import {JWTAuthGuard} from './guards/jwt-auth.guard';
 
 @Module({
     imports: [

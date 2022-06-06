@@ -4,7 +4,7 @@ import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
 import {JwtService} from '@nestjs/jwt';
-import { SkillService } from '@/skills/skills.service';
+import {SkillService} from '@/skills/skills.service';
 
 @Injectable()
 export class UserService {
@@ -50,7 +50,9 @@ export class UserService {
             throw new NotFoundException(`There isn't any user with id: ${id}`);
         }
 
-        const skills = await this.skillService.findOrCreate(updates.skills || [])
+        const skills = await this.skillService.findOrCreate(
+            updates.skills || [],
+        );
 
         const updateSkill = await this.userRepository.save({
             id: id,
@@ -74,5 +76,15 @@ export class UserService {
     async getSkillByUserId(id: number) {
         const skill = await this.userRepository.find({where: {id: id}});
         return skill;
+    }
+
+    async checkExistEmail(emailAddress: any) {
+        const result = await this.any({
+            where: [{emailAddress: emailAddress}],
+        });
+
+        if (result != null) {
+            return {message: 'This email already exists'};
+        }
     }
 }

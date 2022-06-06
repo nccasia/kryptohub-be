@@ -4,10 +4,11 @@ import {
     Get,
     UseInterceptors,
     ClassSerializerInterceptor,
-    Param,
-    ParseIntPipe,
     Put,
     Body,
+    HttpCode,
+    Post,
+    HttpStatus,
 } from '@nestjs/common';
 
 import {UserService} from './user.service';
@@ -37,10 +38,16 @@ export class ProfileController {
 
     @Put('update')
     @UseGuards(JWTAuthGuard)
-    async update(
-        @AuthUser() user: User,
-        @Body() updatesUser: UserUpdate,
-    ) {
+    async update(@AuthUser() user: User, @Body() updatesUser: UserUpdate) {
         return this.userService.update(user.id as number, updatesUser);
+    }
+
+    @HttpCode(HttpStatus.OK)
+    @Post('/check-email')
+    @UseGuards(JWTAuthGuard)
+    async checkExistEmail(@Body() emailAddress: any) {
+        return await this.userService.checkExistEmail(
+            emailAddress.emailAddress,
+        );
     }
 }
