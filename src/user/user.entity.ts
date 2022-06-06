@@ -60,10 +60,6 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({nullable: true})
-    profileLink?: string;
-
-    @ApiProperty()
-    @Column({nullable: true})
     avatarPath?: string;
 
     @ApiProperty()
