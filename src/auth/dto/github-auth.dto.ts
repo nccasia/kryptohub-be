@@ -5,4 +5,8 @@ export class GithubRegistration {
     @ApiProperty({required: false})
     @IsOptional()
     readonly accessToken?: string = '';
+
+    @ApiProperty({required: false})
+    @IsOptional()
+    readonly githubAddress?: string = '';
 }

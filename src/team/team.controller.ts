@@ -78,7 +78,7 @@ export class TeamController {
     async updateTeam(
         @Param('id', new ParseIntPipe()) id: number,
         @Body() updateTeamDto: UpdateTeamDto,
-    ): Promise<Team> {
+    ) {
         return await this.teamService.updateTeam(id, updateTeamDto);
     }
 
