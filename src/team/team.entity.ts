@@ -1,3 +1,4 @@
+import {Portfolio} from '@/portfolio/portfolio.entity';
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
@@ -39,10 +40,7 @@ export class Team extends BaseEntity {
     workingTime?: string;
 
     @Column({nullable: true})
-    hour?: string;
-
-    @Column({nullable: true})
-    week?: string;
+    saleEmail?: string;
 
     @Column({nullable: true})
     description?: string;
@@ -74,14 +72,17 @@ export class Team extends BaseEntity {
     @Column({type: 'boolean', default: false})
     status?: boolean;
 
-    @Column({nullable: true})
-    location?: string;
-
     @OneToMany(() => SkillDistribution, (skill) => skill.team, {
         eager: false,
     })
     @JoinTable()
     skillDistribution?: SkillDistribution[];
+
+    @OneToMany(() => Portfolio, (portfolio) => portfolio.team, {
+        eager: false,
+    })
+    @JoinTable()
+    portfolio?: Portfolio[];
 
     @ManyToOne((type) => User, (user) => user.team, {eager: false})
     user?: User;

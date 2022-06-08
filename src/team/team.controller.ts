@@ -64,7 +64,7 @@ export class TeamController {
         return await this.teamService.getList(query);
     }
 
-    @Get('/:id')
+    @Get('get/:id')
     @HttpCode(HttpStatus.OK)
     async getTeamById(
         @Param('id', new ParseIntPipe()) id: number,

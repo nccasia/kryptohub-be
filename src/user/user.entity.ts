@@ -47,6 +47,14 @@ export class User extends BaseEntity {
 
     @ApiProperty()
     @Column({nullable: true})
+    adminEmail?: string;
+
+    @ApiProperty()
+    @Column({nullable: true})
+    saleEmail?: string;
+
+    @ApiProperty()
+    @Column({nullable: true})
     @Exclude()
     password?: string;
 

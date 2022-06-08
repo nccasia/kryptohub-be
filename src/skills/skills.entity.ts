@@ -1,7 +1,7 @@
 import {Team} from '@/team/team.entity';
 import {User} from '@/user/user.entity';
 import {ApiProperty} from '@nestjs/swagger';
-import { IsNotEmpty } from 'class-validator';
+import {IsNotEmpty} from 'class-validator';
 import {
     Entity,
     PrimaryGeneratedColumn,
@@ -19,7 +19,7 @@ export class Skill extends BaseEntity {
     @ApiProperty()
     @IsNotEmpty()
     @Column()
-    skillName!: string;
+    skillName?: string;
 
     @ManyToMany(() => User, (user) => user.skills)
     users?: User[];
