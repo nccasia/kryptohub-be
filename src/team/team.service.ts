@@ -1,7 +1,12 @@
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {SkillDistributionService} from '@/skill-distribution/skill-distribution.service';
 import {SkillService} from '@/skills/skills.service';
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Like, Repository} from 'typeorm';
 import {Paging} from '@utils/commonDto';
@@ -82,7 +87,6 @@ export class TeamService {
                 description: updateTeamDto.description,
                 linkWebsite: updateTeamDto.linkWebsite,
                 founded: updateTeamDto.founded,
-                location: updateTeamDto.location,
                 skillDistribution: skillDistributions,
                 slogan: updateTeamDto.slogan,
                 skills,
@@ -91,8 +95,7 @@ export class TeamService {
                 projectSize: updateTeamDto.projectSize,
                 timeZone: updateTeamDto.timeZone,
                 workingTime: updateTeamDto.workingTime,
-                week: updateTeamDto.week,
-                hour: updateTeamDto.hour,
+                saleEmail: updateTeamDto.saleEmail,
                 organization: updateTeamDto.organization,
                 avatarUrl: updateTeamDto.avatarUrl,
                 status: updateTeamDto.status,
@@ -126,6 +129,7 @@ export class TeamService {
         if (result.affected === 0) {
             throw new NotFoundException(`Team with ID ${id} not found`);
         }
+        throw new HttpException('Delete team success', HttpStatus.OK);
     }
 
     async uploadAvatar(id: number, file: string, fileName: string) {

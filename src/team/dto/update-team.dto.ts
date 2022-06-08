@@ -38,11 +38,7 @@ export class UpdateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    hour?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    week?: string;
+    saleEmail?: string;
 
     @ApiProperty()
     @IsOptional()
@@ -75,10 +71,6 @@ export class UpdateTeamDto {
     @ApiProperty()
     @IsOptional()
     projectSize?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    location?: string;
 
     @ApiProperty()
     @IsOptional()

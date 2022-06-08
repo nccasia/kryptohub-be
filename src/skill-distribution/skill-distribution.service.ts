@@ -1,4 +1,9 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {
+    HttpException,
+    HttpStatus,
+    Injectable,
+    NotFoundException,
+} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {FindOneOptions, In, Repository} from 'typeorm';
 import {CreateSkillDistributionDto} from './dto/create-skill-distribution.dto';
@@ -12,13 +17,13 @@ export class SkillDistributionService {
     ) {}
 
     async create(createSkillDistributionDto: CreateSkillDistributionDto) {
-        const skillDistribution = new SkillDistribution(createSkillDistributionDto);
+        const skillDistribution = new SkillDistribution(
+            createSkillDistributionDto,
+        );
 
         const result = await this.skillDistributionRepository.findOne({
             where: {
                 skillDistributionName: skillDistribution.skillDistributionName,
-                skillDistributionValue:
-                    skillDistribution.skillDistributionValue,
             },
         });
 
@@ -33,7 +38,8 @@ export class SkillDistributionService {
 
         return {
             ...saveSkillDistribution,
-            skillDistributionValue: saveSkillDistribution.skillDistributionValue
+            skillDistributionValue:
+                saveSkillDistribution.skillDistributionValue,
         };
     }
 
@@ -44,6 +50,10 @@ export class SkillDistributionService {
         return skill;
     }
 
+    async getAllSkillDistribution(): Promise<SkillDistribution[]> {
+        return await this.skillDistributionRepository.find();
+    }
+
     async findOne(where: FindOneOptions<SkillDistribution>) {
         const skillDistribution =
             await this.skillDistributionRepository.findOne(where);
@@ -51,12 +61,38 @@ export class SkillDistributionService {
     }
 
     async update(id, data: SkillDistribution) {
-        const skillDistribution = await this.skillDistributionRepository.findOne({id})
-        if(!skillDistribution) return {}
+        try {
+            const skillDistribution =
+                await this.skillDistributionRepository.findOne({id});
+            if (!skillDistribution) {
+                throw new NotFoundException(
+                    `There isn't any skill with id: ${id}`,
+                );
+            }
 
-        skillDistribution.skillDistributionName = data.skillDistributionName
-        skillDistribution.skillDistributionValue = data.skillDistributionValue
+            skillDistribution.skillDistributionName =
+                data.skillDistributionName;
+            skillDistribution.skillDistributionValue =
+                data.skillDistributionValue;
 
-        return await skillDistribution.save()
+            return await skillDistribution.save();
+        } catch (error) {
+            throw new NotFoundException(
+                `Skill distribution with ID ${id} not found`,
+            );
+        }
+    }
+
+    async delete(id: number): Promise<void> {
+        const result = await this.skillDistributionRepository.delete({id});
+        if (result.affected === 0) {
+            throw new NotFoundException(
+                `Skill distribution with ID ${id} not found`,
+            );
+        }
+        throw new HttpException(
+            'Delete skill distribution success',
+            HttpStatus.OK,
+        );
     }
 }

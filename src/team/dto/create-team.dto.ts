@@ -1,8 +1,14 @@
-import { CreateSkillDistributionDto } from '@/skill-distribution/dto/create-skill-distribution.dto';
+import {CreateSkillDistributionDto} from '@/skill-distribution/dto/create-skill-distribution.dto';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import {IsArray, IsNotEmpty, IsNotEmptyObject, IsOptional, ValidateNested} from 'class-validator';
+import {Type} from 'class-transformer';
+import {
+    IsArray,
+    IsNotEmpty,
+    IsNotEmptyObject,
+    IsOptional,
+    ValidateNested,
+} from 'class-validator';
 
 export class CreateTeamDto {
     @ApiProperty({required: true})
@@ -23,13 +29,13 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    @ValidateNested({ each: true })
+    @ValidateNested({each: true})
     @Type(() => Skill)
     skills?: Skill[];
 
     @ApiProperty()
     @IsOptional()
-    @ValidateNested({ each: true })
+    @ValidateNested({each: true})
     @Type(() => CreateSkillDistributionDto)
     skillDistribution?: CreateSkillDistributionDto[];
 
@@ -43,11 +49,7 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    hour?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    week?: string;
+    saleEmail?: string;
 
     @ApiProperty()
     @IsOptional()
@@ -80,10 +82,6 @@ export class CreateTeamDto {
     @ApiProperty()
     @IsOptional()
     projectSize?: string;
-
-    @ApiProperty()
-    @IsOptional()
-    location?: string;
 
     @ApiProperty()
     @IsOptional()

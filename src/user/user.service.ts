@@ -43,6 +43,13 @@ export class UserService {
         });
     }
 
+    // async getSkillById(id: number) {
+    //     return await this.userRepository.findOne({
+    //         where: {id: id},
+    //         relations: ['skills', 'skillDistribution'],
+    //     });
+    // }
+
     async update(id: number, updates: UserUpdate) {
         const user = await this.userRepository.findOne(id);
 
