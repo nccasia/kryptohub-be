@@ -40,9 +40,9 @@ export class SkillService {
 
         return {
             content: list,
-            pagable: {
+            pageable: {
                 total,
-                ...paging.pagable,
+                ...paging.pageable,
             },
         };
     }
