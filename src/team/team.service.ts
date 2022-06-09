@@ -159,7 +159,7 @@ export class TeamService {
 
         const paging = formatPaging(page, size, sort);
         const queryBuilder = createQueryBuilder(this.teamRepository, 'team', {
-            pagable: {page, size, sort},
+            pageable: {page, size, sort},
             relations: ['skills'],
         });
 
@@ -183,9 +183,9 @@ export class TeamService {
 
         return {
             content: list,
-            pagable: {
+            pageable: {
                 total,
-                ...paging.pagable,
+                ...paging.pageable,
             },
         };
     }
@@ -215,10 +215,22 @@ export class TeamService {
 
         return {
             content: list,
-            pagable: {
+            pageable: {
                 total,
-                ...paging.pagable,
+                ...paging.pageable,
             },
         };
+    }
+
+    async findOne(where) {
+        return await this.teamRepository.findOne(where)
+    }
+
+    async anyUserTeam({userId, teamId}) {
+        return await this.teamRepository
+            .createQueryBuilder('team')
+            .where('"userId" = :userId',{userId})
+            .andWhere('id = :teamId',{teamId})
+            .getOne()
     }
 }

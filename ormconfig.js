@@ -14,5 +14,5 @@ module.exports = {
   cli: {
     migrationsDir: 'src/migrations',
   },
-  synchronize: false,
+  synchronize: true,
 };

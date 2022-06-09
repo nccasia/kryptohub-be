@@ -2,7 +2,7 @@ import {extname} from 'path';
 import {Request} from 'express';
 import {promisify} from 'util';
 import {unlink} from 'fs';
-import { Pagable } from './commonDto';
+import { Pageable } from './commonDto';
 import { formatPaging } from './formatter';
 
 const unlinkAsync = promisify(unlink);
@@ -28,8 +28,8 @@ export class HelperFile {
     }
 }
 
-export const createQueryBuilder = (repository, alias: string, {pagable, relations}:{pagable: Pagable, relations: string[]}) => {
-    const {page, size, sort} = pagable
+export const createQueryBuilder = (repository, alias: string, {pageable, relations}:{pageable: Pageable, relations: string[]}) => {
+    const {page, size, sort} = pageable
     const paging = formatPaging(page, size, sort);
     const query = repository.createQueryBuilder(alias)
         .take(paging.query.take)

@@ -17,7 +17,7 @@ export const formatPaging = (page: string | number = DEFAULT_PAGE, size: string 
   if(_sort && _sort.length > 1) query.sort = {[_sort[0]]: _sort[1].toUpperCase()} as OrderByCondition
 
   return {
-    pagable: {
+    pageable: {
       page: _page,
       size: _size,
     },

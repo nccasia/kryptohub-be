@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsOptional } from "class-validator";
 
-export class Pagable {
+export class Pageable {
   @ApiProperty({required: false})
   @IsOptional()
   page?: number
@@ -17,7 +17,7 @@ export class Pagable {
 
 export interface Paging<T> {
   content: T[],
-  pagable: {
+  pageable: {
     page: number,
     size: number,
     total: number

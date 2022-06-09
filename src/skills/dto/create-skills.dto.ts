@@ -1,5 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {Pagable} from '@utils/commonDto';
+import { Pageable } from '@utils/commonDto';
 import {IsOptional} from 'class-validator';
 
 export class CreateSkillDto {
@@ -8,8 +8,8 @@ export class CreateSkillDto {
     readonly skillName?: string;
 }
 
-export class GetListSkillDto extends Pagable {
-    @ApiProperty({required: false})
-    @IsOptional()
-    readonly keyword?: string;
+export class GetListSkillDto extends Pageable {
+  @ApiProperty({required: false})
+  @IsOptional()
+  readonly keyword?: string;
 }
