@@ -29,9 +29,6 @@ export class Team extends BaseEntity {
     @Column({nullable: true})
     timeZone?: string;
 
-    @Column({nullable: true})
-    organization?: string;
-
     @ManyToMany(() => Skill, (skill) => skill.team)
     @JoinTable()
     skills?: Skill[];

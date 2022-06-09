@@ -6,6 +6,7 @@ import {
     HttpStatus,
     Injectable,
     NotFoundException,
+    UnauthorizedException,
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Like, Repository} from 'typeorm';
@@ -27,6 +28,7 @@ export class TeamService {
         private readonly skillService: SkillService,
         private readonly skillDistributionService: SkillDistributionService,
     ) {}
+
     async createTeam(user: User, createTeamDto: CreateTeamDto) {
         try {
             const skills = await this.skillService.findOrCreate(
@@ -96,7 +98,6 @@ export class TeamService {
                 timeZone: updateTeamDto.timeZone,
                 workingTime: updateTeamDto.workingTime,
                 saleEmail: updateTeamDto.saleEmail,
-                organization: updateTeamDto.organization,
                 avatarUrl: updateTeamDto.avatarUrl,
                 status: updateTeamDto.status,
             });

@@ -25,10 +25,6 @@ export class CreateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    organization?: string;
-
-    @ApiProperty()
-    @IsOptional()
     @ValidateNested({each: true})
     @Type(() => Skill)
     skills?: Skill[];
