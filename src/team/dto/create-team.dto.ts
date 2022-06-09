@@ -1,3 +1,5 @@
+import {CreatePortfolioDto} from '@/portfolio/dto/create-portfolio.dto';
+import {Portfolio} from '@/portfolio/portfolio.entity';
 import {CreateSkillDistributionDto} from '@/skill-distribution/dto/create-skill-distribution.dto';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
@@ -28,6 +30,12 @@ export class CreateTeamDto {
   @ValidateNested({each: true})
   @Type(() => CreateSkillDistributionDto)
   skillDistribution?: CreateSkillDistributionDto[];
+
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({each: true})
+  @Type(() => CreatePortfolioDto)
+  portfolios?: CreatePortfolioDto[];
 
   @ApiProperty()
   @IsOptional()
