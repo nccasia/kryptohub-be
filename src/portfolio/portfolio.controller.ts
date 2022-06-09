@@ -1,25 +1,29 @@
 import {JWTAuthGuard} from '@/auth/guards/jwt-auth.guard';
-import {AuthUser} from '@/user/user.decorator';
-import {User} from '@/user/user.entity';
 import {
-  Body,
   Controller,
-  Delete,
   Get,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  Param,
+  UseGuards,
   HttpCode,
   HttpStatus,
-  Param,
-  ParseIntPipe,
-  Post,
+  Body,
   Put,
-  UseGuards,
+  ParseIntPipe,
+  Delete,
+  Res,
 } from '@nestjs/common';
+import {FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {HelperFile} from '@utils/helper';
+import {diskStorage} from 'multer';
 import {CreatePortfolioDto} from './dto/create-portfolio.dto';
 import {UpdatePortfolioDto} from './dto/update-porfolio.dto';
 import {Portfolio} from './portfolio.entity';
 import {PortfolioService} from './portfolio.service';
-
+import {Response} from 'express';
 @ApiTags('Portfolio')
 @ApiBearerAuth()
 @Controller('portfolio')
@@ -29,14 +33,8 @@ export class PortfolioController {
   @UseGuards(JWTAuthGuard)
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  async createPorfolio(
-    @Body() createPortfolioDto: CreatePortfolioDto,
-    @AuthUser() user: User,
-  ): Promise<Portfolio> {
-    return await this.portfolioService.createPortfolio(
-      createPortfolioDto,
-      user,
-    );
+  async createPorfolio(@Body() createPortfolioDto: CreatePortfolioDto) {
+    return await this.portfolioService.createPortfolio(createPortfolioDto);
   }
 
   @UseGuards(JWTAuthGuard)
@@ -70,5 +68,34 @@ export class PortfolioController {
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<void> {
     return await this.portfolioService.deletePortfolio(id);
+  }
+
+  @Put('upload/:id/portfolio')
+  @UseInterceptors(
+    FileInterceptor('portfolio', {
+      storage: diskStorage({
+        destination: './upload/portfolio',
+        filename: HelperFile.customFilename,
+      }),
+      limits: {
+        fileSize: 1024 * 1024 * 5,
+      },
+    }),
+  )
+  updateAvatar(
+    @Param('id') id: string,
+    @UploadedFile() file: Express.Multer.File,
+  ) {
+    return this.portfolioService.updateAvatar(id, file.path, file.filename);
+  }
+
+  @Get('portfolio-image/:imageportfolio')
+  findProfileImage(
+    @Param('imagename') imagename: string,
+    @Res() res: Response,
+  ) {
+    return res.sendFile(imagename, {
+      root: './upload/portfolio',
+    });
   }
 }

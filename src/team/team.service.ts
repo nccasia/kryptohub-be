@@ -18,6 +18,8 @@ import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
+import {PortfolioService} from '@/portfolio/portfolio.service';
+import {Portfolio} from '@/portfolio/portfolio.entity';
 
 @Injectable()
 export class TeamService {
@@ -26,6 +28,7 @@ export class TeamService {
     private readonly teamRepository: Repository<Team>,
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
+    private readonly portfolioService: PortfolioService,
   ) {}
 
   async createTeam(user: User, createTeamDto: CreateTeamDto) {
@@ -41,17 +44,25 @@ export class TeamService {
         ) || [],
       )) as SkillDistribution[];
 
+      const portfolios = (await Promise.all(
+        createTeamDto.portfolios?.map(
+          async (porfolio) =>
+            await this.portfolioService.createPortfolio(porfolio),
+        ) || [],
+      )) as Portfolio[];
+
       const team = new Team({
         ...createTeamDto,
         user,
         skills,
         skillDistribution: skillDistributions,
+        portfolio: portfolios,
       });
 
       await team.save();
       delete team.user;
 
-      return team;
+      return {data: {...team, portfolios: portfolios}};
     } catch (error) {
       throw new NotFoundException('Error cannot create team');
     }
@@ -68,12 +79,23 @@ export class TeamService {
       const skills = await this.skillService.findOrCreate(
         updateTeamDto.skills || [],
       );
+
       const skillDistributions = await Promise.all(
         updateTeamDto.skillDistribution?.map(
           async (skillDistribution) =>
             await this.skillDistributionService.update(
               skillDistribution.id,
               skillDistribution,
+            ),
+        ) || [],
+      );
+
+      const portfolios = await Promise.all(
+        updateTeamDto.portfolios?.map(
+          async (portfolio) =>
+            await this.portfolioService.updatePortfolio(
+              portfolio.id,
+              portfolio,
             ),
         ) || [],
       );
@@ -87,6 +109,7 @@ export class TeamService {
         skillDistribution: skillDistributions,
         slogan: updateTeamDto.slogan,
         skills,
+        portfolio: portfolios,
         teamName: updateTeamDto.teamName,
         teamSize: updateTeamDto.teamSize,
         projectSize: updateTeamDto.projectSize,
@@ -96,22 +119,22 @@ export class TeamService {
         avatarUrl: updateTeamDto.avatarUrl,
         status: updateTeamDto.status,
       });
-      return updateTeam;
+      return {data: {...updateTeam}};
     } catch (error) {
-      throw new NotFoundException('Error cannot update team');
+      throw new NotFoundException(`Portfolio with ID ${id} not found`);
     }
   }
 
   async getAllTeam(): Promise<Team[]> {
     return await this.teamRepository.find({
-      relations: ['skills', 'skillDistribution'],
+      relations: ['skills', 'skillDistribution', 'portfolio'],
     });
   }
 
   async getTeamById(id: number): Promise<Team> {
     const getTeam = await this.teamRepository.findOne({
       where: {id: id},
-      relations: ['skills', 'skillDistribution'],
+      relations: ['skills', 'skillDistribution', 'portfolio'],
     });
 
     if (!getTeam) {
@@ -134,19 +157,23 @@ export class TeamService {
     if (userAvatar?.avatar === null || userAvatar?.avatar === '') {
       await this.teamRepository.update(id, {
         avatar: file,
-        avatarUrl: 'http://localhost:3000' + '/team/profile-image/' + fileName,
+        avatarUrl: 'http://localhost:3000' + '/team/team-image/' + fileName,
       });
     } else {
       await HelperFile.removeFile(userAvatar?.avatar as string);
 
       await this.teamRepository.update(id, {
         avatar: file,
-        avatarUrl: 'http://localhost:3000' + '/team/profile-image/' + fileName,
+        avatarUrl: 'http://localhost:3000' + '/team/team-image/' + fileName,
       });
     }
     const user = await this.teamRepository.findOne(id);
     return user;
   }
+
+  // public async setAvatar(userId: number, avatarUrl: string) {
+  //   this.teamRepository.update(userId, {avatar: avatarUrl});
+  // }
 
   async getList(queryData: GetListTeamDto): Promise<Paging<Team>> {
     const {keyword, skill_IN, timeZone_IN, page, size, sort} = queryData;

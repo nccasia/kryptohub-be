@@ -1,3 +1,4 @@
+import {Portfolio} from '@/portfolio/portfolio.entity';
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
@@ -23,6 +24,10 @@ export class UpdateTeamDto {
   @ApiProperty()
   @IsOptional()
   skillDistribution?: SkillDistribution[];
+
+  @ApiProperty()
+  @IsOptional()
+  portfolios?: Portfolio[];
 
   @ApiProperty()
   @IsOptional()
