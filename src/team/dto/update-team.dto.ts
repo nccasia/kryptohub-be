@@ -4,71 +4,71 @@ import {ApiProperty} from '@nestjs/swagger';
 import {IsOptional} from 'class-validator';
 
 export class UpdateTeamDto {
-    @ApiProperty()
-    @IsOptional()
-    teamName?: string;
+  @ApiProperty()
+  @IsOptional()
+  teamName?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    teamSize?: string;
+  @ApiProperty()
+  @IsOptional()
+  teamSize?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    timeZone?: string;
+  @ApiProperty()
+  @IsOptional()
+  timeZone?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    skills?: Skill[];
+  @ApiProperty()
+  @IsOptional()
+  skills?: Skill[];
 
-    @ApiProperty()
-    @IsOptional()
-    skillDistribution?: SkillDistribution[];
+  @ApiProperty()
+  @IsOptional()
+  skillDistribution?: SkillDistribution[];
 
-    @ApiProperty()
-    @IsOptional()
-    slogan?: string;
+  @ApiProperty()
+  @IsOptional()
+  slogan?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    workingTime?: string;
+  @ApiProperty()
+  @IsOptional()
+  workingTime?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    saleEmail?: string;
+  @ApiProperty()
+  @IsOptional()
+  saleEmail?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    description?: string;
+  @ApiProperty()
+  @IsOptional()
+  description?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    avatar?: string;
+  @ApiProperty()
+  @IsOptional()
+  avatar?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    avatarUrl?: string;
+  @ApiProperty()
+  @IsOptional()
+  avatarUrl?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    founded?: string;
+  @ApiProperty()
+  @IsOptional()
+  founded?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    linkWebsite?: string;
+  @ApiProperty()
+  @IsOptional()
+  linkWebsite?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    createAt?: Date;
+  @ApiProperty()
+  @IsOptional()
+  createAt?: Date;
 
-    @ApiProperty()
-    @IsOptional()
-    updateAt?: Date;
+  @ApiProperty()
+  @IsOptional()
+  updateAt?: Date;
 
-    @ApiProperty()
-    @IsOptional()
-    projectSize?: string;
+  @ApiProperty()
+  @IsOptional()
+  projectSize?: string;
 
-    @ApiProperty()
-    @IsOptional()
-    status?: boolean;
+  @ApiProperty()
+  @IsOptional()
+  status?: boolean;
 }
