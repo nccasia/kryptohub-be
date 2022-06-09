@@ -1,3 +1,4 @@
+import {User} from '@/user/user.entity';
 import {
     HttpException,
     HttpStatus,
@@ -19,24 +20,17 @@ export class PortfolioService {
 
     async createPortfolio(
         createPortfolioDto: CreatePortfolioDto,
+        user: User,
     ): Promise<Portfolio> {
         try {
-            const portfolio = new Portfolio();
-            const payload = createPortfolioDto;
-            portfolio.category = payload.category;
-            portfolio.clientWebsite = payload.clientWebsite;
-            portfolio.videoLink = payload.videoLink;
-            portfolio.companyName = payload.companyName;
-            portfolio.content = payload.content;
-            portfolio.description = payload.description;
-            portfolio.imageUrl = payload.imageUrl;
-            portfolio.endDate = payload.endDate;
-            portfolio.startDate = payload.startDate;
-            portfolio.estimate = payload.estimate;
-            portfolio.privacy = payload.privacy;
-            portfolio.title = payload.title;
+            const portfolio = new Portfolio({
+                ...createPortfolioDto,
+                team: user as any,
+            });
 
-            return await portfolio.save();
+            await portfolio.save();
+            delete portfolio.team;
+            return portfolio;
         } catch (error) {
             throw new NotFoundException('Error cannot create portfolio');
         }

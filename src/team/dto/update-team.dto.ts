@@ -18,10 +18,6 @@ export class UpdateTeamDto {
 
     @ApiProperty()
     @IsOptional()
-    organization?: string;
-
-    @ApiProperty()
-    @IsOptional()
     skills?: Skill[];
 
     @ApiProperty()

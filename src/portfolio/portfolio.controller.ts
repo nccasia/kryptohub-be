@@ -1,4 +1,6 @@
 import {JWTAuthGuard} from '@/auth/guards/jwt-auth.guard';
+import {AuthUser} from '@/user/user.decorator';
+import {User} from '@/user/user.entity';
 import {
     Body,
     Controller,
@@ -29,8 +31,12 @@ export class PortfolioController {
     @HttpCode(HttpStatus.OK)
     async createPorfolio(
         @Body() createPortfolioDto: CreatePortfolioDto,
+        @AuthUser() user: User,
     ): Promise<Portfolio> {
-        return await this.portfolioService.createPortfolio(createPortfolioDto);
+        return await this.portfolioService.createPortfolio(
+            createPortfolioDto,
+            user,
+        );
     }
 
     @UseGuards(JWTAuthGuard)
