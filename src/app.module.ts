@@ -13,6 +13,8 @@ import {TokenModule} from './token/token.module';
 import {TeamModule} from './team/team.module';
 import {MulterModule} from '@nestjs/platform-express';
 import {SkillDistributionModule} from './skill-distribution/skill-distribution.module';
+import { MembersModule } from './members/members.module';
+import { EmailModule } from './email/email.module';
 import {PortfolioModule} from './portfolio/portfolio.module';
 
 @Module({
@@ -33,6 +35,8 @@ import {PortfolioModule} from './portfolio/portfolio.module';
         SkillModule,
         TeamModule,
         SkillDistributionModule,
+        MembersModule,
+        EmailModule,
         PortfolioModule,
     ],
     controllers: [AppController],

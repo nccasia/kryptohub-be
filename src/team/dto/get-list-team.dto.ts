@@ -1,8 +1,8 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
-import { Pagable } from "@utils/commonDto";
+import { Pageable } from "@utils/commonDto";
 import { IsOptional } from "class-validator";
 
-export class GetListTeamDto extends Pagable {
+export class GetListTeamDto extends Pageable {
   @ApiPropertyOptional()
   @IsOptional()
   readonly keyword?: string;
