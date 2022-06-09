@@ -15,6 +15,7 @@ import {MulterModule} from '@nestjs/platform-express';
 import {SkillDistributionModule} from './skill-distribution/skill-distribution.module';
 import { MembersModule } from './members/members.module';
 import { EmailModule } from './email/email.module';
+import {PortfolioModule} from './portfolio/portfolio.module';
 
 @Module({
     imports: [
@@ -36,6 +37,7 @@ import { EmailModule } from './email/email.module';
         SkillDistributionModule,
         MembersModule,
         EmailModule,
+        PortfolioModule,
     ],
     controllers: [AppController],
     providers: [AppService],

@@ -4,6 +4,7 @@ import {IsOptional} from 'class-validator';
 
 export class CreateSkillDto {
     @ApiProperty({required: true})
+    @IsOptional()
     readonly skillName?: string;
 }
 
