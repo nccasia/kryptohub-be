@@ -29,12 +29,18 @@ export class Team extends BaseEntity {
   @Column({nullable: true})
   timeZone?: string;
 
+<<<<<<< HEAD
   @ManyToMany(() => Skill, (skill) => skill.team)
   @JoinTable()
   skills?: Skill[];
 
   @Column({nullable: true})
   workingTime?: string;
+=======
+    @ManyToMany(() => Skill, (skill) => skill.team)
+    @JoinTable()
+    skills?: Skill[];
+>>>>>>> 987d2219f308ca5854e13f34b5c559a5db6cc972
 
   @Column({nullable: true})
   saleEmail?: string;
