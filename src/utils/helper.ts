@@ -1,32 +1,11 @@
-import {extname} from 'path';
 import {Request} from 'express';
+import {extname} from 'path';
 import {promisify} from 'util';
 import {unlink} from 'fs';
 import {Pageable} from './commonDto';
 import {formatPaging} from './formatter';
-
-const unlinkAsync = promisify(unlink);
-export class HelperFile {
-  static customFilename(req: Request, file: Express.Multer.File, cb: any) {
-    const randomName = Array(32)
-      .fill(null)
-      .map(() => Math.round(Math.random() * 16).toString(16))
-      .join('');
-
-    const nameFile = cb(null, `${randomName}${extname(file.originalname)}`);
-
-    return nameFile;
-  }
-
-  static async removeFile(file: string) {
-    try {
-      await unlinkAsync(file);
-    } catch (err) {
-      throw new Error('Arquivo não encontrado');
-    }
-    return true;
-  }
-}
+import * as bcrypt from 'bcrypt';
+import {v4 as uuidv4} from 'uuid';
 
 export const createQueryBuilder = (
   repository,
@@ -51,4 +30,16 @@ export const createQueryBuilder = (
   });
 
   return query;
+};
+
+export const imageFileFilter = (_req, file, callback) => {
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif|webp)$/)) {
+    return callback(new Error('Only image files are allowed!'), false);
+  }
+  callback(null, true);
+};
+
+export const editFileName = (_req, file, callback) => {
+  const fileExtName = extname(file.originalname);
+  callback(null, `${uuidv4()}${fileExtName}`);
 };

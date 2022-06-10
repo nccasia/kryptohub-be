@@ -47,11 +47,7 @@ export class UpdateTeamDto {
 
   @ApiProperty()
   @IsOptional()
-  avatar?: string;
-
-  @ApiProperty()
-  @IsOptional()
-  avatarUrl?: string;
+  imageUrl?: string;
 
   @ApiProperty()
   @IsOptional()

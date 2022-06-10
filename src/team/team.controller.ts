@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   HttpCode,
+  HttpException,
   HttpStatus,
   Param,
   ParseIntPipe,
@@ -23,13 +24,11 @@ import {CreateTeamDto} from './dto/create-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {TeamService} from './team.service';
-import {Response} from 'express';
 import {diskStorage} from 'multer';
-import {HelperFile} from '../utils/helper';
+import {editFileName, imageFileFilter} from '../utils/helper';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {GetListTeamDto} from './dto/get-list-team.dto';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
-import {extname} from 'path';
 
 @ApiTags('Team')
 @ApiBearerAuth()
@@ -83,66 +82,30 @@ export class TeamController {
     return await this.teamService.updateTeam(id, updateTeamDto);
   }
 
-  @UseGuards(JWTAuthGuard)
-  @Delete('delete/:id')
-  @HttpCode(HttpStatus.OK)
-  async deleteTeam(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
-    return await this.teamService.deleteTeam(id);
-  }
-
-  @UseGuards(JWTAuthGuard)
-  @Put('upload/:id')
+  @Post(':id/image')
   @UseInterceptors(
-    FileInterceptor('upload-team', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: './upload/team',
-        filename: HelperFile.customFilename,
+
+        filename: editFileName,
       }),
       limits: {
         fileSize: 1024 * 1024 * 5,
       },
+      fileFilter: imageFileFilter,
     }),
   )
-  async uploadFile(
-    @Param('id') id: number,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    return await this.teamService.uploadAvatar(id, file.path, file.fieldname);
+  async uploadImage(@Param('id') id, @UploadedFile() file) {
+    try {
+      await this.teamService.setAvatar(Number(id), file.filename);
+    } catch (error) {
+      throw new HttpException('Upload file failed', HttpStatus.OK);
+    }
   }
 
-  @Get('team-image/:imageTeam')
-  findProfileImage(
-    @Param('imageTeam') imagename: string,
-    @Res() res: Response,
-  ) {
-    return res.sendFile(imagename, {
-      root: './upload/team',
-    });
+  @Get('getImage/:imgpath')
+  async seenImage(@Param('imgpath') imgpath, @Res() res): Promise<any> {
+    res.sendFile(imgpath, {root: './upload/team'});
   }
-  //   @Post(':id/avatar')
-  //   @UseInterceptors(
-  //     FileInterceptor('file', {
-  //       storage: diskStorage({
-  //         destination: './avatars',
-
-  //         filename: (req, file, cb) => {
-  //           const randomName = Array(32)
-  //             .fill(null)
-  //             .map(() => Math.round(Math.random() * 16).toString(16))
-  //             .join('');
-  //           return cb(null, `${randomName}${extname(file.originalname)}`);
-  //         },
-  //       }),
-  //     }),
-  //   )
-  //   uploadAvatar(@Param('id') id, @UploadedFile() file) {
-  //     console.log(file.path);
-
-  //     this.teamService.setAvatar(Number(id), `http://localhost:3000${file.path}`);
-  //   }
-
-  //   @Get('avatars/:fileId')
-  //   async serveAvatar(@Param('fileId') fileId, @Res() res): Promise<any> {
-  //     res.sendFile(fileId, {root: 'avatars'});
-  //   }
 }

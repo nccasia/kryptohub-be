@@ -43,10 +43,7 @@ export class Team extends BaseEntity {
   description?: string;
 
   @Column({nullable: true})
-  avatar?: string;
-
-  @Column({nullable: true})
-  avatarUrl?: string;
+  imageUrl?: string;
 
   @Column({nullable: true})
   slogan?: string;

@@ -6,7 +6,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {HelperFile} from '@utils/helper';
 import {Repository} from 'typeorm';
 import {CreatePortfolioDto} from './dto/create-portfolio.dto';
 import {UpdatePortfolioDto} from './dto/update-porfolio.dto';
@@ -19,18 +18,13 @@ export class PortfolioService {
     private readonly portfolioRepository: Repository<Portfolio>,
   ) {}
 
-  async createPortfolio(
-    createPortfolioDto: CreatePortfolioDto,
-    // user: User,
-  ) {
+  async createPortfolio(createPortfolioDto: CreatePortfolioDto) {
     try {
       const portfolio = new Portfolio({
         ...createPortfolioDto,
       });
 
       const result = await this.portfolioRepository.save(portfolio);
-      console.log(result);
-
       return {
         ...result,
       };
@@ -90,25 +84,7 @@ export class PortfolioService {
     throw new HttpException('Delete portfolio success', HttpStatus.OK);
   }
 
-  async updateAvatar(id: string, file: string, fileName: string) {
-    const userAvatar = await this.portfolioRepository.findOne(id);
-
-    if (userAvatar?.imageUrl === null || userAvatar?.imageUrl === '') {
-      await this.portfolioRepository.update(id, {
-        imageUrl: file,
-        // avatar_url: process.env.HOST + '/users/profile-image/' + fileName,
-      });
-    } else {
-      await HelperFile.removeFile(userAvatar?.imageUrl as string);
-
-      await this.portfolioRepository.update(id, {
-        imageUrl: file,
-        // avatar_url: process.env.HOST + '/users/profile-image/' + fileName,
-      });
-    }
-
-    const user = await this.portfolioRepository.findOne(id);
-
-    return user;
+  async setImage(id: number, imageUrl: string) {
+    await this.portfolioRepository.update(id, {imageUrl: imageUrl});
   }
 }

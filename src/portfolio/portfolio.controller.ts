@@ -3,8 +3,6 @@ import {
   Controller,
   Get,
   Post,
-  UseInterceptors,
-  UploadedFile,
   Param,
   UseGuards,
   HttpCode,
@@ -13,17 +11,20 @@ import {
   Put,
   ParseIntPipe,
   Delete,
+  UseInterceptors,
+  UploadedFile,
   Res,
+  NotFoundException,
+  HttpException,
 } from '@nestjs/common';
-import {FileInterceptor, FilesInterceptor} from '@nestjs/platform-express';
+import {FileInterceptor} from '@nestjs/platform-express';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {HelperFile} from '@utils/helper';
+import {editFileName, imageFileFilter} from '@utils/helper';
 import {diskStorage} from 'multer';
 import {CreatePortfolioDto} from './dto/create-portfolio.dto';
 import {UpdatePortfolioDto} from './dto/update-porfolio.dto';
 import {Portfolio} from './portfolio.entity';
 import {PortfolioService} from './portfolio.service';
-import {Response} from 'express';
 @ApiTags('Portfolio')
 @ApiBearerAuth()
 @Controller('portfolio')
@@ -70,32 +71,32 @@ export class PortfolioController {
     return await this.portfolioService.deletePortfolio(id);
   }
 
-  @Put('upload/:id/portfolio')
+  @Post(':id/image')
+  @UseGuards(JWTAuthGuard)
   @UseInterceptors(
-    FileInterceptor('portfolio', {
+    FileInterceptor('file', {
       storage: diskStorage({
         destination: './upload/portfolio',
-        filename: HelperFile.customFilename,
+
+        filename: editFileName,
       }),
       limits: {
         fileSize: 1024 * 1024 * 5,
       },
+      fileFilter: imageFileFilter,
     }),
   )
-  updateAvatar(
-    @Param('id') id: string,
-    @UploadedFile() file: Express.Multer.File,
-  ) {
-    return this.portfolioService.updateAvatar(id, file.path, file.filename);
+  async uploadImage(@Param('id') id, @UploadedFile() file) {
+    try {
+      await this.portfolioService.setImage(Number(id), file.filename);
+      return {message: 'Upload file successful', imageUrl: file.filename};
+    } catch (error) {
+      throw new HttpException('Upload file failed', HttpStatus.OK);
+    }
   }
 
-  @Get('portfolio-image/:imageportfolio')
-  findProfileImage(
-    @Param('imagename') imagename: string,
-    @Res() res: Response,
-  ) {
-    return res.sendFile(imagename, {
-      root: './upload/portfolio',
-    });
+  @Get('getImage/:imgpath')
+  async seenImage(@Param('imgpath') imgpath, @Res() res): Promise<any> {
+    res.sendFile(imgpath, {root: './upload/portfolio'});
   }
 }
