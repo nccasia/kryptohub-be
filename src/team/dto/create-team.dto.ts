@@ -1,5 +1,4 @@
 import {CreatePortfolioDto} from '@/portfolio/dto/create-portfolio.dto';
-import {Portfolio} from '@/portfolio/portfolio.entity';
 import {CreateSkillDistributionDto} from '@/skill-distribution/dto/create-skill-distribution.dto';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
@@ -55,11 +54,7 @@ export class CreateTeamDto {
 
   @ApiProperty()
   @IsOptional()
-  avatar?: string;
-
-  @ApiProperty()
-  @IsOptional()
-  avatarUrl?: string;
+  imageUrl?: string;
 
   @ApiProperty()
   @IsOptional()

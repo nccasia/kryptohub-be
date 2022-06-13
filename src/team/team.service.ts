@@ -12,7 +12,7 @@ import {Like, Repository} from 'typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
 import {User} from '../user/user.entity';
-import {createQueryBuilder, HelperFile} from '../utils/helper';
+import {createQueryBuilder} from '../utils/helper';
 import {CreateTeamDto} from './dto/create-team.dto';
 import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
@@ -102,7 +102,6 @@ export class TeamService {
 
       const updateTeam = await this.teamRepository.save({
         id: id,
-        avatar: updateTeamDto.avatar,
         description: updateTeamDto.description,
         linkWebsite: updateTeamDto.linkWebsite,
         founded: updateTeamDto.founded,
@@ -116,7 +115,7 @@ export class TeamService {
         timeZone: updateTeamDto.timeZone,
         workingTime: updateTeamDto.workingTime,
         saleEmail: updateTeamDto.saleEmail,
-        avatarUrl: updateTeamDto.avatarUrl,
+        imageUrl: updateTeamDto.imageUrl,
         status: updateTeamDto.status,
       });
       return {data: {...updateTeam}};
@@ -151,29 +150,9 @@ export class TeamService {
     throw new HttpException('Delete team success', HttpStatus.OK);
   }
 
-  async uploadAvatar(id: number, file: string, fileName: string) {
-    const userAvatar = await this.teamRepository.findOne(id);
-
-    if (userAvatar?.avatar === null || userAvatar?.avatar === '') {
-      await this.teamRepository.update(id, {
-        avatar: file,
-        avatarUrl: 'http://localhost:3000' + '/team/team-image/' + fileName,
-      });
-    } else {
-      await HelperFile.removeFile(userAvatar?.avatar as string);
-
-      await this.teamRepository.update(id, {
-        avatar: file,
-        avatarUrl: 'http://localhost:3000' + '/team/team-image/' + fileName,
-      });
-    }
-    const user = await this.teamRepository.findOne(id);
-    return user;
+  async setAvatar(id: number, imageUrl: string) {
+    await this.teamRepository.update(id, {imageUrl: imageUrl});
   }
-
-  // public async setAvatar(userId: number, avatarUrl: string) {
-  //   this.teamRepository.update(userId, {avatar: avatarUrl});
-  // }
 
   async getList(queryData: GetListTeamDto): Promise<Paging<Team>> {
     const {keyword, skill_IN, timeZone_IN, page, size, sort} = queryData;
