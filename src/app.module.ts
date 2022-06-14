@@ -13,33 +13,37 @@ import {TokenModule} from './token/token.module';
 import {TeamModule} from './team/team.module';
 import {MulterModule} from '@nestjs/platform-express';
 import {SkillDistributionModule} from './skill-distribution/skill-distribution.module';
-import { MembersModule } from './members/members.module';
-import { EmailModule } from './email/email.module';
+import {MembersModule} from './members/members.module';
+import {EmailModule} from './email/email.module';
 import {PortfolioModule} from './portfolio/portfolio.module';
+import {AwardsModule} from './awards/awards.module';
+import {KeyClientModule} from './key-clients/key-clients.module';
 
 @Module({
-    imports: [
-        ConfigModule.forRoot({
-            isGlobal: true,
-        }),
-        MulterModule.register({
-            dest: './files',
-        }),
-        TerminusModule,
-        DatabaseModule,
-        IpfsModule,
-        TokenModule,
-        SubsgraphModule,
-        S3fsModule,
-        AuthModule,
-        SkillModule,
-        TeamModule,
-        SkillDistributionModule,
-        MembersModule,
-        EmailModule,
-        PortfolioModule,
-    ],
-    controllers: [AppController],
-    providers: [AppService],
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+    }),
+    MulterModule.register({
+      dest: './files',
+    }),
+    TerminusModule,
+    DatabaseModule,
+    IpfsModule,
+    TokenModule,
+    SubsgraphModule,
+    S3fsModule,
+    AuthModule,
+    SkillModule,
+    TeamModule,
+    SkillDistributionModule,
+    MembersModule,
+    EmailModule,
+    PortfolioModule,
+    AwardsModule,
+    KeyClientModule,
+  ],
+  controllers: [AppController],
+  providers: [AppService],
 })
 export class AppModule {}

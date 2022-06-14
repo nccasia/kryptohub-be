@@ -1,3 +1,5 @@
+import {AwardsModule} from '@/awards/awards.module';
+import {KeyClientModule} from '@/key-clients/key-clients.module';
 import {PortfolioModule} from '@/portfolio/portfolio.module';
 import {SkillDistributionModule} from '@/skill-distribution/skill-distribution.module';
 import {Module} from '@nestjs/common';
@@ -12,6 +14,8 @@ import {TeamService} from './team.service';
     SkillModule,
     SkillDistributionModule,
     PortfolioModule,
+    AwardsModule,
+    KeyClientModule,
     TypeOrmModule.forFeature([Team]),
   ],
   controllers: [TeamController],

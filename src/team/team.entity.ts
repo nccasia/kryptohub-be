@@ -1,3 +1,5 @@
+import {Awards} from '@/awards/awards.entity';
+import {KeyClient} from '@/key-clients/key-clients.entity';
 import {Portfolio} from '@/portfolio/portfolio.entity';
 import {SkillDistribution} from '@/skill-distribution/skill-distribution.entity';
 import {Skill} from '@/skills/skills.entity';
@@ -76,7 +78,19 @@ export class Team extends BaseEntity {
     eager: false,
   })
   @JoinTable()
-  portfolio?: Portfolio[];
+  portfolios?: Portfolio[];
+
+  @OneToMany(() => Awards, (awards) => awards.team, {
+    eager: false,
+  })
+  @JoinTable()
+  awards?: Awards[];
+
+  @OneToMany(() => KeyClient, (keyClient) => keyClient.team, {
+    eager: false,
+  })
+  @JoinTable()
+  keyClients?: KeyClient[];
 
   @ManyToOne((type) => User, (user) => user.team, {eager: false})
   user?: User;
