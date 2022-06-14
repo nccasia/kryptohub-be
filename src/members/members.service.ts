@@ -4,12 +4,12 @@ import {User} from '@/user/user.entity';
 import {UserService} from '@/user/user.service';
 import {MailerService} from '@nestjs-modules/mailer';
 import {
-  HttpCode,
   HttpException,
   HttpStatus,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
@@ -19,6 +19,7 @@ import {
   AddTeamMembersDto,
   GetListTeamMemberDto,
   InviteMemberDto,
+  JoinTeamDto,
 } from './members.dto';
 
 @Injectable()
@@ -29,6 +30,7 @@ export class MembersService {
     private readonly teamService: TeamService,
     private readonly userService: UserService,
     private readonly mailerService: MailerService,
+    private configService: ConfigService
   ) {}
 
   async getList(
@@ -62,7 +64,6 @@ export class MembersService {
     const {teamId, members} = data;
 
     const team = await this.teamService.anyUserTeam({userId: user.id, teamId});
-    console.log(team);
 
     if (!team) throw new HttpException('Team not found', HttpStatus.NOT_FOUND);
 
@@ -97,16 +98,33 @@ export class MembersService {
     } else {
       await newMember.save();
     }
-    this.sendInvitationEmail({email});
-    return newMember
-  }
 
-  async sendInvitationEmail({email}) {
-    await this.mailerService.sendMail({
+    this.mailerService.sendMail({
       to: email,
       subject: 'Invitation',
       template: 'invitation',
+      context: {
+        teamName: team.teamName,
+        role,
+        joinTeamLink: this.configService.get('FE_HOST')+`/join-team?teamId=${team.id}`,
+        contact: 'kryptohub.co'
+      }
     });
+    return newMember
+  }
+
+  async joinTeam(user: User, data: JoinTeamDto) {
+    const invitation = await this.memberRepository.findOne({where: {
+      emailAddress: user.emailAddress,
+      team: {id: data.teamId},
+      inviteStatus: InviteStatus.PENDING
+    }})
+
+    if(!invitation) throw new NotFoundException('not found invitation')
+
+    invitation.inviteStatus = InviteStatus.ACCEPTED
+    await invitation.save()
+
+    return invitation
   }
 }
-

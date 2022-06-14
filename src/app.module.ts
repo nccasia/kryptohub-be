@@ -1,7 +1,7 @@
 import {TerminusModule} from '@nestjs/terminus';
 import {AuthModule} from './auth/auth.module';
 import {DatabaseModule} from './database/database.module';
-import {Module} from '@nestjs/common';
+import {ClassSerializerInterceptor, Module} from '@nestjs/common';
 import {AppController} from './app.controller';
 import {IpfsModule} from './ipfs/ipfs.module';
 import {SubsgraphModule} from './subsgraph/subsgraph.module';
@@ -18,6 +18,7 @@ import {EmailModule} from './email/email.module';
 import {PortfolioModule} from './portfolio/portfolio.module';
 import {AwardsModule} from './awards/awards.module';
 import {KeyClientModule} from './key-clients/key-clients.module';
+import {APP_INTERCEPTOR} from '@nestjs/core';
 
 @Module({
   imports: [
@@ -44,6 +45,13 @@ import {KeyClientModule} from './key-clients/key-clients.module';
     KeyClientModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}
+
