@@ -20,6 +20,10 @@ import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
 import {PortfolioService} from '@/portfolio/portfolio.service';
 import {Portfolio} from '@/portfolio/portfolio.entity';
+import {AwardsService} from '@/awards/awards.service';
+import {Awards} from '@/awards/awards.entity';
+import {KeyClientService} from '@/key-clients/key-clients.service';
+import {KeyClient} from '@/key-clients/key-clients.entity';
 
 @Injectable()
 export class TeamService {
@@ -29,6 +33,8 @@ export class TeamService {
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
     private readonly portfolioService: PortfolioService,
+    private readonly awardsService: AwardsService,
+    private readonly keyClientsService: KeyClientService,
   ) {}
 
   async createTeam(user: User, createTeamDto: CreateTeamDto) {
@@ -51,18 +57,33 @@ export class TeamService {
         ) || [],
       )) as Portfolio[];
 
+      const awards = (await Promise.all(
+        createTeamDto.awards?.map(
+          async (adward) => await this.awardsService.createAwards(adward),
+        ) || [],
+      )) as Awards[];
+
+      const keyClients = (await Promise.all(
+        createTeamDto.keyClients?.map(
+          async (keyClient) =>
+            await this.keyClientsService.createkeyClient(keyClient),
+        ) || [],
+      )) as KeyClient[];
+
       const team = new Team({
         ...createTeamDto,
         user,
         skills,
         skillDistribution: skillDistributions,
-        portfolio: portfolios,
+        portfolios: portfolios,
+        awards: awards,
+        keyClients: keyClients,
       });
 
       await team.save();
       delete team.user;
 
-      return {data: {...team, portfolios: portfolios}};
+      return {data: {...team}};
     } catch (error) {
       throw new NotFoundException('Error cannot create team');
     }
@@ -100,6 +121,23 @@ export class TeamService {
         ) || [],
       );
 
+      const awards = await Promise.all(
+        updateTeamDto.awards?.map(
+          async (portfolio) =>
+            await this.awardsService.updateAwards(portfolio.id, portfolio),
+        ) || [],
+      );
+
+      const keyClients = await Promise.all(
+        updateTeamDto.keyClients?.map(
+          async (keyClient) =>
+            await this.keyClientsService.updateKeyClient(
+              keyClient.id,
+              keyClient as any,
+            ),
+        ) || [],
+      );
+
       const updateTeam = await this.teamRepository.save({
         id: id,
         description: updateTeamDto.description,
@@ -108,7 +146,9 @@ export class TeamService {
         skillDistribution: skillDistributions,
         slogan: updateTeamDto.slogan,
         skills,
-        portfolio: portfolios,
+        portfolios: portfolios,
+        awards: awards,
+        keyClients: keyClients,
         teamName: updateTeamDto.teamName,
         teamSize: updateTeamDto.teamSize,
         projectSize: updateTeamDto.projectSize,
@@ -120,20 +160,32 @@ export class TeamService {
       });
       return {data: {...updateTeam}};
     } catch (error) {
-      throw new NotFoundException(`Portfolio with ID ${id} not found`);
+      throw new NotFoundException(`Team with ID ${id} not found`);
     }
   }
 
   async getAllTeam(): Promise<Team[]> {
     return await this.teamRepository.find({
-      relations: ['skills', 'skillDistribution', 'portfolio'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
   }
 
   async getTeamById(id: number): Promise<Team> {
     const getTeam = await this.teamRepository.findOne({
       where: {id: id},
-      relations: ['skills', 'skillDistribution', 'portfolio'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
 
     if (!getTeam) {

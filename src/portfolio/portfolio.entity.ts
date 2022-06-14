@@ -56,7 +56,7 @@ export class Portfolio extends BaseEntity {
   })
   privacy?: PrivacyEnum;
 
-  @ManyToOne(() => Team, (team) => team.portfolio)
+  @ManyToOne(() => Team, (team) => team.portfolios)
   team?: Team[];
 
   constructor(data: Partial<Portfolio> = {}) {
