@@ -47,3 +47,10 @@ export class GetListTeamMemberDto extends Pageable {
   @Type(() => Number)
   teamId!: number
 }
+
+export class JoinTeamDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @Type(() => Number)
+  teamId!: number;
+}

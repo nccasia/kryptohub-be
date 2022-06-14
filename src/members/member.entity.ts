@@ -14,7 +14,7 @@ import {
 export enum InviteStatus {
   PENDING = 'pending',
   REJECTED = 'rejected',
-  ACEPTED = 'acepted',
+  ACCEPTED = 'accepted',
 }
 export enum MemberRole {
   LEADER = 'leader',
