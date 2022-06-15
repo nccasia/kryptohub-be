@@ -7,6 +7,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {
   BaseEntity,
   Column,
+  DeleteDateColumn,
   Entity,
   JoinTable,
   ManyToMany,
@@ -83,7 +84,6 @@ export class Team extends BaseEntity {
   @OneToMany(() => Awards, (awards) => awards.team, {
     eager: false,
   })
-  @JoinTable()
   awards?: Awards[];
 
   @OneToMany(() => KeyClient, (keyClient) => keyClient.team, {
@@ -94,6 +94,9 @@ export class Team extends BaseEntity {
 
   @ManyToOne((type) => User, (user) => user.team, {eager: false})
   user?: User;
+
+  @DeleteDateColumn()
+  deletedAt?: Date;
 
   constructor(data: Partial<Team> = {}) {
     super();

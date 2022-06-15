@@ -21,7 +21,7 @@ export class Awards extends BaseEntity {
   awardsWebsite?: string;
 
   @ManyToOne(() => Team, (team) => team.awards)
-  team?: Team[];
+  team!: Team;
 
   constructor(data: Partial<Awards> = {}) {
     super();

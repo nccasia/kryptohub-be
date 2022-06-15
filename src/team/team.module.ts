@@ -14,7 +14,6 @@ import {TeamService} from './team.service';
     SkillModule,
     SkillDistributionModule,
     PortfolioModule,
-    AwardsModule,
     KeyClientModule,
     TypeOrmModule.forFeature([Team]),
   ],
