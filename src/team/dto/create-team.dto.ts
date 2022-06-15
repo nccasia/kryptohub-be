@@ -41,12 +41,6 @@ export class CreateTeamDto {
   @ApiProperty()
   @IsOptional()
   @ValidateNested({each: true})
-  @Type(() => CreateAwardsDto)
-  awards?: CreateAwardsDto[];
-
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({each: true})
   @Type(() => CreateKeyClientDto)
   keyClients?: CreateKeyClientDto[];
 

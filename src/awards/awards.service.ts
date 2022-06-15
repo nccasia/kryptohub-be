@@ -1,3 +1,5 @@
+import {Team} from '@/team/team.entity';
+import {User} from '@/user/user.entity';
 import {
   HttpException,
   HttpStatus,
@@ -15,14 +17,32 @@ export class AwardsService {
   constructor(
     @InjectRepository(Awards)
     private readonly awardsRepository: Repository<Awards>,
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
   ) {}
 
-  async createAwards(createAwardsDto: CreateAwardsDto) {
+  async createAwards(createAwardsDto: CreateAwardsDto, user: User) {
     try {
-      const awards = new Awards({...createAwardsDto});
+      const awards = new Awards();
+
+      awards.awardsTitle = createAwardsDto.awardsTitle;
+      awards.awardsWebsite = createAwardsDto.awardsWebsite;
+
+      const team = await this.teamRepository.findOne({
+        where: {id: createAwardsDto.teamId, user: {id: user.id}},
+      });
+
+      if (!team) {
+        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      }
+      awards.team = team;
+
       const result = await this.awardsRepository.save(awards);
+
       return {
-        ...result,
+        awardsTitle: result.awardsTitle,
+        awardsWebsite: result.awardsWebsite,
+        teamId: awards.team.id,
       };
     } catch (error) {
       throw new HttpException(
@@ -71,5 +91,9 @@ export class AwardsService {
       throw new NotFoundException(`Awards with ID ${id} not found`);
     }
     return awards;
+  }
+
+  async getAllAwardsByTeamId(teamId: number): Promise<Awards[]> {
+    return await this.awardsRepository.find({where: {team: teamId}});
   }
 }

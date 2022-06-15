@@ -82,6 +82,13 @@ export class TeamController {
     return await this.teamService.updateTeam(id, updateTeamDto);
   }
 
+  @UseGuards(JWTAuthGuard)
+  @Delete('delete/:id')
+  @HttpCode(HttpStatus.OK)
+  async deleteTeam(@Param('id', new ParseIntPipe()) id: number): Promise<void> {
+    return await this.teamService.deleteTeam(id);
+  }
+
   @Post(':id/image')
   @UseInterceptors(
     FileInterceptor('file', {

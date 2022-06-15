@@ -1,4 +1,6 @@
 import {JWTAuthGuard} from '@/auth/guards/jwt-auth.guard';
+import {AuthUser} from '@/user/user.decorator';
+import {User} from '@/user/user.entity';
 import {
   Body,
   Controller,
@@ -27,8 +29,11 @@ export class AwardsController {
   @UseGuards(JWTAuthGuard)
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  async createAwards(@Body() createAwardsDto: CreateAwardsDto) {
-    return await this.awardsService.createAwards(createAwardsDto);
+  async createAwards(
+    @Body() createAwardsDto: CreateAwardsDto,
+    @AuthUser() user: User,
+  ) {
+    return await this.awardsService.createAwards(createAwardsDto, user);
   }
 
   @UseGuards(JWTAuthGuard)
@@ -56,5 +61,14 @@ export class AwardsController {
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<Awards[]> {
     return await this.awardsService.getAwardsById(id);
+  }
+
+  @Get('getAllAwards/:teamId')
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(JWTAuthGuard)
+  async getAllAwardsByTeamId(
+    @Param('teamId', new ParseIntPipe()) teamId: number,
+  ): Promise<Awards[]> {
+    return await this.awardsService.getAllAwardsByTeamId(teamId);
   }
 }
