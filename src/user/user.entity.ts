@@ -92,6 +92,9 @@ export class User extends BaseEntity {
   @JoinTable()
   skills?: Skill[];
 
+  @Column("int", { array: true, nullable: true })
+  shortList?: number[];
+
   constructor(data: Partial<User> = {}) {
     super();
     Object.assign(this, data);

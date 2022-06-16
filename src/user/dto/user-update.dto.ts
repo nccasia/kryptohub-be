@@ -1,5 +1,6 @@
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {IsDefined, IsString, IsNotEmpty, IsOptional} from 'class-validator';
 
 export class UserUpdate {
@@ -30,4 +31,11 @@ export class UserUpdate {
     @ApiProperty()
     @IsOptional()
     skills?: Skill[];
+}
+
+export class AddShortListDto {
+    @ApiProperty()
+    @IsNotEmpty()
+    @Type(() => Number)
+    teamId!: number
 }

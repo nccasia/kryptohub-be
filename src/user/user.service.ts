@@ -5,6 +5,7 @@ import {User} from './user.entity';
 import {UserUpdate} from './dto/user-update.dto';
 import {JwtService} from '@nestjs/jwt';
 import {SkillService} from '@/skills/skills.service';
+import {TeamService} from '@/team/team.service';
 
 @Injectable()
 export class UserService {
@@ -13,6 +14,7 @@ export class UserService {
     private readonly userRepository: Repository<User>,
     private readonly skillService: SkillService,
     private readonly jwtService: JwtService,
+    private readonly teamService: TeamService,
   ) {}
 
   async create(data: Partial<User>): Promise<User> {
@@ -96,4 +98,37 @@ export class UserService {
   async setImage(id: number, avatarUrl: string) {
     await this.userRepository.update(id, {avatarPath: avatarUrl});
   }
+
+  async getShortList(authUser: User) {
+    const shortList = await this.userRepository
+      .createQueryBuilder('user')
+      .leftJoinAndSelect('user.team', 'team', 'team.id = ANY ("shortList")')
+      .where('user.id = :id', {id: authUser.id})
+      .getOne();
+    return shortList?.team;
+  }
+
+  async addShortList(authUser: User, teamId: number) {
+    const team = await this.teamService.findOne({where: {id: teamId}});
+    if (!team) throw new NotFoundException('Team not found');
+
+    const user = await this.findOne({where: {id: authUser.id}});
+    const shortList = new Set(user.shortList);
+    shortList.add(teamId);
+    user.shortList = Array.from(shortList);
+    await user.save();
+    return;
+  }
+
+  async removeShortList(authUser: User, teamId: number) {
+    const team = await this.teamService.findOne({where: {id: teamId}});
+    if (!team) throw new NotFoundException('Team not found');
+
+    const user = await this.findOne({where: {id: authUser.id}});
+    user.shortList = user.shortList?.filter(e => e*1 !== teamId*1)
+    console.log(user.shortList);
+    await user.save();
+    return;
+  }
 }
+
