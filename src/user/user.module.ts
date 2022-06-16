@@ -14,10 +14,13 @@ import {JwtStrategy} from '../auth/strategies/jwt.strategy';
 import {JwtModule, JwtModuleOptions} from '@nestjs/jwt';
 import {ConfigModule, ConfigService} from '@nestjs/config';
 import {SkillModule} from '../skills/skills.module';
+import { UserController } from './user.controller';
+import { TeamModule } from '@/team/team.module';
 
 @Module({
     imports: [
         SkillModule,
+        TeamModule,
         TypeOrmModule.forFeature([User, Profile]),
         JwtModule.registerAsync({
             imports: [ConfigModule],
@@ -36,7 +39,7 @@ import {SkillModule} from '../skills/skills.module';
             inject: [ConfigService],
         }),
     ],
-    controllers: [ProfileController],
+    controllers: [ProfileController, UserController],
     providers: [
         UserService,
         IsEmailAvailable,
