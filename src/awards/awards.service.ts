@@ -108,6 +108,7 @@ export class AwardsService {
       awardsTitle: awards[0].awardsTitle,
       awardsWebsite: awards[0].awardsWebsite,
       teamId: awards[0].team?.id,
+      id: awards[0].id,
     };
   }
 
