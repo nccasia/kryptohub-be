@@ -1,6 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsOptional} from 'class-validator';
-
+import {Type} from 'class-transformer';
+import {IsNotEmpty, IsOptional} from 'class-validator';
 export class UpdateAwardsDto {
   @ApiProperty({required: true})
   @IsOptional()
@@ -9,4 +9,9 @@ export class UpdateAwardsDto {
   @ApiProperty({required: true})
   @IsOptional()
   awardsWebsite?: string;
+
+  @ApiProperty({required: true})
+  @IsNotEmpty()
+  @Type(() => Number)
+  teamId!: number;
 }

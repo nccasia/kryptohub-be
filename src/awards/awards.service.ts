@@ -62,14 +62,22 @@ export class AwardsService {
           HttpStatus.NOT_FOUND,
         );
       }
+      const team = await this.teamRepository.findOne({
+        where: {id: updateAwardsDto.teamId},
+      });
+
+      if (!team) {
+        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      }
 
       const updateAwards = await this.awardsRepository.save({
         id: id,
         awardsTitle: updateAwardsDto.awardsTitle,
         awardsWebsite: updateAwardsDto.awardsWebsite,
+        teamId: updateAwardsDto.teamId,
       });
 
-      return updateAwards;
+      return {...updateAwards, teamId: team?.id};
     } catch (error) {
       throw new HttpException(
         `Awards with ID ${id} not found`,
