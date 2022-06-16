@@ -57,9 +57,7 @@ export class AwardsController {
 
   @Get('get/:id')
   @HttpCode(HttpStatus.OK)
-  async getAwardsById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<Awards[]> {
+  async getAwardsById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.awardsService.getAwardsById(id);
   }
 
