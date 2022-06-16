@@ -43,6 +43,7 @@ export class AwardsService {
         awardsTitle: result.awardsTitle,
         awardsWebsite: result.awardsWebsite,
         teamId: awards.team.id,
+        id: result.id,
       };
     } catch (error) {
       throw new HttpException(
