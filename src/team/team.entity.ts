@@ -32,7 +32,7 @@ export class Team extends BaseEntity {
   @Column({nullable: true})
   timeZone?: string;
 
-  @ManyToMany(() => Skill, (skill) => skill.team)
+  @ManyToMany(() => Skill, (skill) => skill.team, {eager: true})
   @JoinTable()
   skills?: Skill[];
 
@@ -70,7 +70,7 @@ export class Team extends BaseEntity {
   status?: boolean;
 
   @OneToMany(() => SkillDistribution, (skill) => skill.team, {
-    eager: false,
+    eager: true,
   })
   @JoinTable()
   skillDistribution?: SkillDistribution[];

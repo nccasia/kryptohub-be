@@ -94,12 +94,21 @@ export class AwardsService {
     throw new HttpException('Delete awards successful', HttpStatus.OK);
   }
 
-  async getAwardsById(id: number): Promise<Awards[]> {
-    const awards = await this.awardsRepository.find({where: {id: id}});
-    if (!awards) {
+  async getAwardsById(id: number) {
+    const awards = await this.awardsRepository.find({
+      where: {id: id},
+      relations: ['team'],
+    });
+
+    if (awards && awards.length === 0) {
       throw new NotFoundException(`Awards with ID ${id} not found`);
     }
-    return awards;
+
+    return {
+      awardsTitle: awards[0].awardsTitle,
+      awardsWebsite: awards[0].awardsWebsite,
+      teamId: awards[0].team?.id,
+    };
   }
 
   async getAllAwardsByTeamId(teamId: number): Promise<Awards[]> {
