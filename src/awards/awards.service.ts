@@ -103,11 +103,13 @@ export class AwardsService {
     if (awards && awards.length === 0) {
       throw new NotFoundException(`Awards with ID ${id} not found`);
     }
+    console.log(awards, 'fdsjfn');
 
     return {
       awardsTitle: awards[0].awardsTitle,
       awardsWebsite: awards[0].awardsWebsite,
       teamId: awards[0].team?.id,
+      id: awards[0].id,
     };
   }
 
