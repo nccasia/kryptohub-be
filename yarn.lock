@@ -2457,9 +2457,12 @@ busboy@^0.2.11:
   version "0.2.14"
   resolved "https://registry.yarnpkg.com/busboy/-/busboy-0.2.14.tgz#6c2a622efcf47c57bbbe1e2a9c37ad36c7925453"
   integrity sha512-InWFDomvlkEj+xWLBfU3AvnbVYqeTWmQopiW0tWWEy5yehYm2YkGEc59sUmw/4ty5Zj/b0WHGs1LgecuBSBGrg==
+busboy@^1.0.0:
+  version "1.6.0"
+  resolved "https://registry.yarnpkg.com/busboy/-/busboy-1.6.0.tgz#966ea36a9502e43cdb9146962523b92f531f6893"
+  integrity sha512-8SFQbg/0hQ9xy3UNTB0YEnsNBbWfhf7RtnzpL7TkBiTBRfrQ9Fxcnz7VJsleJpyp6rVLvXiuORqjlHi5q+PYuA==
   dependencies:
-    dicer "0.2.5"
-    readable-stream "1.1.x"
+    streamsearch "^1.1.0"
 
 busboy@^1.0.0:
   version "1.6.0"
@@ -6074,11 +6077,10 @@ multer@^1.4.4:
   integrity sha512-2wY2+xD4udX612aMqMcB8Ws2Voq6NIUPEtD1be6m411T4uDH/VtL9i//xvcyFlTVfRdaBsk7hV5tgrGQqhuBiw==
   dependencies:
     append-field "^1.0.0"
-    busboy "^0.2.11"
+    busboy "^1.0.0"
     concat-stream "^1.5.2"
     mkdirp "^0.5.4"
     object-assign "^4.1.1"
-    on-finished "^2.3.0"
     type-is "^1.6.4"
     xtend "^4.0.0"
 
