@@ -77,7 +77,7 @@ export class AwardsService {
         teamId: updateAwardsDto.teamId,
       });
 
-      return {...updateAwards, teamId: team?.id};
+      return {...updateAwards, teamId: team.id};
     } catch (error) {
       throw new HttpException(
         `Awards with ID ${id} not found`,
@@ -107,7 +107,7 @@ export class AwardsService {
     return {
       awardsTitle: awards[0].awardsTitle,
       awardsWebsite: awards[0].awardsWebsite,
-      teamId: awards[0].team?.id,
+      teamId: awards[0].team.id,
       id: awards[0].id,
     };
   }

@@ -78,7 +78,6 @@ export class Team extends BaseEntity {
   @OneToMany(() => Portfolio, (portfolio) => portfolio.team, {
     eager: false,
   })
-  @JoinTable()
   portfolios?: Portfolio[];
 
   @OneToMany(() => Awards, (awards) => awards.team, {

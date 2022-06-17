@@ -1,4 +1,6 @@
 import {JWTAuthGuard} from '@/auth/guards/jwt-auth.guard';
+import {AuthUser} from '@/user/user.decorator';
+import {User} from '@/user/user.entity';
 import {
   Controller,
   Get,
@@ -34,8 +36,14 @@ export class PortfolioController {
   @UseGuards(JWTAuthGuard)
   @Post('create')
   @HttpCode(HttpStatus.OK)
-  async createPorfolio(@Body() createPortfolioDto: CreatePortfolioDto) {
-    return await this.portfolioService.createPortfolio(createPortfolioDto);
+  async createPorfolio(
+    @Body() createPortfolioDto: CreatePortfolioDto,
+    @AuthUser() user: User,
+  ) {
+    return await this.portfolioService.createPortfolio(
+      createPortfolioDto,
+      user,
+    );
   }
 
   @UseGuards(JWTAuthGuard)
@@ -44,21 +52,21 @@ export class PortfolioController {
   async updatePortfolio(
     @Param('id', new ParseIntPipe()) id: number,
     @Body() updatePortfolioDto: UpdatePortfolioDto,
-  ): Promise<Portfolio> {
+  ) {
     return await this.portfolioService.updatePortfolio(id, updatePortfolioDto);
   }
 
-  @Get('getAll')
+  @Get('getAll/:teamId')
   @HttpCode(HttpStatus.OK)
-  async getAllPortfolio(): Promise<Portfolio[]> {
-    return await this.portfolioService.getAllPortfolio();
+  async getAllPortfolioByTeamId(
+    @Param('teamId', new ParseIntPipe()) teamId: number,
+  ): Promise<Portfolio[]> {
+    return await this.portfolioService.getAllPortfolioByTeamId(teamId);
   }
 
   @Get('get/:id')
   @HttpCode(HttpStatus.OK)
-  async getPortfolioById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<Portfolio[]> {
+  async getPortfolioById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.portfolioService.getPortfolioById(id);
   }
 
