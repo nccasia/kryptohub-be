@@ -1,4 +1,5 @@
 import {ApiProperty} from '@nestjs/swagger';
+import {Type} from 'class-transformer';
 import {IsEnum, IsNotEmpty, IsOptional} from 'class-validator';
 import {PrivacyEnum} from '../portfolio.enum';
 
@@ -51,4 +52,9 @@ export class CreatePortfolioDto {
   @IsEnum(PrivacyEnum)
   @IsNotEmpty()
   readonly privacy?: PrivacyEnum;
+
+  @ApiProperty({required: true})
+  @IsNotEmpty()
+  @Type(() => Number)
+  teamId!: number;
 }

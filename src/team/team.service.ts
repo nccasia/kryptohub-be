@@ -19,7 +19,6 @@ import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
 import {PortfolioService} from '@/portfolio/portfolio.service';
-import {Portfolio} from '@/portfolio/portfolio.entity';
 import {KeyClientService} from '@/key-clients/key-clients.service';
 import {KeyClient} from '@/key-clients/key-clients.entity';
 
@@ -30,7 +29,6 @@ export class TeamService {
     private readonly teamRepository: Repository<Team>,
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
-    private readonly portfolioService: PortfolioService,
     private readonly keyClientsService: KeyClientService,
   ) {}
 
@@ -47,13 +45,6 @@ export class TeamService {
         ) || [],
       )) as SkillDistribution[];
 
-      const portfolios = (await Promise.all(
-        createTeamDto.portfolios?.map(
-          async (porfolio) =>
-            await this.portfolioService.createPortfolio(porfolio),
-        ) || [],
-      )) as Portfolio[];
-
       const keyClients = (await Promise.all(
         createTeamDto.keyClients?.map(
           async (keyClient) =>
@@ -66,7 +57,6 @@ export class TeamService {
         user,
         skills,
         skillDistribution: skillDistributions,
-        portfolios: portfolios,
         keyClients: keyClients,
       });
 
@@ -101,16 +91,6 @@ export class TeamService {
         ) || [],
       );
 
-      const portfolios = await Promise.all(
-        updateTeamDto.portfolios?.map(
-          async (portfolio) =>
-            await this.portfolioService.updatePortfolio(
-              portfolio.id,
-              portfolio,
-            ),
-        ) || [],
-      );
-
       const keyClients = await Promise.all(
         updateTeamDto.keyClients?.map(
           async (keyClient) =>
@@ -129,7 +109,6 @@ export class TeamService {
         skillDistribution: skillDistributions,
         slogan: updateTeamDto.slogan,
         skills,
-        portfolios: portfolios,
         keyClients: keyClients,
         teamName: updateTeamDto.teamName,
         teamSize: updateTeamDto.teamSize,
@@ -148,14 +127,26 @@ export class TeamService {
 
   async getAllTeam(): Promise<Team[]> {
     return await this.teamRepository.find({
-      relations: ['skills', 'skillDistribution', 'portfolios', 'keyClients'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
   }
 
   async getTeamById(id: number): Promise<Team> {
     const getTeam = await this.teamRepository.findOne({
       where: {id: id},
-      relations: ['skills', 'skillDistribution', 'portfolios', 'keyClients'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
 
     if (!getTeam) {
