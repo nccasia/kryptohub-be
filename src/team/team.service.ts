@@ -127,14 +127,26 @@ export class TeamService {
 
   async getAllTeam(): Promise<Team[]> {
     return await this.teamRepository.find({
-      relations: ['skills', 'skillDistribution', 'portfolios', 'keyClients'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
   }
 
   async getTeamById(id: number): Promise<Team> {
     const getTeam = await this.teamRepository.findOne({
       where: {id: id},
-      relations: ['skills', 'skillDistribution', 'portfolios', 'keyClients'],
+      relations: [
+        'skills',
+        'skillDistribution',
+        'portfolios',
+        'awards',
+        'keyClients',
+      ],
     });
 
     if (!getTeam) {
