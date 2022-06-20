@@ -9,7 +9,7 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
+import {ConfigService} from '@nestjs/config';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Paging} from '@utils/commonDto';
 import {formatPaging} from '@utils/formatter';
@@ -30,7 +30,7 @@ export class MembersService {
     private readonly teamService: TeamService,
     private readonly userService: UserService,
     private readonly mailerService: MailerService,
-    private configService: ConfigService
+    private configService: ConfigService,
   ) {}
 
   async getList(
@@ -43,13 +43,14 @@ export class MembersService {
 
     if (!team) throw new NotFoundException();
 
-    const paging = formatPaging(page, size, sort)
-    const [list, total] = await this.memberRepository.findAndCount({
-      relations: ['user'],
-      where: {team: {id: team.id}},
-      take: paging.query.take,
-      skip: paging.query.skip,
-    });
+    const paging = formatPaging(page, size, sort);
+    const [list, total] = await this.memberRepository
+      .createQueryBuilder('member')
+      .leftJoinAndSelect('member.user', 'user')
+      .where(`"teamId" = :id`, {id: team.id})
+      .take(paging.query.take)
+      .skip(paging.query.skip)
+      .getManyAndCount();
 
     return {
       content: list,
@@ -79,10 +80,11 @@ export class MembersService {
     const {email, role = MemberRole.MEMBER} = data;
     const user = await this.userService.any({where: {emailAddress: email}});
 
-    const member = await this.memberRepository.findOne({
-      relations: ['user'],
-      where: {emailAddress: email, team: {id: team.id}},
-    });
+    const member = await this.memberRepository
+      .createQueryBuilder('member')
+      .where(`"emailAddress" = :email`, {email})
+      .andWhere(`"teamId" = :teamId`, {teamId: team.id})
+      .getOne();
     if (member) return member;
 
     let newMember: Member = new Member({
@@ -106,25 +108,28 @@ export class MembersService {
       context: {
         teamName: team.teamName,
         role,
-        joinTeamLink: this.configService.get('FE_HOST')+`/join-team?teamId=${team.id}`,
-        contact: 'kryptohub.co'
-      }
+        joinTeamLink:
+          this.configService.get('FE_HOST') + `/join-team?teamId=${team.id}`,
+        contact: 'kryptohub.co',
+      },
     });
-    return newMember
+    return newMember;
   }
 
   async joinTeam(user: User, data: JoinTeamDto) {
-    const invitation = await this.memberRepository.findOne({where: {
-      emailAddress: user.emailAddress,
-      team: {id: data.teamId},
-      inviteStatus: InviteStatus.PENDING
-    }})
+    const invitation = await this.memberRepository.findOne({
+      where: {
+        emailAddress: user.emailAddress,
+        team: {id: data.teamId},
+        inviteStatus: InviteStatus.PENDING,
+      },
+    });
 
-    if(!invitation) throw new NotFoundException('not found invitation')
+    if (!invitation) throw new NotFoundException('not found invitation');
 
-    invitation.inviteStatus = InviteStatus.ACCEPTED
-    await invitation.save()
+    invitation.inviteStatus = InviteStatus.ACCEPTED;
+    await invitation.save();
 
-    return invitation
+    return invitation;
   }
 }
