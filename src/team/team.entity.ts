@@ -88,7 +88,6 @@ export class Team extends BaseEntity {
   @OneToMany(() => KeyClient, (keyClient) => keyClient.team, {
     eager: false,
   })
-  @JoinTable()
   keyClients?: KeyClient[];
 
   @ManyToOne((type) => User, (user) => user.team, {eager: false})

@@ -1,3 +1,5 @@
+import {Team} from '@/team/team.entity';
+import {User} from '@/user/user.entity';
 import {
   HttpException,
   HttpStatus,
@@ -15,14 +17,29 @@ export class KeyClientService {
   constructor(
     @InjectRepository(KeyClient)
     private readonly keyClientRepository: Repository<KeyClient>,
+    @InjectRepository(Team)
+    private readonly teamRepository: Repository<Team>,
   ) {}
 
-  async createkeyClient(createKeyClientDto: CreateKeyClientDto) {
+  async createkeyClient(createKeyClientDto: CreateKeyClientDto, user: User) {
     try {
       const keyClients = new KeyClient(createKeyClientDto as any);
+
+      const team = await this.teamRepository.findOne({
+        where: {id: createKeyClientDto.teamId, user: {id: user.id}},
+      });
+
+      if (!team) {
+        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      }
+
+      keyClients.team = team as any;
+
       const result = await this.keyClientRepository.save(keyClients);
       return {
-        ...result,
+        id: result.id,
+        keyName: result.keyName,
+        teamId: keyClients.team.id,
       };
     } catch (error) {
       throw new HttpException(
@@ -42,11 +59,20 @@ export class KeyClientService {
         );
       }
 
+      const team = await this.teamRepository.findOne({
+        where: {id: updateKeyClientDto.teamId},
+      });
+
+      if (!team) {
+        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      }
+
       const updateKeyClient = await this.keyClientRepository.save({
         id: id,
         keyName: updateKeyClientDto.keyName as any,
+        teamId: updateKeyClientDto.teamId,
       });
-      return updateKeyClient;
+      return {...updateKeyClient, teamId: team.id};
     } catch (error) {
       throw new HttpException(
         `Key client with ID ${id} not found`,
@@ -63,11 +89,18 @@ export class KeyClientService {
     throw new HttpException('Delete key client successful', HttpStatus.OK);
   }
 
-  async getKeyClientById(id: number): Promise<KeyClient[]> {
-    const keyClients = await this.keyClientRepository.find({where: {id: id}});
+  async getKeyClientById(id: number) {
+    const keyClients = await this.keyClientRepository.find({
+      where: {id: id},
+      relations: ['team'],
+    });
     if (!keyClients) {
       throw new NotFoundException(`Key client with ID ${id} not found`);
     }
-    return keyClients;
+    return {
+      id: keyClients[0].id,
+      keyName: keyClients[0].keyName,
+      teamId: keyClients[0].team.id,
+    };
   }
 }

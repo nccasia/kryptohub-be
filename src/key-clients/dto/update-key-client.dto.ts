@@ -1,9 +1,15 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {IsArray, IsOptional} from 'class-validator';
+import {Type} from 'class-transformer';
+import {IsArray, IsNotEmpty, IsOptional} from 'class-validator';
 
 export class UpdateKeyClientDto {
   @ApiProperty({required: true})
   @IsOptional()
   @IsArray()
   keyName?: string[];
+
+  @ApiProperty({required: true})
+  @IsNotEmpty()
+  @Type(() => Number)
+  teamId!: number;
 }

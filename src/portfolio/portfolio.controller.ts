@@ -16,7 +16,6 @@ import {
   UseInterceptors,
   UploadedFile,
   Res,
-  NotFoundException,
   HttpException,
 } from '@nestjs/common';
 import {FileInterceptor} from '@nestjs/platform-express';
