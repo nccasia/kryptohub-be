@@ -32,18 +32,6 @@ export class CreateTeamDto {
   @Type(() => CreateSkillDistributionDto)
   skillDistribution?: CreateSkillDistributionDto[];
 
-  // @ApiProperty()
-  // @IsOptional()
-  // @ValidateNested({each: true})
-  // @Type(() => CreatePortfolioDto)
-  // portfolios?: CreatePortfolioDto[];
-
-  @ApiProperty()
-  @IsOptional()
-  @ValidateNested({each: true})
-  @Type(() => CreateKeyClientDto)
-  keyClients?: CreateKeyClientDto[];
-
   @ApiProperty()
   @IsOptional()
   slogan?: string;

@@ -28,14 +28,6 @@ export class UpdateTeamDto {
 
   @ApiProperty()
   @IsOptional()
-  portfolios?: Portfolio[];
-
-  @ApiProperty()
-  @IsOptional()
-  keyClients?: KeyClient[];
-
-  @ApiProperty()
-  @IsOptional()
   slogan?: string;
 
   @ApiProperty()

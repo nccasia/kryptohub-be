@@ -18,7 +18,7 @@ export class KeyClient extends BaseEntity {
   keyName?: string;
 
   @ManyToOne(() => Team, (team) => team.keyClients)
-  team?: Team[];
+  team!: Team;
 
   constructor(data: Partial<KeyClient> = {}) {
     super();

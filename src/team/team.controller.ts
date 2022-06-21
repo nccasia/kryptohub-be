@@ -66,9 +66,7 @@ export class TeamController {
 
   @Get('get/:id')
   @HttpCode(HttpStatus.OK)
-  async getTeamById(
-    @Param('id', new ParseIntPipe()) id: number,
-  ): Promise<Team> {
+  async getTeamById(@Param('id', new ParseIntPipe()) id: number) {
     return await this.teamService.getTeamById(id);
   }
 
