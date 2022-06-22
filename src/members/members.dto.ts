@@ -54,3 +54,10 @@ export class JoinTeamDto {
   @Type(() => Number)
   teamId!: number;
 }
+
+export class DeleteMemberDto extends JoinTeamDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @Type(() => Number)
+  memberId!: number
+}
