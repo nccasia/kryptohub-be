@@ -17,6 +17,7 @@ import {Repository} from 'typeorm';
 import {InviteStatus, Member, MemberRole} from './member.entity';
 import {
   AddTeamMembersDto,
+  DeleteMemberDto,
   GetListTeamMemberDto,
   InviteMemberDto,
   JoinTeamDto,
@@ -131,5 +132,21 @@ export class MembersService {
     await invitation.save();
 
     return invitation;
+  }
+
+  async removeMember(user: User, query: DeleteMemberDto){
+    const team = await this.teamService.anyUserTeam({userId: user.id, teamId: query.teamId})
+    if(!team) throw new NotFoundException('Team not found')
+
+    const member = await this.memberRepository.findOne({where: {
+      id: query.memberId,
+      team: {
+        id: query.teamId
+      }
+    }})
+
+    if(!member) throw new NotFoundException('Member not found')
+
+    await this.memberRepository.softDelete(member.id)
   }
 }
