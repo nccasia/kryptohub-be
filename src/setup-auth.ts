@@ -4,7 +4,6 @@ import cookieParser from 'cookie-parser';
 import session from 'express-session';
 import passport from 'passport';
 import connectPgSimple from 'connect-pg-simple';
-
 import { AppModule } from './app.module';
 
 export function setupAuth(app: INestApplication): INestApplication {
