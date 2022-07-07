@@ -1,4 +1,3 @@
-import {AwardsModule} from '@/awards/awards.module';
 import {KeyClientModule} from '@/key-clients/key-clients.module';
 import {PortfolioModule} from '@/portfolio/portfolio.module';
 import {SkillDistributionModule} from '@/skill-distribution/skill-distribution.module';

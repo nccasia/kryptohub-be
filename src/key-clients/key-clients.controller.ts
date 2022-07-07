@@ -1,6 +1,4 @@
 import {JWTAuthGuard} from '@/auth/guards/jwt-auth.guard';
-import {AuthUser} from '@/user/user.decorator';
-import {User} from '@/user/user.entity';
 import {
   Body,
   Controller,
@@ -17,6 +15,7 @@ import {
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {CreateKeyClientDto} from './dto/create-key-client.dto';
 import {UpdateKeyClientDto} from './dto/update-key-client.dto';
+import { KeyClient } from './key-clients.entity';
 import {KeyClientService} from './key-clients.service';
 
 @ApiTags('KeyClient')
@@ -30,11 +29,9 @@ export class KeyClientController {
   @HttpCode(HttpStatus.OK)
   async createkeyClient(
     @Body() createKeyClientDto: CreateKeyClientDto,
-    @AuthUser() user: User,
   ) {
     return await this.keyClientService.createkeyClient(
       createKeyClientDto,
-      user,
     );
   }
 
@@ -59,7 +56,9 @@ export class KeyClientController {
 
   @Get('get/:id')
   @HttpCode(HttpStatus.OK)
-  async getAwardsById(@Param('id', new ParseIntPipe()) id: number) {
+  async getAwardsById(
+    @Param('id', new ParseIntPipe()) id: number,
+  ): Promise<KeyClient[]> {
     return await this.keyClientService.getKeyClientById(id);
   }
 }

@@ -18,6 +18,8 @@ import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
+import { KeyClientService } from '@/key-clients/key-clients.service';
+import { KeyClient } from '@/key-clients/key-clients.entity';
 
 @Injectable()
 export class TeamService {
@@ -26,6 +28,7 @@ export class TeamService {
     private readonly teamRepository: Repository<Team>,
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
+    private readonly keyClientsService: KeyClientService
   ) {}
 
   async createTeam(user: User, createTeamDto: CreateTeamDto) {
@@ -41,16 +44,25 @@ export class TeamService {
         ) || [],
       )) as SkillDistribution[];
 
+      const keyClients = (await Promise.all(
+        createTeamDto.keyClients?.map(
+          async (keyClient) =>
+            await this.keyClientsService.createkeyClient(keyClient),
+        ) || [],
+      )) as KeyClient[];
+      
+
       const team = new Team({
         ...createTeamDto,
         user,
         skills,
         skillDistribution: skillDistributions,
+        keyClients: keyClients
       });
 
       await team.save();
       delete team.user;
-
+      
       return {data: {...team}};
     } catch (error) {
       throw new NotFoundException('Error cannot create team');
@@ -79,6 +91,16 @@ export class TeamService {
         ) || [],
       );
 
+      const keyClients = await Promise.all(
+        updateTeamDto.keyClients?.map(
+          async (keyClient) =>
+            await this.keyClientsService.updateKeyClient(
+              keyClient.id,
+              keyClient as any,
+            ),
+        ) || [],
+      );
+
       const updateTeam = await this.teamRepository.save({
         id: id,
         description: updateTeamDto.description,
@@ -87,6 +109,7 @@ export class TeamService {
         skillDistribution: skillDistributions,
         slogan: updateTeamDto.slogan,
         skills,
+        keyClients: keyClients,
         teamName: updateTeamDto.teamName,
         teamSize: updateTeamDto.teamSize,
         projectSize: updateTeamDto.projectSize,
