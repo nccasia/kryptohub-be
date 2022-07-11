@@ -96,7 +96,7 @@ export class TeamController {
         filename: editFileName,
       }),
       limits: {
-        fileSize: 1024 * 1024 * 5,
+        fileSize: 1024 * 1024 * 15,
       },
       fileFilter: imageFileFilter,
     }),
