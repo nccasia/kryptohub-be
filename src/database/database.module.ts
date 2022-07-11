@@ -1,4 +1,3 @@
-import {ConfigModule} from '@nestjs/config';
 import {Global, Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {TypeOrmConfigService} from './database-config.service';
