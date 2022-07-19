@@ -84,7 +84,7 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt?: Date;
 
-  @OneToMany((type) => Team, (team) => team.user, {eager: true})
+  @OneToMany((type) => Team, (team) => team.user, {eager: false})
   @JoinTable()
   team?: Team[];
 
