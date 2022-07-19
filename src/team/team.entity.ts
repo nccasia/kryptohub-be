@@ -76,23 +76,24 @@ export class Team extends BaseEntity {
   skillDistribution?: SkillDistribution[];
 
   @OneToMany(() => Portfolio, (portfolio) => portfolio.team, {
-    eager: false,
+    eager: true,
   })
   @JoinTable()
   portfolios?: Portfolio[];
 
   @OneToMany(() => Awards, (awards) => awards.team, {
-    eager: false,
+    eager: true,
   })
   awards?: Awards[];
 
   @OneToMany(() => KeyClient, (keyClient) => keyClient.team, {
-    eager: false,
+    eager: true,
   })
   @JoinTable()
   keyClients?: KeyClient[];
 
-  @ManyToOne((type) => User, (user) => user.team, {eager: false})
+  @ManyToOne((type) => User, (user) => user.team, {eager: true})
+  @JoinTable()
   user?: User;
 
   @DeleteDateColumn()
