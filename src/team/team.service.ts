@@ -20,6 +20,8 @@ import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
 import { KeyClientService } from '@/key-clients/key-clients.service';
 import { KeyClient } from '@/key-clients/key-clients.entity';
+import { PortfolioService } from '@/portfolio/portfolio.service';
+import { Portfolio } from '@/portfolio/portfolio.entity';
 
 @Injectable()
 export class TeamService {
@@ -28,7 +30,8 @@ export class TeamService {
     private readonly teamRepository: Repository<Team>,
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
-    private readonly keyClientsService: KeyClientService
+    private readonly keyClientsService: KeyClientService,
+    private readonly portfoliosService: PortfolioService
   ) {}
 
   async createTeam(user: User, createTeamDto: CreateTeamDto) {
@@ -50,6 +53,13 @@ export class TeamService {
             await this.keyClientsService.createkeyClient(keyClient),
         ) || [],
       )) as KeyClient[];
+
+      const portfolios = (await Promise.all(
+        createTeamDto.portfolios?.map(
+          async (porfolio) =>
+            await this.portfoliosService.createPortfolio(porfolio),
+        ) || [],
+      )) as Portfolio[];
       
 
       const team = new Team({
@@ -57,7 +67,8 @@ export class TeamService {
         user,
         skills,
         skillDistribution: skillDistributions,
-        keyClients: keyClients
+        keyClients: keyClients,
+        portfolios: portfolios
       });
 
       await team.save();
@@ -101,6 +112,16 @@ export class TeamService {
         ) || [],
       );
 
+      const portfolios = await Promise.all(
+        updateTeamDto.portfolios?.map(
+          async (porfolio) =>
+            await this.portfoliosService.updatePortfolio(
+              porfolio.id,
+              porfolio as any,
+            ),
+        ) || [],
+      );
+
       const updateTeam = await this.teamRepository.save({
         id: id,
         description: updateTeamDto.description,
@@ -110,6 +131,7 @@ export class TeamService {
         slogan: updateTeamDto.slogan,
         skills,
         keyClients: keyClients,
+        portfolios: portfolios,
         teamName: updateTeamDto.teamName,
         teamSize: updateTeamDto.teamSize,
         projectSize: updateTeamDto.projectSize,

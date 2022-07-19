@@ -53,8 +53,8 @@ export class UpdatePortfolioDto {
   @IsNotEmpty()
   privacy?: PrivacyEnum;
 
-  @ApiProperty({required: true})
-  @IsNotEmpty()
-  @Type(() => Number)
-  teamId!: number;
+  // @ApiProperty({required: true})
+  // @IsNotEmpty()
+  // @Type(() => Number)
+  // teamId!: number;
 }

@@ -23,7 +23,7 @@ export class Team extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column()
+  @Column({unique: true})
   teamName?: string;
 
   @Column({nullable: true})
@@ -78,6 +78,7 @@ export class Team extends BaseEntity {
   @OneToMany(() => Portfolio, (portfolio) => portfolio.team, {
     eager: false,
   })
+  @JoinTable()
   portfolios?: Portfolio[];
 
   @OneToMany(() => Awards, (awards) => awards.team, {
