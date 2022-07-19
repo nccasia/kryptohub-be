@@ -21,18 +21,6 @@ export class SkillDistributionService {
             createSkillDistributionDto,
         );
 
-        const result = await this.skillDistributionRepository.findOne({
-            where: {
-                skillDistributionName: skillDistribution.skillDistributionName,
-            },
-        });
-
-        if (result) {
-            throw new NotFoundException(
-                'Skill distribution name already exists',
-            );
-        }
-
         const saveSkillDistribution =
             await this.skillDistributionRepository.save(skillDistribution);
 
