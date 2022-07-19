@@ -1,4 +1,5 @@
 import { CreateKeyClientDto } from '@/key-clients/dto/create-key-client.dto';
+import { CreatePortfolioDto } from '@/portfolio/dto/create-portfolio.dto';
 import {CreateSkillDistributionDto} from '@/skill-distribution/dto/create-skill-distribution.dto';
 import {Skill} from '@/skills/skills.entity';
 import {ApiProperty} from '@nestjs/swagger';
@@ -35,6 +36,12 @@ export class CreateTeamDto {
   @ValidateNested({each: true})
   @Type(() => CreateKeyClientDto)
   keyClients?: CreateKeyClientDto[];
+
+  @ApiProperty()
+  @IsOptional()
+  @ValidateNested({each: true})
+  @Type(() => CreatePortfolioDto)
+  portfolios?: CreatePortfolioDto[];
 
   @ApiProperty()
   @IsOptional()

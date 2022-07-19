@@ -17,40 +17,41 @@ export class PortfolioService {
   constructor(
     @InjectRepository(Portfolio)
     private readonly portfolioRepository: Repository<Portfolio>,
-    @InjectRepository(Team)
-    private readonly teamRepository: Repository<Team>,
+    // @InjectRepository(Team)
+    // private readonly teamRepository: Repository<Team>,
   ) {}
 
-  async createPortfolio(createPortfolioDto: CreatePortfolioDto, user: User) {
+  async createPortfolio(createPortfolioDto: CreatePortfolioDto) {
     try {
       const portfolio = new Portfolio({
         ...createPortfolioDto,
       });
 
-      const team = await this.teamRepository.findOne({
-        where: {id: createPortfolioDto.teamId, user: {id: user.id}},
-      });
+      // const team = await this.teamRepository.findOne({
+      //   where: {id: createPortfolioDto.teamId, user: {id: user.id}},
+      // });
 
-      if (!team) {
-        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
-      }
-      portfolio.team = team;
+      // if (!team) {
+      //   throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      // }
+      // portfolio.team = team;
       const result = await this.portfolioRepository.save(portfolio);
       return {
-        id: result.id,
-        companyName: result.companyName,
-        imageUrl: result.imageUrl,
-        videoLink: result.videoLink,
-        content: result.content,
-        clientWebsite: result.clientWebsite,
-        title: result.title,
-        category: result.category,
-        estimate: result.estimate,
-        startDate: result.startDate,
-        endDate: result.endDate,
-        description: result.description,
-        privacy: result.privacy,
-        teamId: portfolio.team.id,
+        // id: result.id,
+        // companyName: result.companyName,
+        // imageUrl: result.imageUrl,
+        // videoLink: result.videoLink,
+        // content: result.content,
+        // clientWebsite: result.clientWebsite,
+        // title: result.title,
+        // category: result.category,
+        // estimate: result.estimate,
+        // startDate: result.startDate,
+        // endDate: result.endDate,
+        // description: result.description,
+        // privacy: result.privacy,
+        // teamId: portfolio.team.id,
+        ...result
       };
     } catch (error) {
       throw new NotFoundException('Error cannot create portfolio');
@@ -64,13 +65,13 @@ export class PortfolioService {
         throw new NotFoundException(`There isn't any portfolio with id: ${id}`);
       }
 
-      const team = await this.teamRepository.findOne({
-        where: {id: updatePortfolioDto.teamId},
-      });
+      // const team = await this.teamRepository.findOne({
+      //   where: {id: updatePortfolioDto.teamId},
+      // });
 
-      if (!team) {
-        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
-      }
+      // if (!team) {
+      //   throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
+      // }
 
       const updatePortfolio = await this.portfolioRepository.save({
         id: id,
@@ -86,9 +87,9 @@ export class PortfolioService {
         startDate: updatePortfolioDto.startDate,
         title: updatePortfolioDto.title,
         privacy: updatePortfolioDto.privacy,
-        teamId: updatePortfolioDto.teamId,
+        // teamId: updatePortfolioDto.teamId,
       });
-      return {...updatePortfolio, teamId: team.id};
+      return {...updatePortfolio};
     } catch (error) {
       throw new NotFoundException(`Portfolio with ID ${id} not found`);
     }
@@ -120,7 +121,7 @@ export class PortfolioService {
       startDate: porfolio[0].startDate,
       title: porfolio[0].title,
       privacy: porfolio[0].privacy,
-      teamId: porfolio[0].team.id,
+      // teamId: porfolio[0].team.id,
     };
   }
 

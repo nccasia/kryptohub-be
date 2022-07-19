@@ -37,11 +37,11 @@ export class PortfolioController {
   @HttpCode(HttpStatus.OK)
   async createPorfolio(
     @Body() createPortfolioDto: CreatePortfolioDto,
-    @AuthUser() user: User,
+    // @AuthUser() user: User,
   ) {
     return await this.portfolioService.createPortfolio(
       createPortfolioDto,
-      user,
+      // user,
     );
   }
 
