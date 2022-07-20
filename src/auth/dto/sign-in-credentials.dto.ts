@@ -10,15 +10,12 @@ import {
 
 export class SignInRegistration {
     @ApiProperty({required: false})
-    // @IsDefined()
     @IsOptional()
-    // @IsNotEmpty()
+
     readonly usernameOrEmail?: string = '';
 
     @ApiProperty({required: false})
-    // @IsDefined()
     @IsOptional()
-    // @IsNotEmpty()
     readonly password?: string = '';
 
 }
