@@ -5,7 +5,6 @@ import {
     IsEmail,
     MinLength,
     IsOptional,
-    Validate,
 } from 'class-validator';
 
 export class SignInRegistration {
