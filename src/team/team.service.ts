@@ -57,7 +57,7 @@ export class TeamService {
       const portfolios = (await Promise.all(
         createTeamDto.portfolios?.map(
           async (porfolio) =>
-            await this.portfoliosService.createPortfolio(porfolio),
+            await this.portfoliosService.createPorfolioOtherTeam(porfolio),
         ) || [],
       )) as Portfolio[];
       
