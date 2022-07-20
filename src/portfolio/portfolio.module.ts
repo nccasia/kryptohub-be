@@ -6,7 +6,7 @@ import {Portfolio} from './portfolio.entity';
 import {PortfolioService} from './portfolio.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Portfolio])],
+  imports: [TypeOrmModule.forFeature([Portfolio, Team])],
   controllers: [PortfolioController],
   providers: [PortfolioService],
   exports: [PortfolioService],

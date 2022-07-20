@@ -53,8 +53,8 @@ export class CreatePortfolioDto {
   @IsNotEmpty()
   readonly privacy?: PrivacyEnum;
 
-  // @ApiProperty({required: true})
-  // @IsNotEmpty()
-  // @Type(() => Number)
-  // teamId!: number;
+  @ApiProperty({required: true})
+  @IsOptional()
+  @Type(() => Number)
+  teamId?: number;
 }
