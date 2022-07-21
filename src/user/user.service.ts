@@ -41,7 +41,7 @@ export class UserService {
 
   async getSkillById(id: number) {
     return await this.userRepository.findOne(id, {
-      relations: ['skills', 'team'],
+      relations: ['skills'],
     });
   }
 
