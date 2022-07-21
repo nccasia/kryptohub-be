@@ -45,6 +45,14 @@ export class UserService {
     });
   }
 
+  async getProfileMyTeam(id: number) {
+    return await this.userRepository.findOne(id, {
+      relations: ['team'],
+    });
+  }
+
+
+
   // async getSkillById(id: number) {
   //     return await this.userRepository.findOne({
   //         where: {id: id},
