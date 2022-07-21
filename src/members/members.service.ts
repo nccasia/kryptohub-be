@@ -127,10 +127,14 @@ export class MembersService {
     });
 
     if (!invitation) throw new NotFoundException('not found invitation');
-
     invitation.inviteStatus = InviteStatus.ACCEPTED;
-    await invitation.save();
+    
+    if(!invitation.user) {
+      const users = await this.userService.findOne({where: {emailAddress: user.emailAddress}})
+      invitation.user = users
+    }
 
+    await invitation.save();
     return invitation;
   }
 
