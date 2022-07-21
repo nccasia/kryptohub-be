@@ -43,6 +43,13 @@ export class ProfileController {
     return getUser;
   }
 
+  @Get('/get-profile-team')
+  @UseGuards(JWTAuthGuard)
+  async getProfile(@AuthUser() user: User) {
+    const getUser = await this.userService.getProfileMyTeam(user.id as number);
+    return getUser;
+  }
+
   @Put('update')
   @UseGuards(JWTAuthGuard)
   async update(@AuthUser() user: User, @Body() updatesUser: UserUpdate) {
