@@ -156,6 +156,9 @@ export class TeamService {
         'awards',
         'keyClients',
       ],
+      order: {
+        id: "DESC"
+      }
     });
   }
 
@@ -169,7 +172,7 @@ export class TeamService {
         'awards',
         'keyClients',
         'user',
-      ],
+      ]
     });
 
     if (!getTeam) {
