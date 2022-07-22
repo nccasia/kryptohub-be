@@ -141,9 +141,20 @@ export class AuthService {
         .pipe((res) => res),
     );
 
-    const userGithub = getUser.data;
-    const username = userGithub.login;
+    const getEmail = await firstValueFrom(
+      this.http
+        .get('https://api.github.com/user/emails', {
+          headers: {
+            Authorization: `Bearer ${githubRegistration.accessToken}`,
+          },
+        })
+        .pipe((res) => res),
+    );
 
+    const userGithub = getUser.data;
+    const userEmail = getEmail.data.find((user) => user.primary == true)
+
+    const username = userGithub.login;
     try {
       const user = await this.userService.findOne({
         where: {username},
@@ -151,6 +162,7 @@ export class AuthService {
 
       const payload = {
         username: user.username,
+        emailAddress: userEmail.email,
         sub: user.githubAddress,
       };
 
@@ -161,21 +173,24 @@ export class AuthService {
       const user = await this.userService.create({
         username: username,
         githubAddress: userGithub.html_url,
+        emailAddress: userEmail.email,
         status: 'isNew',
         provider: SocialProviderTypes.GITHUB,
       });
-
+      
       delete user.password;
       const payload = {
         username: user.username,
+        email: user.emailAddress,
         sub: user.githubAddress,
       };
-
+      
       return {
         accessToken: this.jwtService.sign(payload),
       };
     }
   }
+
 
   async loginWeb3(walletAddress: string): Promise<User> {
     let user: User;
