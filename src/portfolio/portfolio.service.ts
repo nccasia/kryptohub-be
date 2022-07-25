@@ -77,14 +77,6 @@ export class PortfolioService {
         throw new NotFoundException(`There isn't any portfolio with id: ${id}`);
       }
 
-      const team = await this.teamRepository.findOne({
-        where: {id: updatePortfolioDto.teamId},
-      });
-
-      if (!team) {
-        throw new HttpException('Cannot find team ID', HttpStatus.NOT_FOUND);
-      }
-
       const updatePortfolio = await this.portfolioRepository.save({
         id: id,
         category: updatePortfolioDto.category,
@@ -99,7 +91,6 @@ export class PortfolioService {
         startDate: updatePortfolioDto.startDate,
         title: updatePortfolioDto.title,
         privacy: updatePortfolioDto.privacy,
-        teamId: updatePortfolioDto.teamId,
       });
       return {...updatePortfolio};
     } catch (error) {

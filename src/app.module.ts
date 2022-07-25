@@ -19,6 +19,7 @@ import {PortfolioModule} from './portfolio/portfolio.module';
 import {AwardsModule} from './awards/awards.module';
 import {KeyClientModule} from './key-clients/key-clients.module';
 import {APP_INTERCEPTOR} from '@nestjs/core';
+import { ServiceLineModule } from './services-line/service-line.module';
 
 @Module({
   imports: [
@@ -43,6 +44,7 @@ import {APP_INTERCEPTOR} from '@nestjs/core';
     PortfolioModule,
     AwardsModule,
     KeyClientModule,
+    ServiceLineModule
   ],
   controllers: [AppController],
   providers: [

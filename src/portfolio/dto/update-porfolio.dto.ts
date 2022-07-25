@@ -52,9 +52,4 @@ export class UpdatePortfolioDto {
   @IsEnum(PrivacyEnum)
   @IsNotEmpty()
   privacy?: PrivacyEnum;
-
-  @ApiProperty({required: true})
-  @IsOptional()
-  @Type(() => Number)
-  teamId?: number;
 }
