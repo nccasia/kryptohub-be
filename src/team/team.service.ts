@@ -18,10 +18,10 @@ import {GetListTeamDto} from './dto/get-list-team.dto';
 import {UpdateTeamDto} from './dto/update-team.dto';
 import {Team} from './team.entity';
 import {GetListTeamPagingDto} from './dto/get-team.dto';
-import { KeyClientService } from '@/key-clients/key-clients.service';
-import { KeyClient } from '@/key-clients/key-clients.entity';
-import { PortfolioService } from '@/portfolio/portfolio.service';
-import { Portfolio } from '@/portfolio/portfolio.entity';
+import {KeyClientService} from '@/key-clients/key-clients.service';
+import {KeyClient} from '@/key-clients/key-clients.entity';
+import {PortfolioService} from '@/portfolio/portfolio.service';
+import {Portfolio} from '@/portfolio/portfolio.entity';
 
 @Injectable()
 export class TeamService {
@@ -31,7 +31,7 @@ export class TeamService {
     private readonly skillService: SkillService,
     private readonly skillDistributionService: SkillDistributionService,
     private readonly keyClientsService: KeyClientService,
-    private readonly portfoliosService: PortfolioService
+    private readonly portfoliosService: PortfolioService,
   ) {}
 
   async createTeam(user: User, createTeamDto: CreateTeamDto) {
@@ -60,7 +60,6 @@ export class TeamService {
             await this.portfoliosService.createPorfolioOtherTeam(porfolio),
         ) || [],
       )) as Portfolio[];
-      
 
       const team = new Team({
         ...createTeamDto,
@@ -68,12 +67,12 @@ export class TeamService {
         skills,
         skillDistribution: skillDistributions,
         keyClients: keyClients,
-        portfolios: portfolios
+        portfolios: portfolios,
       });
 
       await team.save();
       delete team.user;
-      
+
       return {data: {...team}};
     } catch (error) {
       throw new NotFoundException('Error cannot create team');
@@ -157,8 +156,8 @@ export class TeamService {
         'keyClients',
       ],
       order: {
-        id: "DESC"
-      }
+        id: 'DESC',
+      },
     });
   }
 
@@ -172,7 +171,7 @@ export class TeamService {
         'awards',
         'keyClients',
         'user',
-      ]
+      ],
     });
 
     if (!getTeam) {
@@ -272,5 +271,12 @@ export class TeamService {
       .where('"userId" = :userId', {userId})
       .andWhere('id = :teamId', {teamId})
       .getOne();
+  }
+
+  async getShortListTeam(teamId: number[]) {
+    return this.teamRepository
+      .createQueryBuilder('team')
+      .where('team.id IN(:...id)', {id: teamId})
+      .getMany();
   }
 }
