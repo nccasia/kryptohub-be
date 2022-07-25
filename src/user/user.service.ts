@@ -1,4 +1,4 @@
-import {Injectable, NotFoundException} from '@nestjs/common';
+import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
@@ -99,12 +99,13 @@ export class UserService {
   }
 
   async getShortList(authUser: User) {
-    const shortList = await this.userRepository
-      .createQueryBuilder('user')
-      .leftJoinAndSelect('user.team', 'team', 'team.id = ANY ("shortList")')
-      .where('user.id = :id', {id: authUser.id})
-      .getOne();
-    return shortList?.team;
+    if(!authUser.id) return new BadRequestException('Not found');
+    const user = await this.getSkillById(authUser.id);
+    if(!user) return new BadRequestException('Not found');
+    
+    if(!user.shortList) return [];
+    const shortListTeam = await this.teamService.getShortListTeam(user.shortList);
+    return shortListTeam;
   }
 
   async addShortList(authUser: User, teamId: number) {
