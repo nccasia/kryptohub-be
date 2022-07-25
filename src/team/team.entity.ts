@@ -23,7 +23,7 @@ export class Team extends BaseEntity {
   @PrimaryGeneratedColumn()
   id?: number;
 
-  @Column({unique: true})
+  @Column({nullable: true})
   teamName?: string;
 
   @Column({nullable: true})
