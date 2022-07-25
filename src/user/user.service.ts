@@ -116,8 +116,14 @@ export class UserService {
     const shortList = new Set(user.shortList);
     shortList.add(teamId);
     user.shortList = Array.from(shortList);
-    await user.save();
-    return;
+    
+    const result = await this.userRepository.save(
+      {
+        ...user,
+        shortList: user.shortList,
+      }
+    );
+    return result;
   }
 
   async removeShortList(authUser: User, teamId: number) {
@@ -127,8 +133,13 @@ export class UserService {
     const user = await this.findOne({where: {id: authUser.id}});
     user.shortList = user.shortList?.filter(e => e*1 !== teamId*1)
     console.log(user.shortList);
-    await user.save();
-    return;
+    const result = await this.userRepository.save(
+      {
+        ...user,
+        shortList: user.shortList,
+      }
+    );
+    return result;
   }
 }
 
