@@ -42,8 +42,8 @@ import { ServiceLineModule } from './services-line/service-line.module';
     MembersModule,
     EmailModule,
     PortfolioModule,
-    AwardsModule,
     KeyClientModule,
+    AwardsModule,
     ServiceLineModule
   ],
   controllers: [AppController],
