@@ -4,7 +4,6 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import {JwtService} from '@nestjs/jwt';
-
 import {SocialProviderTypes, User} from '../user/user.entity';
 import {JwtPayload} from './interfaces/jwt-payload.interface';
 import {UserService} from '../user/user.service';
@@ -113,8 +112,12 @@ export class AuthService {
       );
     }
 
+    if (user.provider !== 'username') {
+      return new NotFoundException(`Please login with ${user.provider}`);
+    }
+
     if (!password && password === '') {
-      throw new UnauthorizedException(`password should not be empty`);
+      throw new UnauthorizedException(`Password should not be empty`);
     }
 
     if (!(await user.checkPassword(password as string))) {
@@ -152,7 +155,7 @@ export class AuthService {
     );
 
     const userGithub = getUser.data;
-    const userEmail = getEmail.data.find((user) => user.primary == true)
+    const userEmail = getEmail.data.find((user) => user.primary == true);
 
     const username = userGithub.login;
     try {
@@ -177,20 +180,19 @@ export class AuthService {
         status: 'isNew',
         provider: SocialProviderTypes.GITHUB,
       });
-      
+
       delete user.password;
       const payload = {
         username: user.username,
         email: user.emailAddress,
         sub: user.githubAddress,
       };
-      
+
       return {
         accessToken: this.jwtService.sign(payload),
       };
     }
   }
-
 
   async loginWeb3(walletAddress: string): Promise<User> {
     let user: User;
