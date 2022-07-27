@@ -113,7 +113,7 @@ export class AuthService {
     }
 
     if (user.provider !== 'username') {
-      return new NotFoundException(`Please login with ${user.provider}`);
+      throw new NotFoundException(`Please login with ${user.provider}`);
     }
 
     if (!password && password === '') {
