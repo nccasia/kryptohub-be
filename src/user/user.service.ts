@@ -1,4 +1,10 @@
-import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common';
+import {
+  BadRequestException,
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {FindOneOptions, Repository} from 'typeorm';
 import {User} from './user.entity';
@@ -99,12 +105,14 @@ export class UserService {
   }
 
   async getShortList(authUser: User) {
-    if(!authUser.id) return new BadRequestException('Not found');
+    if (!authUser.id) return new BadRequestException('Not found');
     const user = await this.getSkillById(authUser.id);
-    if(!user) return new BadRequestException('Not found');
-    
-    if(!user.shortList) return [];
-    const shortListTeam = await this.teamService.getShortListTeam(user.shortList);
+    if (!user) return new BadRequestException('Not found');
+
+    if (!user.shortList || user.shortList.length === 0) return [];
+    const shortListTeam = await this.teamService.getShortListTeam(
+      user.shortList,
+    );
     return shortListTeam;
   }
 
@@ -116,13 +124,11 @@ export class UserService {
     const shortList = new Set(user.shortList);
     shortList.add(teamId);
     user.shortList = Array.from(shortList);
-    
-    const result = await this.userRepository.save(
-      {
-        ...user,
-        shortList: user.shortList,
-      }
-    );
+
+    const result = await this.userRepository.save({
+      ...user,
+      shortList: user.shortList,
+    });
     return result;
   }
 
@@ -131,15 +137,22 @@ export class UserService {
     if (!team) throw new NotFoundException('Team not found');
 
     const user = await this.findOne({where: {id: authUser.id}});
-    user.shortList = user.shortList?.filter(e => e*1 !== teamId*1)
-    console.log(user.shortList);
-    const result = await this.userRepository.save(
-      {
-        ...user,
-        shortList: user.shortList,
-      }
-    );
+    user.shortList = user.shortList?.filter((e) => e * 1 !== teamId * 1);
+    const result = await this.userRepository.save({
+      ...user,
+      shortList: user.shortList,
+    });
     return result;
   }
-}
 
+  async removeAllShortList(authUser: User) {
+    const user = await this.findOne({where: {id: authUser.id}});
+    if (user) {
+      user.shortList = Object();
+      await this.userRepository.save(user);
+      throw new HttpException('Delete all short lists success', HttpStatus.OK);
+    } else {
+      throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+    }
+  }
+}

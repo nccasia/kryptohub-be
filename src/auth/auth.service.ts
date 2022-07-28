@@ -14,12 +14,24 @@ import jwt_decode from 'jwt-decode';
 import {GithubRegistration} from './dto/github-auth.dto';
 import {firstValueFrom} from 'rxjs';
 import {HttpService} from '@nestjs/axios';
+import {MailerService} from '@nestjs-modules/mailer';
+import {ConfigService} from '@nestjs/config';
+import {
+  ChangePasswordDto,
+  SendMailResetPasswordDto,
+} from './dto/reset-password.dto';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
 @Injectable()
 export class AuthService {
   constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
     private readonly userService: UserService,
     private readonly http: HttpService,
     private readonly jwtService: JwtService,
+    private readonly mailerService: MailerService,
+    private configService: ConfigService,
   ) {}
 
   async register(
@@ -55,7 +67,7 @@ export class AuthService {
       )
     ) {
       throw new UnauthorizedException(
-        `Password must includes lowercase, uppercase, number and special character`,
+        'Password must includes lowercase, uppercase, number and special character',
       );
     }
 
@@ -131,6 +143,52 @@ export class AuthService {
     return {
       accessToken: this.jwtService.sign(payload),
     };
+  }
+
+  async sendMailResetPassword(data: SendMailResetPasswordDto) {
+    const {email} = data;
+    const emailAddress = await this.userService.any({
+      where: {emailAddress: email},
+    });
+
+    if (!emailAddress)
+      throw new NotFoundException('User with this email does not exist');
+
+    const payload = {email};
+    const token = await this.jwtService.sign(payload);
+    await this.userRepository.update({emailAddress: email}, {token});
+
+    this.mailerService.sendMail({
+      to: email,
+      subject: 'Reset your Password',
+      template: 'reset-password',
+      context: {
+        resetLink:
+          this.configService.get('FE_HOST') + `/change-password?token=${token}`,
+        contact: 'kryptohub.co',
+      },
+    });
+  }
+
+  async changePassword(changePasswordDto: ChangePasswordDto, token: string) {
+    const user = new User();
+    const decoded: any = await jwt_decode(token);
+    user.password = changePasswordDto.password;
+
+    const email = await this.userRepository.findOne({
+      emailAddress: decoded.email,
+    });
+
+    if (!email) {
+      throw new NotFoundException('Email not found');
+    }
+
+    const userData = await this.userRepository.findOne({
+      emailAddress: email.emailAddress,
+    });
+    if (!userData) return;
+    userData.password = user.password;
+    await this.userRepository.save(userData);
   }
 
   async loginGithub(githubRegistration: GithubRegistration) {

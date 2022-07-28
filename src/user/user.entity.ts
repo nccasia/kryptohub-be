@@ -84,6 +84,9 @@ export class User extends BaseEntity {
   @UpdateDateColumn()
   updatedAt?: Date;
 
+  @Column({nullable: true})
+  token?: string;
+
   @OneToMany((type) => Team, (team) => team.user, {eager: false})
   @JoinTable()
   team?: Team[];
@@ -92,7 +95,7 @@ export class User extends BaseEntity {
   @JoinTable()
   skills?: Skill[];
 
-  @Column("int", { array: true, nullable: true })
+  @Column('int', {array: true, nullable: true})
   shortList?: number[];
 
   constructor(data: Partial<User> = {}) {

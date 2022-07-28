@@ -10,38 +10,39 @@ import {JwtStrategy} from './strategies/jwt.strategy';
 import {LocalStrategy} from './strategies/local.strategy';
 import {Web3Strategy} from './strategies/web3.strategy';
 import {HttpModule} from '@nestjs/axios';
+import {TypeOrmModule} from '@nestjs/typeorm';
+import {User} from '@/user/user.entity';
 
 @Module({
-    imports: [
-        ConfigModule,
-        UserModule,
-        HttpModule,
-        JwtModule.registerAsync({
-            imports: [ConfigModule],
-            useFactory: async (
-                env: ConfigService,
-            ): Promise<JwtModuleOptions> => ({
-                secret: env.get('JWT_SECRET'),
-                signOptions: {
-                    expiresIn: '1d',
-                    algorithm: 'HS384',
-                },
-                verifyOptions: {
-                    algorithms: ['HS384'],
-                },
-            }),
-            inject: [ConfigService],
-        }),
-        PassportModule.register({defaultStrategy: 'jwt'}),
-    ],
-    controllers: [AuthController],
-    providers: [
-        AuthService,
-        LocalStrategy,
-        JwtStrategy,
-        Web3Strategy,
-        SessionSerializer,
-    ],
-    exports: [PassportModule],
+  imports: [
+    ConfigModule,
+    UserModule,
+    HttpModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: async (env: ConfigService): Promise<JwtModuleOptions> => ({
+        secret: env.get('JWT_SECRET'),
+        signOptions: {
+          expiresIn: '1d',
+          algorithm: 'HS384',
+        },
+        verifyOptions: {
+          algorithms: ['HS384'],
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([User]),
+    PassportModule.register({defaultStrategy: 'jwt'}),
+  ],
+  controllers: [AuthController],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    Web3Strategy,
+    SessionSerializer,
+  ],
+  exports: [PassportModule],
 })
 export class AuthModule {}
