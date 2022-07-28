@@ -1,5 +1,4 @@
 import {ApiProperty} from '@nestjs/swagger';
-import {Type} from 'class-transformer';
 import {IsEmail, IsNotEmpty, IsString, Matches} from 'class-validator';
 
 export class SendMailResetPasswordDto {
