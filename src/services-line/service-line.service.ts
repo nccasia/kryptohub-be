@@ -1,22 +1,27 @@
-import { HttpException, HttpStatus, Injectable, NotFoundException } from "@nestjs/common";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository } from "typeorm";
-import { CreateServiceLineDto } from "./dto/create-service-line.dto";
-import { UpdateServiceLineDto } from "./dto/update-service-line.dto";
-import { ServiceLine } from "./service-line.entity";
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import {InjectRepository} from '@nestjs/typeorm';
+import {Repository} from 'typeorm';
+import {CreateServiceLineDto} from './dto/create-service-line.dto';
+import {UpdateServiceLineDto} from './dto/update-service-line.dto';
+import {ServiceLine} from './service-line.entity';
 
 @Injectable()
 export class ServiceLineService {
   constructor(
     @InjectRepository(ServiceLine)
-    private readonly serviceLineRepository: Repository<ServiceLine>
+    private readonly serviceLineRepository: Repository<ServiceLine>,
   ) {}
 
-  async createServiceLine(createServiceLineDto: CreateServiceLineDto){
+  async createServiceLine(createServiceLineDto: CreateServiceLineDto) {
     try {
-      const serviceLine = new ServiceLine({...createServiceLineDto as any});
+      const serviceLine = new ServiceLine({...(createServiceLineDto as any)});
       const result = await this.serviceLineRepository.save(serviceLine);
-      return {...result}
+      return {...result};
     } catch (error) {
       throw new HttpException(
         'Error cannot create service line',
@@ -25,7 +30,7 @@ export class ServiceLineService {
     }
   }
 
-  async updateServiceLine(id, updateServiceLineDto: UpdateServiceLineDto){
+  async updateServiceLine(id, updateServiceLineDto: UpdateServiceLineDto) {
     try {
       const keyClients = await this.serviceLineRepository.findOne(id);
       if (!keyClients) {
@@ -38,7 +43,7 @@ export class ServiceLineService {
       const updateServiceLine = await this.serviceLineRepository.save({
         id: id,
         name: updateServiceLineDto.name,
-        value: updateServiceLineDto.value as any
+        value: updateServiceLineDto.value as any,
       });
       return updateServiceLine;
     } catch (error) {
@@ -58,14 +63,16 @@ export class ServiceLineService {
   }
 
   async getServiceLineById(id: number): Promise<ServiceLine[]> {
-    const serviceLine = await this.serviceLineRepository.find({where: {id: id}});
+    const serviceLine = await this.serviceLineRepository.find({
+      where: {id: id},
+    });
     if (!serviceLine) {
       throw new NotFoundException(`Service line with ID ${id} not found`);
     }
     return serviceLine;
   }
 
-  async getAllServiceLine(): Promise<ServiceLine[]>{
-    return await this.serviceLineRepository.find()
+  async getAllServiceLine(): Promise<ServiceLine[]> {
+    return await this.serviceLineRepository.find();
   }
 }
