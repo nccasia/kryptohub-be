@@ -10,9 +10,8 @@ import {
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
-import {AddContactJoinTeamDto, LobbyTeamDto} from './dto/join-team.dto';
-import {JoinTeam, JoinTeamRole} from './join-team.entity';
-import {JoinTeamStatus} from './join-team.entity';
+import {AddContactJoinTeamDto} from './dto/join-team.dto';
+import {JoinTeam} from './join-team.entity';
 @Injectable()
 export class JoinTeamService {
   constructor(
@@ -26,13 +25,13 @@ export class JoinTeamService {
     addContactJoinTeam: AddContactJoinTeamDto,
     user: User,
   ) {
-    const {teamId, joinTeam} = addContactJoinTeam;
-    const team = await this.teamService.anyUserTeam({userId: user.id, teamId});
-    if (!team) throw new HttpException('Team not found', HttpStatus.NOT_FOUND);
+    const joinTeam = await this.joinTeamRepository.save({
+      id: user.id,
+    })
   }
 
-  async joinTeam(team: Team, data: LobbyTeamDto) {
-    const {email, role = JoinTeamRole.NOT_ROLE} = data;
-    const user = await this.userService.findOne({where: {emailAddress: email}});
-  }
+  // async joinTeam(team: Team, data: LobbyTeamDto) {
+  //   const {email, role = JoinTeamRole.NOT_ROLE} = data;
+  //   const user = await this.userService.findOne({where: {emailAddress: email}});
+  // }
 }

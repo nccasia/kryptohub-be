@@ -12,17 +12,6 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-export enum JoinTeamStatus {
-  REJECTED = 'rejected',
-  ACCEPTED = 'accepted',
-  PENDING = 'pending',
-}
-
-export enum JoinTeamRole {
-  MEMBER = 'member',
-  NOT_ROLE = 'not_role',
-}
-
 @Entity()
 export class JoinTeam extends BaseEntity {
   @PrimaryGeneratedColumn()
@@ -43,20 +32,13 @@ export class JoinTeam extends BaseEntity {
   emailAddress!: string;
 
   @Column({
-    type: 'enum',
-    enum: JoinTeamStatus,
-    default: JoinTeamStatus.PENDING,
-    nullable: false,
+   default: false,
   })
-  joinTeamStatus!: JoinTeamStatus;
+  verified?: boolean;
 
   @Column({
-    type: 'enum',
-    enum: JoinTeamRole,
-    default: JoinTeamRole.NOT_ROLE,
-    nullable: false,
-  })
-  role?: JoinTeamRole;
+    default: false,})
+  isApproved?: boolean;
 
   @UpdateDateColumn()
   updatedAt!: Date;

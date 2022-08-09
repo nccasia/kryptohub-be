@@ -18,6 +18,8 @@ export class JoinTeamController {
     @AuthUser() user: User,
     @Body() AddContactJoinTeamDto: AddContactJoinTeamDto,
   ) {
+    console.log(user);
+    
     return await this.joinTeamService.addContactJoinTeam(
       AddContactJoinTeamDto,
       user,

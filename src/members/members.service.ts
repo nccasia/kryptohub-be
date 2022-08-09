@@ -153,4 +153,6 @@ export class MembersService {
 
     await this.memberRepository.softDelete(member.id)
   }
+
+  // async contactJoinTeam(user: User, data: )
 }
