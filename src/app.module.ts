@@ -19,7 +19,8 @@ import {PortfolioModule} from './portfolio/portfolio.module';
 import {AwardsModule} from './awards/awards.module';
 import {KeyClientModule} from './key-clients/key-clients.module';
 import {APP_INTERCEPTOR} from '@nestjs/core';
-import { ServiceLineModule } from './services-line/service-line.module';
+import {ServiceLineModule} from './services-line/service-line.module';
+import {JoinTeamModule} from './join-team/join-team.module';
 
 @Module({
   imports: [
@@ -44,7 +45,8 @@ import { ServiceLineModule } from './services-line/service-line.module';
     PortfolioModule,
     KeyClientModule,
     AwardsModule,
-    ServiceLineModule
+    ServiceLineModule,
+    JoinTeamModule,
   ],
   controllers: [AppController],
   providers: [
@@ -56,4 +58,3 @@ import { ServiceLineModule } from './services-line/service-line.module';
   ],
 })
 export class AppModule {}
-
