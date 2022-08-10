@@ -1,14 +1,6 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {Type} from 'class-transformer';
-import {
-  ArrayMinSize,
-  IsArray,
-  IsEmail,
-  IsEnum,
-  IsNotEmpty,
-  IsNumber,
-  ValidateNested,
-} from 'class-validator';
+import {IsNotEmpty, IsNumber} from 'class-validator';
 
 export class AddContactJoinTeamDto {
   @ApiProperty()

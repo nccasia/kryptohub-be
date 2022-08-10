@@ -17,28 +17,33 @@ export class JoinTeam extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne(() => Team)
-  @JoinColumn()
-  team!: Team;
+  // @ManyToOne(() => Team, {nullable: true, eager: true})
+  // @JoinColumn()
+  // team!: Team;
 
-  @ManyToOne(() => User, {nullable: true, eager: true})
-  @JoinColumn()
-  user?: User;
+  @Column({nullable: true})
+  teamId!: number;
 
-  @CreateDateColumn()
-  createdAt!: Date;
+  // @ManyToOne(() => User, {nullable: true, eager: false})
+  // @JoinColumn()
+  @Column({nullable: true})
+  userId!: number;
 
   @Column()
   emailAddress!: string;
 
   @Column({
-   default: false,
+    default: false,
   })
   verified?: boolean;
 
   @Column({
-    default: false,})
+    default: false,
+  })
   isApproved?: boolean;
+
+  @CreateDateColumn()
+  createdAt!: Date;
 
   @UpdateDateColumn()
   updatedAt!: Date;

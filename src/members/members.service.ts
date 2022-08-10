@@ -41,7 +41,6 @@ export class MembersService {
     const {teamId, page, size, sort} = queryData;
 
     const team = await this.teamService.anyUserTeam({userId: user.id, teamId});
-
     if (!team) throw new NotFoundException();
 
     const paging = formatPaging(page, size, sort);
@@ -128,30 +127,37 @@ export class MembersService {
 
     if (!invitation) throw new NotFoundException('not found invitation');
     invitation.inviteStatus = InviteStatus.ACCEPTED;
-    
-    if(!invitation.user) {
-      const users = await this.userService.findOne({where: {emailAddress: user.emailAddress}})
-      invitation.user = users
+
+    if (!invitation.user) {
+      const users = await this.userService.findOne({
+        where: {emailAddress: user.emailAddress},
+      });
+      invitation.user = users;
     }
 
     await invitation.save();
     return invitation;
   }
 
-  async removeMember(user: User, query: DeleteMemberDto){
-    const team = await this.teamService.anyUserTeam({userId: user.id, teamId: query.teamId})
-    if(!team) throw new NotFoundException('Team not found')
+  async removeMember(user: User, query: DeleteMemberDto) {
+    const team = await this.teamService.anyUserTeam({
+      userId: user.id,
+      teamId: query.teamId,
+    });
+    if (!team) throw new NotFoundException('Team not found');
 
-    const member = await this.memberRepository.findOne({where: {
-      id: query.memberId,
-      team: {
-        id: query.teamId
-      }
-    }})
+    const member = await this.memberRepository.findOne({
+      where: {
+        id: query.memberId,
+        team: {
+          id: query.teamId,
+        },
+      },
+    });
 
-    if(!member) throw new NotFoundException('Member not found')
+    if (!member) throw new NotFoundException('Member not found');
 
-    await this.memberRepository.softDelete(member.id)
+    await this.memberRepository.softDelete(member.id);
   }
 
   // async contactJoinTeam(user: User, data: )
