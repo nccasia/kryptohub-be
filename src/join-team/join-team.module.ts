@@ -1,5 +1,4 @@
-import {TeamModule} from '@/team/team.module';
-import {UserModule} from '@/user/user.module';
+import {Member} from '@/members/member.entity';
 import {Module} from '@nestjs/common';
 import {TypeOrmModule} from '@nestjs/typeorm';
 import {JoinTeamController} from './join-team.controller';
@@ -7,7 +6,7 @@ import {JoinTeam} from './join-team.entity';
 import {JoinTeamService} from './join-team.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([JoinTeam]), TeamModule, UserModule],
+  imports: [TypeOrmModule.forFeature([JoinTeam, Member])],
   providers: [JoinTeamService],
   controllers: [JoinTeamController],
 })

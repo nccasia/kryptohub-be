@@ -1,7 +1,5 @@
-import {Team} from '@/team/team.entity';
-import {TeamService} from '@/team/team.service';
+import {InviteStatus, Member, MemberRole} from '@/members/member.entity';
 import {User} from '@/user/user.entity';
-import {UserService} from '@/user/user.service';
 import {
   HttpException,
   HttpStatus,
@@ -18,8 +16,8 @@ export class JoinTeamService {
   constructor(
     @InjectRepository(JoinTeam)
     private readonly joinTeamRepository: Repository<JoinTeam>,
-    private readonly teamService: TeamService,
-    private readonly userService: UserService,
+    @InjectRepository(Member)
+    private readonly memberRepository: Repository<Member>,
   ) {}
 
   async addContactJoinTeam(
@@ -58,7 +56,7 @@ export class JoinTeamService {
 
       const result = await this.joinTeamRepository.save({
         id: id,
-        verified: updateStatusJoinTeam.verified == true,
+        verified: true,
         isApproved: updateStatusJoinTeam.isApproved == true,
       });
       return result;
@@ -76,5 +74,36 @@ export class JoinTeamService {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
     throw new HttpException('Delete success', HttpStatus.OK);
+  }
+
+  async getTeamById(teamId: number) {
+    const team = await this.joinTeamRepository.find({
+      where: {teamId: teamId, verified: false},
+    });
+    return team;
+  }
+
+  async addUserContactJointeam(
+    user: User,
+    addContactJoinTeam: AddContactJoinTeamDto,
+  ) {
+    const member = new Member();
+    const jointeam = new JoinTeam();
+    jointeam.userId = user.id!;
+    jointeam.teamId = addContactJoinTeam.teamId;
+
+    member.role = MemberRole.MEMBER;
+    member.emailAddress = user.emailAddress as string;
+    member.inviteStatus = InviteStatus.ACCEPTED;
+    member.user = jointeam.userId as any;
+    member.team = jointeam.teamId as any;
+    const addToList = await this.memberRepository.save(member);
+
+    const {user: userData, team, ...result} = addToList;
+    return {
+      ...result,
+      userId: jointeam.userId,
+      teamId: jointeam.teamId,
+    };
   }
 }

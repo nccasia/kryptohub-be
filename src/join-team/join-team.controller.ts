@@ -12,6 +12,7 @@ import {
   ParseIntPipe,
   Post,
   Put,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
@@ -66,5 +67,22 @@ export class JoinTeamController {
     @Param('id', new ParseIntPipe()) id: number,
   ): Promise<void> {
     return await this.joinTeamService.deleteContactJoinTeam(id);
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @Get('get/:id')
+  @HttpCode(HttpStatus.OK)
+  async getTeamById(@Param('id', new ParseIntPipe()) teamId: number) {
+    return await this.joinTeamService.getTeamById(teamId);
+  }
+
+  @UseGuards(JWTAuthGuard)
+  @Post('add-to-list-members')
+  @HttpCode(HttpStatus.OK)
+  async AddContactJoinTeamDto(
+    @AuthUser() user: User,
+    @Query() query: AddContactJoinTeamDto,
+  ) {
+    return await this.joinTeamService.addUserContactJointeam(user, query);
   }
 }
