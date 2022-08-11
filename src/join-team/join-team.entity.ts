@@ -1,13 +1,9 @@
-import {Team} from '@/team/team.entity';
-import {User} from '@/user/user.entity';
 import {
   BaseEntity,
   Column,
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
-  JoinColumn,
-  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,15 +13,9 @@ export class JoinTeam extends BaseEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  // @ManyToOne(() => Team, {nullable: true, eager: true})
-  // @JoinColumn()
-  // team!: Team;
-
   @Column({nullable: true})
   teamId!: number;
 
-  // @ManyToOne(() => User, {nullable: true, eager: false})
-  // @JoinColumn()
   @Column({nullable: true})
   userId!: number;
 
