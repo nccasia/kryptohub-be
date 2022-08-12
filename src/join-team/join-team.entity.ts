@@ -22,6 +22,9 @@ export class JoinTeam extends BaseEntity {
   @Column()
   emailAddress!: string;
 
+  @Column({nullable: true})
+  username?: string;
+
   @Column({
     default: false,
   })

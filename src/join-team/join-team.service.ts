@@ -29,6 +29,7 @@ export class JoinTeamService {
       joinTeamData.emailAddress = user.emailAddress!;
       joinTeamData.teamId = addContactJoinTeam.teamId!;
       joinTeamData.userId = user.id!;
+      joinTeamData.username = user.username;
       const joinTeam = await this.joinTeamRepository.save(joinTeamData);
       return joinTeam;
     } catch (error) {
