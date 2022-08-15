@@ -80,7 +80,7 @@ export class JoinTeamService {
   }
 
   async deleteContactJoinTeam(id: number): Promise<void> {
-    const result = await this.joinTeamRepository.softDelete(id);
+    const result = await this.joinTeamRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException(`User with ID ${id} not found`);
     }
