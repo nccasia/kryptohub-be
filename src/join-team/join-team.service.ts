@@ -8,7 +8,10 @@ import {
 } from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Repository} from 'typeorm';
-import {AddContactJoinTeamDto} from './dto/join-team.dto';
+import {
+  AddContactJoinTeamDto,
+  AddUserContactJointeamDto,
+} from './dto/join-team.dto';
 import {UpdateStatusJoinTeam} from './dto/update-status-join-team.dto';
 import {JoinTeam} from './join-team.entity';
 @Injectable()
@@ -18,23 +21,30 @@ export class JoinTeamService {
     private readonly joinTeamRepository: Repository<JoinTeam>,
     @InjectRepository(Member)
     private readonly memberRepository: Repository<Member>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   async addContactJoinTeam(
     addContactJoinTeam: AddContactJoinTeamDto,
     user: User,
   ) {
-    try {
-      const joinTeamData = new JoinTeam();
-      joinTeamData.emailAddress = user.emailAddress!;
-      joinTeamData.teamId = addContactJoinTeam.teamId!;
-      joinTeamData.userId = user.id!;
-      joinTeamData.username = user.username;
-      const joinTeam = await this.joinTeamRepository.save(joinTeamData);
-      return joinTeam;
-    } catch (error) {
-      throw new HttpException('Error cannot join team', HttpStatus.NOT_FOUND);
-    }
+    const joinTeamData = new JoinTeam();
+    const result = await this.joinTeamRepository.find({
+      where: {userId: user.id},
+    });
+
+    if (result.length > 0)
+      throw new HttpException(
+        'You have already sent request to join team',
+        HttpStatus.BAD_REQUEST,
+      );
+    joinTeamData.emailAddress = user.emailAddress!;
+    joinTeamData.teamId = addContactJoinTeam.teamId!;
+    joinTeamData.userId = user.id!;
+    joinTeamData.username = user.username;
+    const joinTeam = await this.joinTeamRepository.save(joinTeamData);
+    return joinTeam;
   }
 
   async getAllUserContactJoinTeams(): Promise<JoinTeam[]> {
@@ -86,15 +96,19 @@ export class JoinTeamService {
 
   async addUserContactJointeam(
     user: User,
-    addContactJoinTeam: AddContactJoinTeamDto,
+    addUserContactJointeamDto: AddUserContactJointeamDto,
   ) {
     const member = new Member();
     const jointeam = new JoinTeam();
-    jointeam.userId = user.id!;
-    jointeam.teamId = addContactJoinTeam.teamId;
+    const users = await this.userRepository.findOne({
+      where: {id: addUserContactJointeamDto.userId},
+    });
+
+    jointeam.userId = addUserContactJointeamDto.userId;
+    jointeam.teamId = addUserContactJointeamDto.teamId;
 
     member.role = MemberRole.MEMBER;
-    member.emailAddress = user.emailAddress as string;
+    member.emailAddress = users?.emailAddress!;
     member.inviteStatus = InviteStatus.ACCEPTED;
     member.user = jointeam.userId as any;
     member.team = jointeam.teamId as any;

@@ -9,3 +9,17 @@ export class AddContactJoinTeamDto {
   @IsNumber()
   teamId!: number;
 }
+
+export class AddUserContactJointeamDto {
+  @ApiProperty()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  teamId!: number;
+
+  @ApiProperty()
+  @IsNotEmpty()
+  @Type(() => Number)
+  @IsNumber()
+  userId!: number;
+}

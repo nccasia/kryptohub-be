@@ -126,7 +126,7 @@ export class MembersService {
       },
     });
 
-    if (!invitation) throw new NotFoundException('not found invitation');
+    if (!invitation) throw new NotFoundException('Not found invitation');
     invitation.inviteStatus = InviteStatus.ACCEPTED;
 
     if (!invitation.user) {
