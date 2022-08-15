@@ -31,7 +31,7 @@ export class JoinTeamService {
   ) {
     const joinTeamData = new JoinTeam();
     const result = await this.joinTeamRepository.find({
-      where: {userId: user.id},
+      where: {userId: user.id, teamId: addContactJoinTeam.teamId},
     });
 
     if (result.length > 0)
@@ -39,6 +39,7 @@ export class JoinTeamService {
         'You have already sent request to join team',
         HttpStatus.BAD_REQUEST,
       );
+
     joinTeamData.emailAddress = user.emailAddress!;
     joinTeamData.teamId = addContactJoinTeam.teamId!;
     joinTeamData.userId = user.id!;
