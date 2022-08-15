@@ -16,7 +16,10 @@ import {
   UseGuards,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
-import {AddContactJoinTeamDto} from './dto/join-team.dto';
+import {
+  AddContactJoinTeamDto,
+  AddUserContactJointeamDto,
+} from './dto/join-team.dto';
 import {UpdateStatusJoinTeam} from './dto/update-status-join-team.dto';
 import {JoinTeam} from './join-team.entity';
 import {JoinTeamService} from './join-team.service';
@@ -81,7 +84,7 @@ export class JoinTeamController {
   @HttpCode(HttpStatus.OK)
   async AddContactJoinTeamDto(
     @AuthUser() user: User,
-    @Query() query: AddContactJoinTeamDto,
+    @Query() query: AddUserContactJointeamDto,
   ) {
     return await this.joinTeamService.addUserContactJointeam(user, query);
   }
