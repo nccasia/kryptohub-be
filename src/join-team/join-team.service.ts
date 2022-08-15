@@ -69,6 +69,9 @@ export class JoinTeamService {
         id: id,
         verified: true,
         isApproved: updateStatusJoinTeam.isApproved == true,
+        userId: joinTeamData.userId,
+        teamId: joinTeamData.teamId,
+        username: joinTeamData.username,
       });
       return result;
     } catch (error) {
