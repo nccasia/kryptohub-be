@@ -155,4 +155,23 @@ export class UserService {
       throw new HttpException('User not found', HttpStatus.NOT_FOUND);
     }
   }
+
+  async getShareShortListLinkWithAccessToken(
+    authUser: User,
+    accessToken: string,
+  ) {
+    const user = await this.findOne({where: {id: authUser.id}});
+    if (!user) throw new NotFoundException('User not found');
+    const payload = this.jwtService.decode(accessToken);
+    if (!payload) throw new NotFoundException('Access token changed');
+    const userPayLoad = await this.findOne({
+      where: {emailAddress: payload.sub},
+    });
+    if (!userPayLoad.shortList || userPayLoad.shortList.length === 0)
+      throw new NotFoundException('Short list removed!');
+    const shortListTeam = await this.teamService.getShortListTeam(
+      userPayLoad.shortList,
+    );
+    return shortListTeam;
+  }
 }
