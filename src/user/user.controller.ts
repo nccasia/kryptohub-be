@@ -43,4 +43,16 @@ export class UserController {
     await this.userService.removeAllShortList(user);
     return;
   }
+
+  @Get('share-short-list/:token')
+  @UseGuards(JWTAuthGuard)
+  async getShareShortListLinkWithAccessToken(
+    @AuthUser() user: User,
+    @Param() param,
+  ) {
+    return await this.userService.getShareShortListLinkWithAccessToken(
+      user,
+      param.token,
+    );
+  }
 }
