@@ -155,7 +155,7 @@ export class AuthService {
       throw new NotFoundException('User with this email does not exist');
 
     const payload = {email};
-    const token = await this.jwtService.sign(payload, {expiresIn: '30*60'});
+    const token = await this.jwtService.sign(payload, {expiresIn: '1800s'});
     await this.userRepository.update({emailAddress: email}, {token});
 
     this.mailerService.sendMail({
