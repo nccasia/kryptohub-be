@@ -37,6 +37,12 @@ export class MembersController {
   }
 
   @UseGuards(JWTAuthGuard)
+  @Get('getAll/:id')
+  async getAllMembers(@Param('id') teamId: number) {
+    return await this.membersService.getAllMembers(teamId);
+  }
+
+  @UseGuards(JWTAuthGuard)
   @Post('add')
   async addMember(@AuthUser() user: User, @Body() body: AddTeamMembersDto) {
     await this.membersService.addTeamMembers(user, body);

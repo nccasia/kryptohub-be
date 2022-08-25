@@ -1,4 +1,3 @@
-import {JoinTeamService} from '@/join-team/join-team.service';
 import {Team} from '@/team/team.entity';
 import {TeamService} from '@/team/team.service';
 import {User} from '@/user/user.entity';
@@ -60,6 +59,12 @@ export class MembersService {
         ...paging.pageable,
       },
     };
+  }
+
+  async getAllMembers(id: number) {
+    return await this.memberRepository.find({
+      where: {team: id, inviteStatus: 'accepted'},
+    });
   }
 
   async addTeamMembers(user: User, data: AddTeamMembersDto) {
